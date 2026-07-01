@@ -1,0 +1,32 @@
+# Source code — never publish
+**/*.go
+go.mod
+go.sum
+
+# Internal files — never publish
+.mcp-injector/
+MCP_Context_Injector_Design.md
+customisation.md
+suggestion_post_fixes.md
+scratch/
+node_modules/
+package-lock.json
+
+# Loose binaries in root — never publish
+benchmark
+main
+public-benchmark
+mcp-public-benchmark
+mcp-injector
+mcp-benchmark
+
+# Test directory — never publish
+test/
+
+# Do publish these
+!README.md
+!VERSION
+!.gitignore
+!releases/
+!scripts/build-release.sh
+!install.sh
