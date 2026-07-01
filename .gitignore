@@ -30,3 +30,6 @@ test/
 !releases/
 !scripts/build-release.sh
 !install.sh
+!website/go.mod
+!website/api/webhook.go
+
