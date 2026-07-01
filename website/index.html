@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>mcp-injector — Compress your codebase for Claude. Save 66-79% on tokens.</title>
+  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 66-79%. Free for codebases under 100K lines.">
+  <meta name="keywords" content="MCP server, Claude Code, context compression, token reduction, codebase indexing, LLM cost reduction, Claude API cost, Cursor MCP, VS Code MCP, prompt caching">
+  <link rel="canonical" href="https://foldwork.dev">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="mcp-injector — 66-79% token reduction for Claude">
+  <meta property="og:description" content="Local MCP daemon. AST body folding. Canonical determinism for prompt cache hits. Free under 100K lines.">
+  <meta property="og:url" content="https://foldwork.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mcp-injector — 66-79% token reduction for Claude">
+  <meta name="twitter:description" content="Local MCP daemon that compresses your codebase. Free for codebases under 100K lines.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <style>
+    /* Reset & CSS variables */
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --border-focus: rgba(124, 58, 237, 0.4);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --success: #10b981;
+      
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    /* Container Utility */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Sticky Navigation */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-nav);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-white);
+      letter-spacing: -0.025em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .nav-link:hover {
+      color: var(--text-white);
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--accent);
+      color: var(--text-white);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 6rem 0 4rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      width: 100%;
+      max-width: 280px;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--text-white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--text-white);
+      background-color: transparent;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: var(--text-muted);
+    }
+
+    .hero-caption {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    /* Section Typography */
+    .section {
+      padding: 5rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Benchmarks Section */
+    .benchmarks-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .bench-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .bench-card.popular {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      right: 2rem;
+      background-color: var(--accent);
+      color: var(--text-white);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .bench-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .bench-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 1.25rem;
+    }
+
+    .bench-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .bench-stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+    }
+
+    .bench-stat-label {
+      color: var(--text-muted);
+    }
+
+    .bench-stat-val {
+      color: var(--text-white);
+      font-family: var(--font-mono);
+    }
+
+    .bench-highlight {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .bench-highlight-label {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    .bench-highlight-val {
+      color: var(--success);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .bench-savings-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .bench-savings-val {
+      color: var(--text-white);
+      font-weight: 600;
+    }
+
+    .bench-footnote {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* How it works */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .step-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .step-num-icon {
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Install Section */
+    .install-box {
+      max-width: 768px;
+      margin: 0 auto;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .install-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .install-tab {
+      flex: 1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .install-tab.active {
+      color: var(--text-white);
+      border-bottom-color: var(--accent);
+      background-color: var(--bg-card);
+    }
+
+    .install-content {
+      padding: 1.5rem;
+    }
+
+    .code-wrapper {
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem 3.5rem 1.25rem 1.25rem;
+      margin-bottom: 1.25rem;
+      overflow-x: auto;
+    }
+
+    .code-block {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--text-white);
+      white-space: pre;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.875rem;
+      right: 0.875rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.375rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-white);
+      border-color: var(--text-muted);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .install-meta {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .ide-badges {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .ide-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    /* Manual Setup Accordion */
+    .collapsible-container {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    .collapsible-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0.5rem 0;
+    }
+
+    .collapsible-trigger:hover {
+      color: var(--text-white);
+    }
+
+    .collapsible-trigger::after {
+      content: '↓';
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .collapsible-trigger.active::after {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-content {
+      display: none;
+      padding-top: 1rem;
+    }
+
+    .collapsible-content.open {
+      display: block;
+    }
+
+    /* Pricing Section */
+    .pricing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+    }
+
+    .pricing-toggle-label {
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .pricing-toggle-label.active {
+      color: var(--text-white);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      transition: .3s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--text-muted);
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+      background-color: var(--text-white);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .price-card.popular {
+      border-color: var(--accent);
+      box-shadow: 0 0 24px rgba(124, 58, 237, 0.12);
+    }
+
+    .price-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 0.5rem;
+    }
+
+    .price-amt {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.04em;
+    }
+
+    .price-features {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      margin-bottom: 2.5rem;
+      flex-grow: 1;
+    }
+
+    .price-feature {
+      font-size: 0.9375rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .price-feature span {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .price-btn {
+      width: 100%;
+      text-align: center;
+    }
+
+    .price-subtext {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 1.25rem;
+      line-height: 1.5;
+    }
+
+    /* FAQ Accordion CSS */
+    .faq-accordion {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item input[type="checkbox"] {
+      display: none;
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-white);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .faq-question::after {
+      content: '+';
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+    }
+
+    .faq-answer p {
+      padding-bottom: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .faq-item input[type="checkbox"]:checked ~ .faq-question::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-item input[type="checkbox"]:checked ~ .faq-answer {
+      max-height: 1000px;
+      transition: max-height 1s ease-in-out;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 4rem 0;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .footer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .footer-brand {
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    .footer-copy {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    /* Media Queries for Desktop Overrides */
+    @media (min-width: 768px) {
+      .nav-link {
+        display: inline-block;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+      }
+      
+      .hero-sub {
+        font-size: 1.15rem;
+      }
+
+      .hero-ctas {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .benchmarks-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-title {
+        font-size: 3.75rem;
+        letter-spacing: -0.05em;
+      }
+
+      .section-title {
+        font-size: 2.25rem;
+      }
+
+      .benchmarks-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "mcp-injector",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, macOS, Windows",
+      "offers": [
+        {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free for codebases under 100,000 lines"
+        },
+        {
+          "@type": "Offer", 
+          "price": "12",
+          "priceCurrency": "USD",
+          "description": "Pro plan per month"
+        }
+      ],
+      "description": "Local MCP daemon that compresses codebases before sending them to Claude Code, Cursor, or VS Code.",
+      "url": "https://foldwork.dev"
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand">
+        Foldwork<span>.dev</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="#pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="container hero">
+    <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
+    <p class="hero-sub">mcp-injector is a local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code — using AST body folding and canonical determinism for maximum prompt cache hits.</p>
+    <div class="hero-ctas">
+      <a href="#install" class="btn btn-primary">Install Free →</a>
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
+    </div>
+    <p class="hero-caption">Free for codebases under 100,000 lines. No signup required.</p>
+  </header>
+
+  <!-- Benchmarks Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Real numbers on real codebases</h2>
+        <p class="section-sub">Run mcp-benchmark on your own repo to see your exact savings.</p>
+      </div>
+      
+      <div class="benchmarks-grid">
+        <!-- Django -->
+        <div class="bench-card">
+          <span class="bench-icon">🐍</span>
+          <h3 class="bench-name">Django Source</h3>
+          <div class="bench-stats">
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Total files scanned</span>
+              <span class="bench-stat-val">2,359</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Raw context tokens</span>
+              <span class="bench-stat-val">5,554,622</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Compressed context</span>
+              <span class="bench-stat-val">1,524,435</span>
+            </div>
+          </div>
+          <div class="bench-highlight">
+            <span class="bench-highlight-label">Reduction</span>
+            <span class="bench-highlight-val">72.6%</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>Saved per run</span>
+            <span class="bench-savings-val">$12.09</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>At 10 runs/day</span>
+            <span class="bench-savings-val">$3,627/mo</span>
+          </div>
+        </div>
+
+        <!-- Spring -->
+        <div class="bench-card popular">
+          <span class="popular-badge">Most Popular</span>
+          <span class="bench-icon">☕</span>
+          <h3 class="bench-name">Spring Framework</h3>
+          <div class="bench-stats">
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Total files scanned</span>
+              <span class="bench-stat-val">9,193</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Raw context tokens</span>
+              <span class="bench-stat-val">15,030,343</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Compressed context</span>
+              <span class="bench-stat-val">5,051,085</span>
+            </div>
+          </div>
+          <div class="bench-highlight">
+            <span class="bench-highlight-label">Reduction</span>
+            <span class="bench-highlight-val">66.4%</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>Saved per run</span>
+            <span class="bench-savings-val">$29.94</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>At 10 runs/day</span>
+            <span class="bench-savings-val">$8,981/mo</span>
+          </div>
+        </div>
+
+        <!-- Next.js -->
+        <div class="bench-card">
+          <span class="bench-icon">▲</span>
+          <h3 class="bench-name">Next.js Source</h3>
+          <div class="bench-stats">
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Total files scanned</span>
+              <span class="bench-stat-val">21,848</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Raw context tokens</span>
+              <span class="bench-stat-val">23,852,376</span>
+            </div>
+            <div class="bench-stat-row">
+              <span class="bench-stat-label">Compressed context</span>
+              <span class="bench-stat-val">4,967,583</span>
+            </div>
+          </div>
+          <div class="bench-highlight">
+            <span class="bench-highlight-label">Reduction</span>
+            <span class="bench-highlight-val">79.2%</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>Saved per run</span>
+            <span class="bench-savings-val">$56.65</span>
+          </div>
+          <div class="bench-savings-row">
+            <span>At 10 runs/day</span>
+            <span class="bench-savings-val">$16,996/mo</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="bench-footnote">* Based on Claude Sonnet pricing: $3.00/1M input tokens. Compression tier 3 (fold + strip). Reproducible: clone any repo above and run mcp-benchmark yourself.</p>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">How it works</h2>
+      </div>
+      
+      <div class="steps-grid">
+        <!-- Step 1 -->
+        <div class="step-card">
+          <div class="step-num-icon">📁</div>
+          <h3 class="step-title">Pre-indexes your codebase</h3>
+          <p class="step-desc">Runs as a persistent local daemon. Builds a SQLite index via file watchers — inotify on Linux, FSEvents on Mac. First query is sub-millisecond on any size codebase.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+          <div class="step-num-icon">🗜️</div>
+          <h3 class="step-title">AST body folding</h3>
+          <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, TypeScript, JavaScript, Java, Rust. Compression is fully reversible — Claude can retrieve full source when needed.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card">
+          <div class="step-num-icon">🎯</div>
+          <h3 class="step-title">Canonical determinism</h3>
+          <p class="step-desc">Files sorted alphabetically, volatile metadata stripped. Output is byte-identical on every run so Anthropic's KV prompt cache fires instead of invalidating. This is the feature other compressors miss.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card">
+          <div class="step-num-icon">💰</div>
+          <h3 class="step-title">You save money</h3>
+          <p class="step-desc">Fewer tokens sent. More cache hits. Two separate cost levers working simultaneously. No cloud, no telemetry, runs entirely on your machine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install Section -->
+  <section class="section" id="install">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Get started in 30 seconds</h2>
+      </div>
+
+      <div class="install-box">
+        <div class="install-tabs">
+          <div class="install-tab active" id="tab-unix">Mac / Linux</div>
+          <div class="install-tab" id="tab-win">Windows</div>
+        </div>
+        
+        <div class="install-content">
+          <!-- Unix Tab -->
+          <div id="content-unix">
+            <div class="code-wrapper">
+              <code class="code-block" id="code-unix">curl -fsSL https://foldwork.dev/install | sh</code>
+              <button class="copy-btn" onclick="copyCode('code-unix', this)">Copy</button>
+            </div>
+          </div>
+
+          <!-- Windows Tab -->
+          <div id="content-win" style="display: none;">
+            <div class="code-wrapper">
+              <code class="code-block" id="code-win"># Download from GitHub Releases
+https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
+              <button class="copy-btn" onclick="copyCode('code-win', this)">Copy</button>
+            </div>
+          </div>
+
+          <p class="install-meta">
+            Automatically detects and configures: Claude Desktop, Cursor, VS Code
+          </p>
+          <div class="ide-badges">
+            <div class="ide-badge">🤖 Claude Desktop</div>
+            <div class="ide-badge">⚡ Cursor</div>
+            <div class="ide-badge">💻 VS Code (Continue)</div>
+          </div>
+
+          <!-- Manual Setup -->
+          <div class="collapsible-container" style="margin-top: 2rem;">
+            <button class="collapsible-trigger" id="manual-trigger">Manual setup</button>
+            <div class="collapsible-content" id="manual-content">
+              <div class="code-wrapper">
+<code class="code-block" id="code-manual">{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "${workspaceFolder}"
+      }
+    }
+  }
+}</code>
+                <button class="copy-btn" onclick="copyCode('code-manual', this)">Copy</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Simple pricing</h2>
+        <p class="section-sub">Free for personal projects. Pay only when it makes financial sense.</p>
+      </div>
+
+      <div class="pricing-toggle-wrap">
+        <span class="pricing-toggle-label active" id="label-monthly">Monthly</span>
+        <label class="switch">
+          <input type="checkbox" id="price-toggle">
+          <span class="slider"></span>
+        </label>
+        <span class="pricing-toggle-label" id="label-yearly">Yearly (save 31%)</span>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="price-card">
+          <h3 class="price-title">Free</h3>
+          <div class="price-amt">$0 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ forever</span></div>
+          <ul class="price-features">
+            <li class="price-feature"><span>✓</span> Codebases under 100,000 lines</li>
+            <li class="price-feature"><span>✓</span> All languages (Go, Python, TS, JS, Java, Rust)</li>
+            <li class="price-feature"><span>✓</span> get_project_map tool</li>
+            <li class="price-feature"><span>✓</span> Basic CCR caching</li>
+            <li class="price-feature"><span>✓</span> No signup, no license key</li>
+          </ul>
+          <a href="#install" class="btn btn-secondary price-btn">Download Free →</a>
+        </div>
+
+        <!-- Pro Tier -->
+        <div class="price-card popular">
+          <span class="popular-badge">Most Popular</span>
+          <h3 class="price-title">Pro</h3>
+          <div class="price-amt" id="pro-price-amt">$12 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);" id="pro-price-period">/ month</span></div>
+          <ul class="price-features">
+            <li class="price-feature"><span>✓</span> Everything in Free</li>
+            <li class="price-feature"><span>✓</span> Unlimited codebase size</li>
+            <li class="price-feature"><span>✓</span> CCR log compaction & stack trace sanitizer</li>
+            <li class="price-feature"><span>✓</span> Git branch-diff tracking</li>
+            <li class="price-feature"><span>✓</span> Team licensing (3 seats)</li>
+            <li class="price-feature"><span>✓</span> Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-primary price-btn">Get Pro →</a>
+          <p class="price-subtext">At $12/month, mcp-injector pays for itself if you run a 100K+ line codebase through Claude just once.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Common questions</h2>
+      </div>
+
+      <div class="faq-accordion">
+        <!-- Q1 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-1">
+          <label class="faq-question" for="faq-1">Is my code sent anywhere?</label>
+          <div class="faq-answer">
+            <p>No. mcp-injector runs entirely on your machine. Your code never leaves your computer. The daemon reads files locally, compresses them locally, and serves them to your IDE via stdio transport. No cloud, no telemetry, no external API calls.</p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-2">
+          <label class="faq-question" for="faq-2">How is this different from Headroom?</label>
+          <div class="faq-answer">
+            <p>Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism — alphabetical file sorting and metadata stripping — so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-3">
+          <label class="faq-question" for="faq-3">What IDEs are supported?</label>
+          <div class="faq-answer">
+            <p>Claude Desktop, Cursor, and VS Code with Continue. The installer auto-detects which are installed and configures them automatically.</p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-4">
+          <label class="faq-question" for="faq-4">What languages are supported?</label>
+          <div class="faq-answer">
+            <p>Go, Python, TypeScript, JavaScript, Java, and Rust. Other file types pass through unmodified.</p>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-5">
+          <label class="faq-question" for="faq-5">What happens when Claude needs the full source?</label>
+          <div class="faq-answer">
+            <p>mcp-injector exposes an injector_retrieve tool. When Claude needs the complete implementation of a compressed function, it calls this tool to fetch the full original source. Compression is always reversible.</p>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="faq-item">
+          <input type="checkbox" id="faq-6">
+          <label class="faq-question" for="faq-6">Can I use this on a team?</label>
+          <div class="faq-answer">
+            <p>Yes. Pro includes 3 seats. Each developer runs their own local daemon — there's no shared server to manage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="mailto:hello@foldwork.dev" class="footer-link">hello@foldwork.dev</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for interactivity -->
+  <script>
+    // Tab toggling logic
+    const tabUnix = document.getElementById('tab-unix');
+    const tabWin = document.getElementById('tab-win');
+    const contentUnix = document.getElementById('content-unix');
+    const contentWin = document.getElementById('content-win');
+
+    tabUnix.addEventListener('click', () => {
+      tabUnix.classList.add('active');
+      tabWin.classList.remove('active');
+      contentUnix.style.display = 'block';
+      contentWin.style.display = 'none';
+    });
+
+    tabWin.addEventListener('click', () => {
+      tabWin.classList.add('active');
+      tabUnix.classList.remove('active');
+      contentWin.style.display = 'block';
+      contentUnix.style.display = 'none';
+    });
+
+    // Manual config accordion toggling logic
+    const manualTrigger = document.getElementById('manual-trigger');
+    const manualContent = document.getElementById('manual-content');
+
+    manualTrigger.addEventListener('click', () => {
+      manualTrigger.classList.toggle('active');
+      manualContent.classList.toggle('open');
+    });
+
+    // Pricing switch logic
+    const priceToggle = document.getElementById('price-toggle');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelYearly = document.getElementById('label-yearly');
+    const proPriceAmt = document.getElementById('pro-price-amt');
+    const proPricePeriod = document.getElementById('pro-price-period');
+
+    function updatePricing() {
+      if (priceToggle.checked) {
+        labelYearly.classList.add('active');
+        labelMonthly.classList.remove('active');
+        proPriceAmt.innerHTML = '$99 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ year</span>';
+      } else {
+        labelMonthly.classList.add('active');
+        labelYearly.classList.remove('active');
+        proPriceAmt.innerHTML = '$12 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ month</span>';
+      }
+    }
+
+    priceToggle.addEventListener('change', updatePricing);
+    labelMonthly.addEventListener('click', () => {
+      priceToggle.checked = false;
+      updatePricing();
+    });
+    labelYearly.addEventListener('click', () => {
+      priceToggle.checked = true;
+      updatePricing();
+    });
+
+    // Copy to clipboard function
+    function copyCode(codeElementId, buttonElement) {
+      const codeElement = document.getElementById(codeElementId);
+      if (!codeElement) return;
+
+      const textToCopy = codeElement.innerText || codeElement.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = buttonElement.innerText;
+        buttonElement.innerText = "Copied!";
+        buttonElement.style.borderColor = "var(--success)";
+        buttonElement.style.color = "var(--success)";
+        
+        setTimeout(() => {
+          buttonElement.innerText = originalText;
+          buttonElement.style.borderColor = "";
+          buttonElement.style.color = "";
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  </script>
+</body>
+</html>
