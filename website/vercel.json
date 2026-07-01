@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/install", "destination": "/install.sh" }
+  "redirects": [
+    { "source": "/install", "destination": "/install.sh", "permanent": true }
   ]
 }
