@@ -1136,7 +1136,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <li class="price-feature"><span>✓</span> Team licensing (3 seats)</li>
             <li class="price-feature"><span>✓</span> Priority support</li>
           </ul>
-          <a href="#" class="btn btn-primary price-btn">Get Pro →</a>
+          <a href="https://foldwork.lemonsqueezy.com/checkout/buy/1f234d29-3c87-47be-831a-5f7d3ed53713?embed=1" class="btn btn-primary price-btn lemonsqueezy-button" id="pro-checkout-btn">Get Pro →</a>
           <p class="price-subtext">At $12/month, mcp-injector pays for itself if you run a 100K+ line codebase through Claude just once.</p>
         </div>
       </div>
@@ -1258,15 +1258,25 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
     const proPriceAmt = document.getElementById('pro-price-amt');
     const proPricePeriod = document.getElementById('pro-price-period');
 
+    const monthlyCheckoutUrl = "https://foldwork.lemonsqueezy.com/checkout/buy/1f234d29-3c87-47be-831a-5f7d3ed53713?embed=1";
+    const yearlyCheckoutUrl = ""; // Add your Lemon Squeezy Yearly checkout link here!
+
     function updatePricing() {
+      const proCheckoutBtn = document.getElementById('pro-checkout-btn');
       if (priceToggle.checked) {
         labelYearly.classList.add('active');
         labelMonthly.classList.remove('active');
         proPriceAmt.innerHTML = '$99 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ year</span>';
+        if (proCheckoutBtn) {
+          proCheckoutBtn.href = yearlyCheckoutUrl || monthlyCheckoutUrl;
+        }
       } else {
         labelMonthly.classList.add('active');
         labelYearly.classList.remove('active');
         proPriceAmt.innerHTML = '$12 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ month</span>';
+        if (proCheckoutBtn) {
+          proCheckoutBtn.href = monthlyCheckoutUrl;
+        }
       }
     }
 
@@ -1303,5 +1313,6 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
       });
     }
   </script>
+  <script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
 </body>
 </html>
