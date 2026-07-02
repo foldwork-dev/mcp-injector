@@ -26,7 +26,7 @@ Estimate the impact of AST code compression on large open-source repositories (c
 Install the daemon locally and configure your IDEs:
 
 ```bash
-curl -fsSL https://mcp-injector.dev/install | sh
+curl -fsSL https://foldwork.dev/install | sh
 ```
 
 *Automatically configures **Claude Desktop**, **Cursor IDE**, and **VS Code (Continue)**.*
@@ -49,7 +49,7 @@ curl -fsSL https://mcp-injector.dev/install | sh
 
 * **Free Tier:** Workspaces under 100,000 total source lines (all tools and features fully active).
 * **Pro Tier ($12/month or $99/year):** Unlocks unlimited workspace sizes and high-speed incremental diff indexing.  
-👉 **[Activate Pro at foldwork.dev/mcp-injector](https://mcp-injector.dev)**
+👉 **[Activate Pro at foldwork.dev](https://www.foldwork.dev/#pricing)**
 
 ---
 
