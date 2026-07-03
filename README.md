@@ -37,6 +37,7 @@ curl -fsSL https://foldwork.dev/install | sh
 
 * **Persistent Local Daemon:** Indexes your repository structure into a high-performance WAL-mode SQLite database catalog.
 * **Smart File Watchers:** Monitors files incrementally via OS notification hooks (`inotify`/`FSEvents`) and local `git post-checkout` / `post-merge` triggers.
+* **Branch-Aware Re-indexing:** Installs a `post-checkout` git hook on startup. Switching branches triggers automatic workspace re-indexing. `get_project_map` always reflects your current branch including uncommitted changes.
 * **Canonical Output Determinism:** Guarantees byte-identical outputs across runs, maximizing Claude's **KV prompt caching** hits.
 * **Compress-Cache-Retrieve (CCR):** Employs lossless AST compression. The LLM gets the high-level outline and calls `injector_retrieve` to fetch raw file bodies on-demand.
 * **100% Local & Offline:** Running entirely on your local machine, keeping your intellectual property private and secure.
@@ -58,13 +59,6 @@ curl -fsSL https://foldwork.dev/install | sh
 * `get_project_map` — Generates a hierarchical outline of module exports, structures, and internal dependencies.
 * `injector_retrieve` — Resolves and retrieves the raw source code of any compressed symbol from the local cache.
 * `injector_stats` — Visualizes index status, current token savings, and CCR cache hit rates.
-
----
-
-## 🔑 SEO Keywords
-`Model Context Protocol`, `MCP server`, `Claude Desktop MCP`, `Cursor context optimizer`, `LLM prompt token compression`, `AST code folding`, `codebase context injection`, `AI agent coding context`, `context window optimization`, `prompt token optimizer`, `VS Code Continue MCP`.
-
----
 
 ## 📄 License
 
