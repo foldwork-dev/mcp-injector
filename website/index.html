@@ -7,13 +7,13 @@
   <!-- SEO Meta Tags -->
   <title>mcp-injector — Compress your codebase for Claude. Save 66-79% on tokens.</title>
   <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 66-79%. Free for codebases under 100K lines.">
-  <meta name="keywords" content="MCP server, Claude Code, context compression, token reduction, codebase indexing, LLM cost reduction, Claude API cost, Cursor MCP, VS Code MCP, prompt caching">
+  <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
 
   <!-- Open Graph -->
   <meta property="og:title" content="mcp-injector — 66-79% token reduction for Claude">
-  <meta property="og:description" content="Local MCP daemon. AST body folding. Canonical determinism for prompt cache hits. Free under 100K lines.">
+  <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 100K lines.">
   <meta property="og:url" content="https://foldwork.dev">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://foldwork.dev/og-image.png">
@@ -21,12 +21,12 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="mcp-injector — 66-79% token reduction for Claude">
-  <meta name="twitter:description" content="Local MCP daemon that compresses your codebase. Free for codebases under 100K lines.">
+  <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 100K lines.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
   <style>
@@ -681,10 +681,6 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .faq-item input[type="checkbox"] {
-      display: none;
-    }
-
     .faq-question {
       display: flex;
       justify-content: space-between;
@@ -695,20 +691,25 @@
       color: var(--text-white);
       cursor: pointer;
       user-select: none;
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      font-family: inherit;
     }
 
-    .faq-question::after {
-      content: '+';
+    .faq-icon {
       font-size: 1.25rem;
       font-weight: 500;
       color: var(--text-muted);
-      transition: transform 0.2s ease;
     }
 
     .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
     }
 
     .faq-answer p {
@@ -716,15 +717,6 @@
       color: var(--text-muted);
       font-size: 0.9375rem;
       line-height: 1.6;
-    }
-
-    .faq-item input[type="checkbox"]:checked ~ .faq-question::after {
-      transform: rotate(45deg);
-    }
-
-    .faq-item input[type="checkbox"]:checked ~ .faq-answer {
-      max-height: 1000px;
-      transition: max-height 1s ease-in-out;
     }
 
     /* Footer */
@@ -825,12 +817,16 @@
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "mcp-injector",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Linux, macOS, Windows",
+      "url": "https://foldwork.dev",
+      "description": "Local MCP daemon that compresses codebases before sending them to Claude Code, Cursor, or VS Code using AST body folding. Reduces token usage by 66-79%.",
       "offers": [
         {
           "@type": "Offer",
@@ -839,16 +835,89 @@
           "description": "Free for codebases under 100,000 lines"
         },
         {
-          "@type": "Offer", 
+          "@type": "Offer",
           "price": "12",
           "priceCurrency": "USD",
-          "description": "Pro plan per month"
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "billingDuration": "P1M"
+          },
+          "description": "Pro plan — unlimited codebase size"
         }
-      ],
-      "description": "Local MCP daemon that compresses codebases before sending them to Claude Code, Cursor, or VS Code.",
-      "url": "https://foldwork.dev"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my code sent anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. mcp-injector runs entirely on your machine. Your code never leaves your computer. The daemon reads files locally, compresses them locally, and serves them to your IDE via stdio transport. No cloud, no telemetry, no external API calls."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is this different from Headroom?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism so Anthropic's KV prompt cache fires on every session. You save tokens AND maximise cache hits simultaneously."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I reduce Claude API costs on large codebases?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector achieves 66-79% token reduction on real projects like Django, Spring Framework, and Next.js."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does mcp-injector work with Claude Code?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. mcp-injector is designed specifically for Claude Code, Cursor, and VS Code with Continue. The installer auto-detects which IDE you have installed and configures the MCP server automatically."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when I switch branches?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "mcp-injector installs a post-checkout git hook on startup. When you switch branches, the daemon automatically re-indexes your workspace. The get_project_map tool always reflects your current branch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What IDEs are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Claude Desktop, Cursor, and VS Code with Continue. The installer auto-detects which are installed and configures them automatically."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What languages are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Go, Python, TypeScript, JavaScript, Java, and Rust. Other file types pass through unmodified."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this on a team?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pro includes 3 seats. Each developer runs their own local daemon — there is no shared server to manage."
+          }
+        }
+      ]
     }
-  </script>
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -856,7 +925,7 @@
   <nav class="navbar">
     <div class="container nav-container">
       <a href="#" class="brand">
-        <svg class="brand-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+        <svg class="brand-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/>
           <path d="M2 17l10 5 10-5"/>
           <path d="M2 12l10 5 10-5"/>
@@ -874,7 +943,7 @@
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
-    <p class="hero-sub">mcp-injector is a local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code — using AST body folding and canonical determinism for maximum prompt cache hits.</p>
+    <p class="hero-sub">mcp-injector is a local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code — using AST body folding and deterministic output so Anthropic's prompt cache fires on every session — not just the first one.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
@@ -893,7 +962,7 @@
       <div class="benchmarks-grid">
         <!-- Django -->
         <div class="bench-card">
-          <span class="bench-icon">🐍</span>
+          <span class="bench-icon" alt="Django Python codebase benchmark">🐍</span>
           <h3 class="bench-name">Django Source</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
@@ -926,7 +995,7 @@
         <!-- Spring -->
         <div class="bench-card popular">
           <span class="popular-badge">Most Popular</span>
-          <span class="bench-icon">☕</span>
+          <span class="bench-icon" alt="Spring Framework Java codebase benchmark">☕</span>
           <h3 class="bench-name">Spring Framework</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
@@ -958,7 +1027,7 @@
 
         <!-- Next.js -->
         <div class="bench-card">
-          <span class="bench-icon">▲</span>
+          <span class="bench-icon" alt="Next.js TypeScript codebase benchmark">▲</span>
           <h3 class="bench-name">Next.js Source</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
@@ -993,6 +1062,19 @@
     </div>
   </section>
 
+<section style="max-width: 720px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; color: #8b949e; line-height: 1.7;">
+  <p>
+    Developers using Claude Code or Cursor on large codebases pay 
+    significantly more than necessary — raw file ingestion sends every 
+    comment, function body, and docstring to the model. mcp-injector 
+    reduces Claude API costs by compressing your codebase at the AST 
+    level before it reaches the context window, cutting token usage by 
+    66–79% without losing structural understanding. It works by 
+    pre-indexing your project into a local SQLite catalog and serving 
+    a compressed, deterministic snapshot to your IDE on every query.
+  </p>
+</section>
+
   <!-- How It Works Section -->
   <section class="section">
     <div class="container">
@@ -1003,28 +1085,28 @@
       <div class="steps-grid">
         <!-- Step 1 -->
         <div class="step-card">
-          <div class="step-num-icon">📁</div>
+          <div class="step-num-icon" alt="Pre-indexes codebase into SQLite">📁</div>
           <h3 class="step-title">Pre-indexes your codebase</h3>
           <p class="step-desc">Runs as a persistent local daemon. Builds a SQLite index via file watchers — inotify on Linux, FSEvents on Mac. First query is sub-millisecond on any size codebase.</p>
         </div>
 
         <!-- Step 2 -->
         <div class="step-card">
-          <div class="step-num-icon">🗜️</div>
+          <div class="step-num-icon" alt="AST body folding compression">🗜️</div>
           <h3 class="step-title">AST body folding</h3>
           <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, TypeScript, JavaScript, Java, Rust. Compression is fully reversible — Claude can retrieve full source when needed.</p>
         </div>
 
         <!-- Step 3 -->
         <div class="step-card">
-          <div class="step-num-icon">🎯</div>
+          <div class="step-num-icon" alt="Canonical determinism for prompt caching">🎯</div>
           <h3 class="step-title">Canonical determinism</h3>
           <p class="step-desc">Files sorted alphabetically, volatile metadata stripped. Output is byte-identical on every run so Anthropic's KV prompt cache fires instead of invalidating. This is the feature other compressors miss.</p>
         </div>
 
         <!-- Step 4 -->
         <div class="step-card">
-          <div class="step-num-icon">💰</div>
+          <div class="step-num-icon" alt="Save money on Claude API costs">💰</div>
           <h3 class="step-title">You save money</h3>
           <p class="step-desc">Fewer tokens sent. More cache hits. Two separate cost levers working simultaneously. No cloud, no telemetry, runs entirely on your machine.</p>
         </div>
@@ -1122,8 +1204,8 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           <ul class="price-features">
             <li class="price-feature"><span>✓</span> Codebases under 100,000 lines</li>
             <li class="price-feature"><span>✓</span> All languages (Go, Python, TS, JS, Java, Rust)</li>
-            <li class="price-feature"><span>✓</span> get_project_map tool</li>
-            <li class="price-feature"><span>✓</span> Basic CCR caching</li>
+            <li class="price-feature"><span>✓</span> Instant codebase structure map</li>
+            <li class="price-feature"><span>✓</span> Incremental file indexing</li>
             <li class="price-feature"><span>✓</span> No signup, no license key</li>
           </ul>
           <a href="#install" class="btn btn-secondary price-btn">Download Free →</a>
@@ -1159,8 +1241,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
       <div class="faq-accordion">
         <!-- Q1 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-1">
-          <label class="faq-question" for="faq-1">Is my code sent anywhere?</label>
+          <button class="faq-question" type="button">
+            <span>Is my code sent anywhere?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>No. mcp-injector runs entirely on your machine. Your code never leaves your computer. The daemon reads files locally, compresses them locally, and serves them to your IDE via stdio transport. No cloud, no telemetry, no external API calls.</p>
           </div>
@@ -1168,8 +1252,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
         <!-- Q2 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-2">
-          <label class="faq-question" for="faq-2">How is this different from Headroom?</label>
+          <button class="faq-question" type="button">
+            <span>How is this different from Headroom?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism — alphabetical file sorting and metadata stripping — so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
           </div>
@@ -1177,8 +1263,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
         <!-- Q3 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-3">
-          <label class="faq-question" for="faq-3">What IDEs are supported?</label>
+          <button class="faq-question" type="button">
+            <span>What IDEs are supported?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>Claude Desktop, Cursor, and VS Code with Continue. The installer auto-detects which are installed and configures them automatically.</p>
           </div>
@@ -1186,8 +1274,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
         <!-- Q4 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-4">
-          <label class="faq-question" for="faq-4">What languages are supported?</label>
+          <button class="faq-question" type="button">
+            <span>What languages are supported?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>Go, Python, TypeScript, JavaScript, Java, and Rust. Other file types pass through unmodified.</p>
           </div>
@@ -1195,8 +1285,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
         <!-- Q5 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-5">
-          <label class="faq-question" for="faq-5">What happens when Claude needs the full source?</label>
+          <button class="faq-question" type="button">
+            <span>What happens when Claude needs the full source?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>mcp-injector exposes an injector_retrieve tool. When Claude needs the complete implementation of a compressed function, it calls this tool to fetch the full original source. Compression is always reversible.</p>
           </div>
@@ -1204,10 +1296,45 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
         <!-- Q6 -->
         <div class="faq-item">
-          <input type="checkbox" id="faq-6">
-          <label class="faq-question" for="faq-6">Can I use this on a team?</label>
+          <button class="faq-question" type="button">
+            <span>Can I use this on a team?</span>
+            <span class="faq-icon">+</span>
+          </button>
           <div class="faq-answer">
             <p>Yes. Pro includes 3 seats. Each developer runs their own local daemon — there's no shared server to manage.</p>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>How do I reduce Claude API costs on large codebases?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding — stripping function bodies while keeping signatures and imports — achieving 66–79% token reduction on real projects like Django, Spring Framework, and Next.js. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>Does mcp-injector work with Claude Code?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. mcp-injector is designed specifically for Claude Code, Cursor, and VS Code with Continue. The installer auto-detects which IDE you have installed and configures the MCP server config automatically. Once installed, Claude has visibility into your entire codebase structure at a fraction of the normal token cost — with no manual configuration required.</p>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>What happens when I switch branches?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>mcp-injector installs a post-checkout git hook on startup. When you switch branches, the daemon automatically detects the change and re-indexes your workspace within seconds. The get_project_map tool always reflects your current branch, including whether you have uncommitted changes. This works in detached HEAD state too.</p>
           </div>
         </div>
       </div>
@@ -1228,75 +1355,100 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
   <!-- Script for interactivity -->
   <script>
-    // Tab toggling logic
-    const tabUnix = document.getElementById('tab-unix');
-    const tabWin = document.getElementById('tab-win');
-    const contentUnix = document.getElementById('content-unix');
-    const contentWin = document.getElementById('content-win');
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tab toggling logic
+      const tabUnix = document.getElementById('tab-unix');
+      const tabWin = document.getElementById('tab-win');
+      const contentUnix = document.getElementById('content-unix');
+      const contentWin = document.getElementById('content-win');
 
-    tabUnix.addEventListener('click', () => {
-      tabUnix.classList.add('active');
-      tabWin.classList.remove('active');
-      contentUnix.style.display = 'block';
-      contentWin.style.display = 'none';
-    });
+      if (tabUnix && tabWin && contentUnix && contentWin) {
+        tabUnix.addEventListener('click', () => {
+          tabUnix.classList.add('active');
+          tabWin.classList.remove('active');
+          contentUnix.style.display = 'block';
+          contentWin.style.display = 'none';
+        });
 
-    tabWin.addEventListener('click', () => {
-      tabWin.classList.add('active');
-      tabUnix.classList.remove('active');
-      contentWin.style.display = 'block';
-      contentUnix.style.display = 'none';
-    });
+        tabWin.addEventListener('click', () => {
+          tabWin.classList.add('active');
+          tabUnix.classList.remove('active');
+          contentWin.style.display = 'block';
+          contentUnix.style.display = 'none';
+        });
+      }
 
-    // Manual config accordion toggling logic
-    const manualTrigger = document.getElementById('manual-trigger');
-    const manualContent = document.getElementById('manual-content');
+      // Manual config accordion toggling logic
+      const manualTrigger = document.getElementById('manual-trigger');
+      const manualContent = document.getElementById('manual-content');
 
-    manualTrigger.addEventListener('click', () => {
-      manualTrigger.classList.toggle('active');
-      manualContent.classList.toggle('open');
-    });
+      if (manualTrigger && manualContent) {
+        manualTrigger.addEventListener('click', () => {
+          manualTrigger.classList.toggle('active');
+          manualContent.classList.toggle('open');
+        });
+      }
 
-    // Pricing switch logic
-    const priceToggle = document.getElementById('price-toggle');
-    const labelMonthly = document.getElementById('label-monthly');
-    const labelYearly = document.getElementById('label-yearly');
-    const proPriceAmt = document.getElementById('pro-price-amt');
-    const proPricePeriod = document.getElementById('pro-price-period');
+      // Pricing switch logic
+      const priceToggle = document.getElementById('price-toggle');
+      const labelMonthly = document.getElementById('label-monthly');
+      const labelYearly = document.getElementById('label-yearly');
+      const proPriceAmt = document.getElementById('pro-price-amt');
 
-    const monthlyCheckoutUrl = "https://foldwork.lemonsqueezy.com/checkout/buy/1f234d29-3c87-47be-831a-5f7d3ed53713?embed=1";
-    const yearlyCheckoutUrl = ""; // Add your Lemon Squeezy Yearly checkout link here!
+      const monthlyCheckoutUrl = "https://foldwork.lemonsqueezy.com/checkout/buy/1f234d29-3c87-47be-831a-5f7d3ed53713?embed=1";
+      const yearlyCheckoutUrl = ""; // Add your Lemon Squeezy Yearly checkout link here!
 
-    function updatePricing() {
-      const proCheckoutBtn = document.getElementById('pro-checkout-btn');
-      if (priceToggle.checked) {
-        labelYearly.classList.add('active');
-        labelMonthly.classList.remove('active');
-        proPriceAmt.innerHTML = '$99 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ year</span>';
-        if (proCheckoutBtn) {
-          proCheckoutBtn.href = yearlyCheckoutUrl || monthlyCheckoutUrl;
-        }
-      } else {
-        labelMonthly.classList.add('active');
-        labelYearly.classList.remove('active');
-        proPriceAmt.innerHTML = '$12 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ month</span>';
-        if (proCheckoutBtn) {
-          proCheckoutBtn.href = monthlyCheckoutUrl;
+      function updatePricing() {
+        const proCheckoutBtn = document.getElementById('pro-checkout-btn');
+        if (priceToggle.checked) {
+          labelYearly.classList.add('active');
+          labelMonthly.classList.remove('active');
+          proPriceAmt.innerHTML = '$99 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ year</span>';
+          if (proCheckoutBtn) {
+            proCheckoutBtn.href = yearlyCheckoutUrl || monthlyCheckoutUrl;
+          }
+        } else {
+          labelMonthly.classList.add('active');
+          labelYearly.classList.remove('active');
+          proPriceAmt.innerHTML = '$12 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ month</span>';
+          if (proCheckoutBtn) {
+            proCheckoutBtn.href = monthlyCheckoutUrl;
+          }
         }
       }
-    }
 
-    priceToggle.addEventListener('change', updatePricing);
-    labelMonthly.addEventListener('click', () => {
-      priceToggle.checked = false;
-      updatePricing();
-    });
-    labelYearly.addEventListener('click', () => {
-      priceToggle.checked = true;
-      updatePricing();
+      if (priceToggle && labelMonthly && labelYearly && proPriceAmt) {
+        priceToggle.addEventListener('change', updatePricing);
+        labelMonthly.addEventListener('click', () => {
+          priceToggle.checked = false;
+          updatePricing();
+        });
+        labelYearly.addEventListener('click', () => {
+          priceToggle.checked = true;
+          updatePricing();
+        });
+      }
+
+      // FAQ accordion toggling logic
+      document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.parentElement;
+          const isOpen = item.classList.contains('open');
+          // Close all
+          document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-icon').textContent = '+';
+          });
+          // Open clicked if it was closed
+          if (!isOpen) {
+            item.classList.add('open');
+            item.querySelector('.faq-icon').textContent = '×';
+          }
+        });
+      });
     });
 
-    // Copy to clipboard function
+    // Copy to clipboard function (needs to be global as it's referenced inline in onclick attributes)
     function copyCode(codeElementId, buttonElement) {
       const codeElement = document.getElementById(codeElementId);
       if (!codeElement) return;

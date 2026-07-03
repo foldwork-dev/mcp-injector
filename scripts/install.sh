@@ -16,6 +16,18 @@ echo -e "  mcp-injector installer"
 echo -e "${GREEN}===================================================================${NC}"
 echo ""
 
+# Check dependencies
+if ! command -v curl &> /dev/null; then
+  echo -e "${RED}Error: curl is required to run this installer.${NC}" >&2
+  exit 1
+fi
+
+if ! command -v python3 &> /dev/null; then
+  echo -e "${RED}Error: python3 is required to configure IDEs.${NC}" >&2
+  exit 1
+fi
+
+
 # 1. Detect OS & Architecture
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
@@ -224,6 +236,24 @@ if [[ "$VSCODE_STATUS" == ✓* ]]; then
 else
   echo -e "  $VSCODE_STATUS"
 fi
+
+# Warn if installed to user home bin and not in PATH
+if [[ "$BIN_DEST" == *"$HOME/.local/bin"* ]]; then
+  if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo ""
+    echo -e "${YELLOW}⚠ Warning: $HOME/.local/bin is not in your PATH.${NC}"
+    echo -e "  You may need to add it to your shell profile (e.g. ~/.bashrc or ~/.zshrc):"
+    echo -e "  export PATH=\$PATH:\$HOME/.local/bin"
+  fi
+fi
+
+# Notify if no IDE configured
+if [[ "$CLAUDE_STATUS" != ✓* && "$CURSOR_STATUS" != ✓* && "$VSCODE_STATUS" != ✓* ]]; then
+  echo ""
+  echo -e "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
+  echo -e "  To manually integrate mcp-injector with your AI tools, please refer to"
+  echo -e "  the documentation at https://foldwork.dev or create your tool config file manually."
+fi
 echo ""
 
 # 7. Run post-install benchmark
@@ -233,6 +263,10 @@ echo ""
 
 echo ""
 echo -e "${GREEN}===================================================================${NC}"
-echo "  You're all set. Restart your IDE and mcp-injector will be active."
+if [[ "$CLAUDE_STATUS" != ✓* && "$CURSOR_STATUS" != ✓* && "$VSCODE_STATUS" != ✓* ]]; then
+  echo "  Installation complete! Please configure your IDE/client manually."
+else
+  echo "  You're all set. Restart your IDE and mcp-injector will be active."
+fi
 echo "  Docs: https://foldwork.dev"
 echo -e "${GREEN}===================================================================${NC}"
