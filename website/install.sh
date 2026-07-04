@@ -2,9 +2,8 @@
 # ─── mcp-injector Zero-Config Installer ───────────────────────────────────────
 #
 # Detects OS and architecture, downloads/installs the binaries, and configures
-# Claude Desktop, Cursor, and VS Code.
 # ─────────────────────────────────────────────────────────────────────────────
-set -euo pipefail
+set -eu
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
