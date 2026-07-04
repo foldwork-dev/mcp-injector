@@ -15,6 +15,7 @@ All notable changes to mcp-injector are documented here.
 
 **MCP tools exposed:**
 - `get_project_map` - compressed codebase structure with module graph, entry points, dependency map
+- `unfolded_files` parameter in `get_project_map` - selective bypass of AST folding for specific files
 - `injector_retrieve` - fetch full uncompressed source for any file or symbol
 - `injector_stats` - current compression ratio, cache hit rate, workspace line count
 

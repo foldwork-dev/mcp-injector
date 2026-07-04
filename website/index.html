@@ -1143,6 +1143,16 @@
           <h3 class="step-title">Switching between branches mid-session</h3>
           <p class="step-desc">When you switch branches, mcp-injector detects the checkout via a git hook and re-indexes automatically. Claude's context reflects your current branch within seconds, not whenever you remember to re-run a context tool.</p>
         </div>
+
+        <div class="step-card">
+          <h3 class="step-title">Preventing accidental secret leaks</h3>
+          <p class="step-desc">Security teams block AI tools because developers accidentally leak AWS and SSH keys. mcp-injector includes a local Shannon entropy filter that dynamically masks high-entropy secrets from the AST before they ever leave your machine.</p>
+        </div>
+
+        <div class="step-card">
+          <h3 class="step-title">Zero bloat. Sub-150MB footprint.</h3>
+          <p class="step-desc">Written in pure Go, mcp-injector is incredibly lightweight. A massive 50-million token, 45,000-file enterprise monorepo takes just 25 seconds to index and idles at under 130MB of RAM. No Electron, no JVM, no dependency hell.</p>
+        </div>
       </div>
     </div>
   </section>

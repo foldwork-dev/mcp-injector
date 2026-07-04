@@ -145,16 +145,20 @@ mcp-injector installs a `post-checkout` git hook when it first runs. Branch swit
 [mcp-injector] Re-index complete in 4.2s (47,293 lines indexed)
 ```
 
-### Secret filtering
+### Security First: Zero-Leak Guarantee
 
-mcp-injector automatically redacts credentials before they reach Claude's context. If your codebase has a hardcoded API key or AWS credential, the `get_project_map` response will include:
+Enterprise security teams often block AI coding tools because developers accidentally leak sensitive credentials in their context window. 
+
+mcp-injector solves this locally. The daemon includes a built-in Shannon entropy filter that analyzes all AST strings and comments in real-time. If it detects high-entropy strings (like AWS Access Keys, SSH private keys, or database passwords), it dynamically redacts them as `[REDACTED: high entropy]` *before* they ever leave your machine. Your API credentials are never sent to Anthropic.
+
+If your codebase has a hardcoded API key or AWS credential, the `get_project_map` response will include:
 
 ```json
 "secrets_redacted": 2,
 "files_with_redactions": ["config/db.go", "scripts/deploy.sh"]
 ```
 
-The actual values are replaced with `[REDACTED BY MCP-INJECTOR]`. Variable names are preserved so Claude still understands the code structure.
+The actual values are replaced with `[REDACTED: high entropy]`. Variable names are preserved so Claude still understands the code structure.
 
 ### Manual MCP configuration
 
