@@ -11,19 +11,19 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${GREEN}===================================================================${NC}"
-echo -e "  mcp-injector installer"
-echo -e "${GREEN}===================================================================${NC}"
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
+printf \"%b\n\" "  mcp-injector installer"
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
 echo ""
 
 # Check dependencies
-if ! command -v curl &> /dev/null; then
-  echo -e "${RED}Error: curl is required to run this installer.${NC}" >&2
+if ! command -v curl > /dev/null 2>&1; then
+  printf \"%b\n\" "${RED}Error: curl is required to run this installer.${NC}" >&2
   exit 1
 fi
 
-if ! command -v python3 &> /dev/null; then
-  echo -e "${RED}Error: python3 is required to configure IDEs.${NC}" >&2
+if ! command -v python3 > /dev/null 2>&1; then
+  printf \"%b\n\" "${RED}Error: python3 is required to configure IDEs.${NC}" >&2
   exit 1
 fi
 
@@ -54,7 +54,7 @@ BENCHMARK_DEST="$INSTALL_DIR/mcp-benchmark"
 USE_SUDO=""
 if [ "$OS" != "windows" ]; then
   if [ ! -w "$INSTALL_DIR" ]; then
-    if [ "$EUID" -ne 0 ]; then
+    if [ "$(id -u)" -ne 0 ]; then
       if sudo -n true 2>/dev/null; then
         USE_SUDO="sudo"
       else
@@ -78,9 +78,9 @@ DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/downl
 BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH"
 
 if curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
-  echo -e "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
+  printf \"%b\n\" "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
 else
-  echo -e "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
+  printf \"%b\n\" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
   if [ -f "./mcp-injector" ]; then
     cp "./mcp-injector" "$TMP_BIN"
   else
@@ -89,9 +89,9 @@ else
 fi
 
 if curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
-  echo -e "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
+  printf \"%b\n\" "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
 else
-  echo -e "${YELLOW}⚠${NC} Release download failed. Compiling/copying local benchmark binary..."
+  printf \"%b\n\" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local benchmark binary..."
   if [ -f "./mcp-benchmark" ]; then
     cp "./mcp-benchmark" "$TMP_BENCHMARK"
   elif [ -f "./benchmark" ]; then
@@ -112,7 +112,7 @@ else
   cp "$TMP_BIN" "$BIN_DEST"
   cp "$TMP_BENCHMARK" "$BENCHMARK_DEST"
 fi
-echo -e "${GREEN}✓${NC} Binaries installed successfully."
+printf \"%b\n\" "${GREEN}✓${NC} Binaries installed successfully."
 
 # 4. Resolve IDE config paths
 CLAUDE_CONFIG=""
@@ -214,45 +214,45 @@ fi
 
 # 6. Print Installation Summary
 echo ""
-echo -e "${GREEN}===================================================================${NC}"
-echo -e "  Installation Summary"
-echo -e "${GREEN}===================================================================${NC}"
-echo -e "  ✓ mcp-injector installed to $BIN_DEST"
-echo -e "  ✓ mcp-benchmark installed to $BENCHMARK_DEST"
-if [[ "$CLAUDE_STATUS" == ✓* ]]; then
-  echo -e "  ${GREEN}$CLAUDE_STATUS${NC}"
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
+printf \"%b\n\" "  Installation Summary"
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
+printf \"%b\n\" "  ✓ mcp-injector installed to $BIN_DEST"
+printf \"%b\n\" "  ✓ mcp-benchmark installed to $BENCHMARK_DEST"
+if echo \"$CLAUDE_STATUS\" | grep -q \"^✓\"; then
+  printf \"%b\n\" "  ${GREEN}$CLAUDE_STATUS${NC}"
 else
-  echo -e "  $CLAUDE_STATUS"
+  printf \"%b\n\" "  $CLAUDE_STATUS"
 fi
 
-if [[ "$CURSOR_STATUS" == ✓* ]]; then
-  echo -e "  ${GREEN}$CURSOR_STATUS${NC}"
+if echo \"$CURSOR_STATUS\" | grep -q \"^✓\"; then
+  printf \"%b\n\" "  ${GREEN}$CURSOR_STATUS${NC}"
 else
-  echo -e "  $CURSOR_STATUS"
+  printf \"%b\n\" "  $CURSOR_STATUS"
 fi
 
-if [[ "$VSCODE_STATUS" == ✓* ]]; then
-  echo -e "  ${GREEN}$VSCODE_STATUS${NC}"
+if echo \"$VSCODE_STATUS\" | grep -q \"^✓\"; then
+  printf \"%b\n\" "  ${GREEN}$VSCODE_STATUS${NC}"
 else
-  echo -e "  $VSCODE_STATUS"
+  printf \"%b\n\" "  $VSCODE_STATUS"
 fi
 
 # Warn if installed to user home bin and not in PATH
-if [[ "$BIN_DEST" == *"$HOME/.local/bin"* ]]; then
-  if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
+  if ! echo ":$PATH:" | grep -q ":$HOME/.local/bin:"; then
     echo ""
-    echo -e "${YELLOW}⚠ Warning: $HOME/.local/bin is not in your PATH.${NC}"
-    echo -e "  You may need to add it to your shell profile (e.g. ~/.bashrc or ~/.zshrc):"
-    echo -e "  export PATH=\$PATH:\$HOME/.local/bin"
+    printf \"%b\n\" "${YELLOW}⚠ Warning: $HOME/.local/bin is not in your PATH.${NC}"
+    printf \"%b\n\" "  You may need to add it to your shell profile (e.g. ~/.bashrc or ~/.zshrc):"
+    printf \"%b\n\" "  export PATH=\$PATH:\$HOME/.local/bin"
   fi
 fi
 
 # Notify if no IDE configured
-if [[ "$CLAUDE_STATUS" != ✓* && "$CURSOR_STATUS" != ✓* && "$VSCODE_STATUS" != ✓* ]]; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS" | grep -q "✓"; then
   echo ""
-  echo -e "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
-  echo -e "  To manually integrate mcp-injector with your AI tools, please refer to"
-  echo -e "  the documentation at https://foldwork.dev or create your tool config file manually."
+  printf \"%b\n\" "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
+  printf \"%b\n\" "  To manually integrate mcp-injector with your AI tools, please refer to"
+  printf \"%b\n\" "  the documentation at https://foldwork.dev or create your tool config file manually."
 fi
 echo ""
 
@@ -262,11 +262,11 @@ echo ""
 "$BENCHMARK_DEST" . || true
 
 echo ""
-echo -e "${GREEN}===================================================================${NC}"
-if [[ "$CLAUDE_STATUS" != ✓* && "$CURSOR_STATUS" != ✓* && "$VSCODE_STATUS" != ✓* ]]; then
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS" | grep -q "✓"; then
   echo "  Installation complete! Please configure your IDE/client manually."
 else
   echo "  You're all set. Restart your IDE and mcp-injector will be active."
 fi
 echo "  Docs: https://foldwork.dev"
-echo -e "${GREEN}===================================================================${NC}"
+printf \"%b\n\" "${GREEN}===================================================================${NC}"
