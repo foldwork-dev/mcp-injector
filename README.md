@@ -50,7 +50,7 @@ curl -fsSL https://foldwork.dev/install | sh
 
 * **Free Tier:** Workspaces under 100,000 total source lines (all tools and features fully active).
 * **Pro Tier ($12/month or $99/year):** Unlocks unlimited workspace sizes and high-speed incremental diff indexing.  
-👉 **[Activate Pro at foldwork.dev](https://www.foldwork.dev/#pricing)**
+👉 **[Activate Pro at foldwork.dev](https://foldwork.dev/#pricing)**
 
 ---
 
@@ -92,7 +92,44 @@ Your code never leaves your machine. Redaction happens locally before compressio
 
 ---
 
+## 🗑️ Uninstall
+
+To remove mcp-injector completely:
+
+```bash
+# Remove binary
+sudo rm /usr/local/bin/mcp-injector
+
+# Remove index cache and logs
+rm -rf ~/.mcp-injector/
+
+# Remove from Claude Desktop config (edit manually):
+# ~/.config/Claude/claude_desktop_config.json   (Linux)
+# ~/Library/Application Support/Claude/claude_desktop_config.json  (macOS)
+# Remove the "mcp-injector" entry from mcpServers
+```
+
+---
+
+## 🔐 What Gets Redacted
+
+mcp-injector automatically redacts the following before your code reaches Claude:
+
+| Pattern | Example Match |
+| :--- | :--- |
+| AWS access key IDs | `AKIAIOSFODNN7EXAMPLE` |
+| GitHub PATs (ghp_, ghs_) | `ghp_aBcDeFg...` |
+| Stripe secret keys | `sk_live_abc...` / `sk_test_abc...` |
+| JWT tokens | `eyJ...` |
+| PEM private key headers | `-----BEGIN RSA PRIVATE KEY-----` |
+| Generic high-entropy strings >20 chars | Detected via Shannon entropy |
+| Password / secret / token assignments | `password = "abc123"` |
+
+Redacted values are replaced with `[REDACTED BY MCP-INJECTOR]`. File paths and variable **names** are never redacted — only the values.
+
+---
+
 ## 📄 License
 
 Commercial. Free tier available. Source code not public.  
-Support Contact: [contact@foldwork.dev](mailto:contact@foldwork.dev)
+Support Contact: [hello@foldwork.dev](mailto:hello@foldwork.dev)
