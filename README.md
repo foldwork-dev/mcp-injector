@@ -56,9 +56,41 @@ curl -fsSL https://foldwork.dev/install | sh
 
 ## 🔌 Exposed MCP Tools
 
-* `get_project_map` — Generates a hierarchical outline of module exports, structures, and internal dependencies.
+* **`get_project_map`** — Generates a hierarchical outline of module exports, structures, and internal dependencies.
+  * `unfolded_files` parameter: pass specific file paths or glob patterns to receive those files uncompressed while everything else stays folded.
+  * `git_context`: always includes current branch, changed files, and recent commits in the response.
+  * `secrets_redacted`: count of credentials automatically redacted before sending to Claude.
+
+  Example call:
+  ```json
+  {
+    "tool": "get_project_map",
+    "arguments": {
+      "tier": 3,
+      "unfolded_files": ["src/auth/handler.go", "**/*_test.go"]
+    }
+  }
+  ```
+
 * `injector_retrieve` — Resolves and retrieves the raw source code of any compressed symbol from the local cache.
 * `injector_stats` — Visualizes index status, current token savings, and CCR cache hit rates.
+
+---
+
+## 🔒 Security
+
+mcp-injector automatically redacts secrets and credentials before they reach Claude's context window:
+
+- AWS access keys, GitHub PATs, Stripe secret keys
+- JWT tokens and bearer tokens
+- High-entropy strings detected via Shannon entropy analysis
+- Private key headers (`-----BEGIN RSA PRIVATE KEY-----`)
+
+Redacted content is replaced with `[REDACTED BY MCP-INJECTOR]`. A count of redactions is included in the `get_project_map` response so you always know what was protected.
+
+Your code never leaves your machine. Redaction happens locally before compression, and is always-on — it cannot be disabled.
+
+---
 
 ## 📄 License
 

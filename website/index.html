@@ -867,6 +867,14 @@
         },
         {
           "@type": "Question",
+          "name": "How is this different from Repomix?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Repomix is a one-shot CLI tool — it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch. More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism — so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time. Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "How do I reduce Claude API costs on large codebases?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -1258,6 +1266,19 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           </button>
           <div class="faq-answer">
             <p>Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism — alphabetical file sorting and metadata stripping — so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
+          </div>
+        </div>
+
+        <!-- Q2b: Repomix comparison -->
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>How is this different from Repomix?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Repomix is a one-shot CLI tool — it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch.</p>
+            <p style="padding-top:0.75rem;">More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism — so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time.</p>
+            <p style="padding-top:0.75rem;">Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper.</p>
           </div>
         </div>
 
