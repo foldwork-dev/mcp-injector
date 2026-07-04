@@ -119,11 +119,11 @@ CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
 
-if [ "$OS" == "darwin" ]; then
+if [ \"$OS\" = \"darwin\" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   VSCODE_CONFIG="$HOME/.continue/config.json"
-elif [ "$OS" == "windows" ]; then
+elif [ \"$OS\" = \"windows\" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
   VSCODE_CONFIG="${USERPROFILE:-}/.continue/config.json"
@@ -183,7 +183,7 @@ VSCODE_STATUS="✗ VS Code with Continue not detected"
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
 if [ -d "$CLAUDE_DIR" ] || [ -f "$CLAUDE_CONFIG" ]; then
   res=$(merge_config "$CLAUDE_CONFIG" "$BIN_DEST")
-  if [ "$res" == "SUCCESS" ]; then
+  if [ \"$res\" = \"SUCCESS\" ]; then
     CLAUDE_STATUS="✓ Claude Desktop configured"
   else
     CLAUDE_STATUS="⚠ Claude Desktop: manual config required: $res"
@@ -194,7 +194,7 @@ fi
 CURSOR_DIR=$(dirname "$CURSOR_CONFIG")
 if [ -d "$CURSOR_DIR" ] || [ -f "$CURSOR_CONFIG" ]; then
   res=$(merge_config "$CURSOR_CONFIG" "$BIN_DEST")
-  if [ "$res" == "SUCCESS" ]; then
+  if [ \"$res\" = \"SUCCESS\" ]; then
     CURSOR_STATUS="✓ Cursor configured"
   else
     CURSOR_STATUS="⚠ Cursor: manual config required: $res"
@@ -205,7 +205,7 @@ fi
 VSCODE_DIR=$(dirname "$VSCODE_CONFIG")
 if [ -d "$VSCODE_DIR" ] || [ -f "$VSCODE_CONFIG" ]; then
   res=$(merge_config "$VSCODE_CONFIG" "$BIN_DEST")
-  if [ "$res" == "SUCCESS" ]; then
+  if [ \"$res\" = \"SUCCESS\" ]; then
     VSCODE_STATUS="✓ VS Code with Continue configured"
   else
     VSCODE_STATUS="⚠ VS Code with Continue: manual config required: $res"
