@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO Meta Tags -->
-  <title>mcp-injector — Compress your codebase for Claude. Save 66-79% on tokens.</title>
+  <title>mcp-injector - Compress your codebase for Claude. Save 66-79% on tokens.</title>
   <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 66-79%. Free for codebases under 100K lines.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="mcp-injector — 66-79% token reduction for Claude">
+  <meta property="og:title" content="mcp-injector - 66-79% token reduction for Claude">
   <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 100K lines.">
   <meta property="og:url" content="https://foldwork.dev">
   <meta property="og:type" content="website">
@@ -20,7 +20,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="mcp-injector — 66-79% token reduction for Claude">
+  <meta name="twitter:title" content="mcp-injector - 66-79% token reduction for Claude">
   <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 100K lines.">
 
   <!-- Google Fonts -->
@@ -842,7 +842,7 @@
             "@type": "UnitPriceSpecification",
             "billingDuration": "P1M"
           },
-          "description": "Pro plan — unlimited codebase size"
+          "description": "Pro plan - unlimited codebase size"
         }
       ]
     },
@@ -870,7 +870,7 @@
           "name": "How is this different from Repomix?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Repomix is a one-shot CLI tool — it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch. More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism — so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time. Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper."
+            "text": "Repomix is a one-shot CLI tool - it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch. More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism - so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time. Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper."
           }
         },
         {
@@ -918,7 +918,7 @@
           "name": "Can I use this on a team?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Pro includes 3 seats. Each developer runs their own local daemon — there is no shared server to manage."
+            "text": "Yes. Pro includes 3 seats. Each developer runs their own local daemon - there is no shared server to manage."
           }
         }
       ]
@@ -951,7 +951,7 @@
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
-    <p class="hero-sub">mcp-injector is a local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code — using AST body folding and deterministic output so Anthropic's prompt cache fires on every session — not just the first one.</p>
+    <p class="hero-sub">Claude Code only sees your open files. On a large codebase it misses context constantly - wrong suggestions, incomplete refactors, 'I don't have access to that file.'<br><br>mcp-injector gives Claude your entire codebase at 1/5th the token cost. Runs locally. No cloud. Free under 100K lines.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
@@ -970,7 +970,7 @@
       <div class="benchmarks-grid">
         <!-- Django -->
         <div class="bench-card">
-          <span class="bench-icon" alt="Django Python codebase benchmark">🐍</span>
+          <span class="bench-icon" alt="Django Python codebase benchmark"></span>
           <h3 class="bench-name">Django Source</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
@@ -1073,7 +1073,7 @@
 <section style="max-width: 720px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; color: #8b949e; line-height: 1.7;">
   <p>
     Developers using Claude Code or Cursor on large codebases pay 
-    significantly more than necessary — raw file ingestion sends every 
+    significantly more than necessary - raw file ingestion sends every 
     comment, function body, and docstring to the model. mcp-injector 
     reduces Claude API costs by compressing your codebase at the AST 
     level before it reaches the context window, cutting token usage by 
@@ -1093,35 +1093,59 @@
       <div class="steps-grid">
         <!-- Step 1 -->
         <div class="step-card">
-          <div class="step-num-icon" alt="Pre-indexes codebase into SQLite">📁</div>
+          <div class="step-num-icon" alt="Pre-indexes codebase into SQLite"></div>
           <h3 class="step-title">Pre-indexes your codebase</h3>
-          <p class="step-desc">Runs as a persistent local daemon. Builds a SQLite index via file watchers — inotify on Linux, FSEvents on Mac. First query is sub-millisecond on any size codebase.</p>
+          <p class="step-desc">Runs as a persistent local daemon. Builds a SQLite index via file watchers - inotify on Linux, FSEvents on Mac. First query is sub-millisecond on any size codebase.</p>
         </div>
 
         <!-- Step 2 -->
         <div class="step-card">
-          <div class="step-num-icon" alt="AST body folding compression">🗜️</div>
+          <div class="step-num-icon" alt="AST body folding compression"></div>
           <h3 class="step-title">AST body folding</h3>
-          <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, TypeScript, JavaScript, Java, Rust. Compression is fully reversible — Claude can retrieve full source when needed.</p>
+          <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, TypeScript, JavaScript, Java, Rust. Compression is fully reversible - Claude can retrieve full source when needed.</p>
         </div>
 
         <!-- Step 3 -->
         <div class="step-card">
-          <div class="step-num-icon" alt="Canonical determinism for prompt caching">🎯</div>
+          <div class="step-num-icon" alt="Canonical determinism for prompt caching"></div>
           <h3 class="step-title">Canonical determinism</h3>
           <p class="step-desc">Files sorted alphabetically, volatile metadata stripped. Output is byte-identical on every run so Anthropic's KV prompt cache fires instead of invalidating. This is the feature other compressors miss.</p>
         </div>
 
         <!-- Step 4 -->
         <div class="step-card">
-          <div class="step-num-icon" alt="Save money on Claude API costs">💰</div>
+          <div class="step-num-icon" alt="Save money on Claude API costs"></div>
           <h3 class="step-title">You save money</h3>
           <p class="step-desc">Fewer tokens sent. More cache hits. Two separate cost levers working simultaneously. No cloud, no telemetry, runs entirely on your machine.</p>
         </div>
       </div>
     </div>
+    </div>
   </section>
 
+  <section class="section" id="use-cases">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">How developers use it</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <h3 class="step-title">Large codebase, expensive Claude bills</h3>
+          <p class="step-desc">A 500K line Spring Boot monorepo costs ~$45 per full-context Claude session. With mcp-injector: ~$15. At 10 sessions/day that's $9,000/month -> $3,000/month. The $12/month Pro subscription pays for itself in the first hour.</p>
+        </div>
+        
+        <div class="step-card">
+          <h3 class="step-title">Claude keeps saying "I don't have access to that file"</h3>
+          <p class="step-desc">Claude Code only indexes files you have open. get_project_map gives Claude a compressed view of your entire repository structure - every module, every public interface, every dependency - so it can answer questions about code it has never seen in this session.</p>
+        </div>
+        
+        <div class="step-card">
+          <h3 class="step-title">Switching between branches mid-session</h3>
+          <p class="step-desc">When you switch branches, mcp-injector detects the checkout via a git hook and re-indexes automatically. Claude's context reflects your current branch within seconds, not whenever you remember to re-run a context tool.</p>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Install Section -->
   <section class="section" id="install">
     <div class="container">
@@ -1157,9 +1181,9 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             Automatically detects and configures: Claude Desktop, Cursor, VS Code
           </p>
           <div class="ide-badges">
-            <div class="ide-badge">🤖 Claude Desktop</div>
-            <div class="ide-badge">⚡ Cursor</div>
-            <div class="ide-badge">💻 VS Code (Continue)</div>
+            <div class="ide-badge"> Claude Desktop</div>
+            <div class="ide-badge"> Cursor</div>
+            <div class="ide-badge"> VS Code (Continue)</div>
           </div>
 
           <!-- Manual Setup -->
@@ -1265,7 +1289,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism — alphabetical file sorting and metadata stripping — so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
+            <p>Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism - alphabetical file sorting and metadata stripping - so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
           </div>
         </div>
 
@@ -1276,8 +1300,8 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Repomix is a one-shot CLI tool — it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch.</p>
-            <p style="padding-top:0.75rem;">More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism — so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time.</p>
+            <p>Repomix is a one-shot CLI tool - it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch.</p>
+            <p style="padding-top:0.75rem;">More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism - so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time.</p>
             <p style="padding-top:0.75rem;">Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper.</p>
           </div>
         </div>
@@ -1322,7 +1346,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Yes. Pro includes 3 seats. Each developer runs their own local daemon — there's no shared server to manage.</p>
+            <p>Yes. Pro includes 3 seats. Each developer runs their own local daemon - there's no shared server to manage.</p>
           </div>
         </div>
 
@@ -1333,7 +1357,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding — stripping function bodies while keeping signatures and imports — achieving 66–79% token reduction on real projects like Django, Spring Framework, and Next.js. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
+            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding - stripping function bodies while keeping signatures and imports - achieving 66–79% token reduction on real projects like Django, Spring Framework, and Next.js. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
           </div>
         </div>
 
@@ -1344,7 +1368,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Yes. mcp-injector is designed specifically for Claude Code, Cursor, and VS Code with Continue. The installer auto-detects which IDE you have installed and configures the MCP server config automatically. Once installed, Claude has visibility into your entire codebase structure at a fraction of the normal token cost — with no manual configuration required.</p>
+            <p>Yes. mcp-injector is designed specifically for Claude Code, Cursor, and VS Code with Continue. The installer auto-detects which IDE you have installed and configures the MCP server config automatically. Once installed, Claude has visibility into your entire codebase structure at a fraction of the normal token cost - with no manual configuration required.</p>
           </div>
         </div>
 

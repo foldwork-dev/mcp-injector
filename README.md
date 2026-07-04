@@ -1,27 +1,58 @@
-# mcp-injector 🚀
+# mcp-injector
 
-### Local Model Context Protocol (MCP) Server for Codebase Context Injection & Token Optimization
+Claude Code only sees the files you have open. On a large codebase this means constant missed context. This leads to wrong suggestions, incomplete refactors, and "I don't have access to that file."
 
-**mcp-injector** is a persistent local Model Context Protocol (MCP) daemon that compresses your entire codebase before sending it to LLMs like Anthropic Claude or OpenAI GPT-4o. It gives AI coding assistants a complete structural understanding of your repository—not just currently open files—at a fraction of the token cost.
+mcp-injector fixes this. It runs as a background daemon, pre-indexes your entire repository into a local SQLite catalog, and serves a compressed snapshot of your whole codebase to Claude on every query at roughly 1/5th the normal token cost.
 
----
+I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$80/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
 
-## ⚡ Real-World Codebase Context Benchmarks
+No cloud. No telemetry. Runs entirely on your machine.--
+
+##  Real-World Codebase Context Benchmarks
 
 Estimate the impact of AST code compression on large open-source repositories (calculated at $3.00 / million input tokens for Claude 3.5 Sonnet):
 
-| 📂 Repository | 🗂️ Total Files | 🚫 Raw Context Tokens | ⚡ Compressed Context Tokens | 📉 Token Reduction | 💰 Cost Saved / Run |
+|  Repository |  Total Files |  Raw Context Tokens |  Compressed Context Tokens |  Token Reduction |  Cost Saved / Run |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Django** | 2,359 | 5.5M | 1.5M | **72.6%** | **$12.09** |
 | **Spring Framework** | 9,193 | 15.0M | 5.0M | **66.4%** | **$29.94** |
 | **Next.js** | 21,848 | 23.8M | 4.9M | **79.2%** | **$56.65** |
 
 *Numbers are reproducible. Run the open-source benchmark tool on any public repository:*  
-👉 **[mcp-benchmark repository](https://github.com/foldwork-dev/mcp-benchmark)**
+ **[mcp-benchmark repository](https://github.com/foldwork-dev/mcp-benchmark)**
 
 ---
 
-## 📦 Quick Install
+## What It Looks Like
+
+Run `mcp-benchmark` on your own project to see your exact savings before installing anything:
+
+```text
+mcp-benchmark ./your-project
+
+════════════════════════════════════════════════════════════════════════════════
+  mcp-benchmark - context
+  Tier 3 compression  |  $3.00/1M tokens  |  2026-07-04T16:29:02Z
+════════════════════════════════════════════════════════════════════════════════
+
+FILE                                          RAW TOKENS    COMPRESSED     SAVED   COST SAVED*
+──────────────────────────────────────────────────────────────────────────────────────────
+cmd/license-gen/main.go                            3,633           214     94.1%       $0.0100
+main.go                                           17,555         1,917     89.1%       $0.0470
+website/api/webhook.go                             2,682           295     89.0%       $0.0070
+main_test.go                                       1,576           353     77.6%       $0.0040
+──────────────────────────────────────────────────────────────────────────────────────────
+TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0680
+
+  * Based on $3.00 / 1M input tokens
+
+  Running this codebase through Claude 10x/day costs $0.76/day raw.
+  With mcp-injector:  $0.08/day.  You save $0.68/day ($20/month).
+```
+
+---
+
+##  Quick Install
 
 Install the daemon locally and configure your IDEs:
 
@@ -33,7 +64,124 @@ curl -fsSL https://foldwork.dev/install | sh
 
 ---
 
-## 🛠️ How It Works
+## Getting Started
+
+### Step 1: Check if your project qualifies for the free tier
+
+Run the benchmark CLI on your project to see your token savings and line count:
+
+```bash
+mcp-benchmark ./your-project
+```
+
+If your project is under 100,000 lines, mcp-injector is completely free. The benchmark output shows your exact line count.
+
+### Step 2: Install the daemon
+
+```bash
+curl -fsSL https://foldwork.dev/install | sh
+```
+
+The installer auto-detects Claude Desktop, Cursor, and VS Code and writes the MCP config automatically. You should see output like:
+
+```text
+* mcp-injector v0.1.0 installed to /usr/local/bin/mcp-injector
+* Claude Desktop configured
+* Cursor configured
+Restart your IDE and mcp-injector will be active.
+```
+
+### Step 3: Restart your IDE
+
+The MCP server starts automatically when your IDE launches. No separate daemon process to manage.
+
+### Step 4: Verify it is working
+
+In Claude Code or Cursor, ask Claude:
+
+> "Use get_project_map to show me the structure of this project"
+
+Claude will call the mcp-injector tool and return a compressed map of your entire codebase. If you see module names, entry points, and dependency information - it is working.
+
+### Step 5: Get the full source when needed
+
+When Claude needs to see the complete implementation of a compressed function, it automatically calls `injector_retrieve`. You can also trigger this explicitly:
+
+> "Show me the full implementation of UserService.java"
+
+Claude will fetch the uncompressed source from the local cache.
+
+### Step 6: Check your savings
+
+```bash
+injector_stats
+```
+
+Or ask Claude directly: "Call injector_stats and tell me my current token savings."
+
+---
+
+## Advanced Usage
+
+### Inspecting specific files uncompressed
+
+Sometimes you need Claude to see the exact implementation of a file while keeping the rest compressed. Use the `unfolded_files` parameter:
+
+In your MCP call or by asking Claude:
+> "Get the project map but show me src/auth/handler.go at full resolution"
+
+This passes `"unfolded_files": ["src/auth/handler.go"]` to get_project_map. That file is served raw; everything else stays compressed.
+
+Glob patterns work too:
+- `"**/*_test.go"` - all test files uncompressed
+- `"src/auth/*.go"` - all files in a directory uncompressed
+
+### Switching branches
+
+mcp-injector installs a `post-checkout` git hook when it first runs. Branch switching automatically triggers a full re-index. You will see this in the daemon logs:
+
+```text
+[mcp-injector] Branch switched to feature/auth-refactor, re-indexing...
+[mcp-injector] Re-index complete in 4.2s (47,293 lines indexed)
+```
+
+### Secret filtering
+
+mcp-injector automatically redacts credentials before they reach Claude's context. If your codebase has a hardcoded API key or AWS credential, the `get_project_map` response will include:
+
+```json
+"secrets_redacted": 2,
+"files_with_redactions": ["config/db.go", "scripts/deploy.sh"]
+```
+
+The actual values are replaced with `[REDACTED BY MCP-INJECTOR]`. Variable names are preserved so Claude still understands the code structure.
+
+### Manual MCP configuration
+
+If the auto-installer does not detect your IDE, add this to your MCP config manually:
+
+```json
+{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "${workspaceFolder}"
+      }
+    }
+  }
+}
+```
+
+Config file locations:
+- Claude Desktop (Mac): `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Claude Desktop (Linux): `~/.config/Claude/claude_desktop_config.json`
+- Cursor: `~/.cursor/mcp.json`
+- VS Code (Continue): `~/.continue/config.json`
+
+---
+
+##  How It Works
 
 * **Persistent Local Daemon:** Indexes your repository structure into a high-performance WAL-mode SQLite database catalog.
 * **Smart File Watchers:** Monitors files incrementally via OS notification hooks (`inotify`/`FSEvents`) and local `git post-checkout` / `post-merge` triggers.
@@ -46,17 +194,17 @@ curl -fsSL https://foldwork.dev/install | sh
 
 ---
 
-## 💎 Pricing Tiers
+##  Pricing Tiers
 
 * **Free Tier:** Workspaces under 100,000 total source lines (all tools and features fully active).
 * **Pro Tier ($12/month or $99/year):** Unlocks unlimited workspace sizes and high-speed incremental diff indexing.  
-👉 **[Activate Pro at foldwork.dev](https://foldwork.dev/#pricing)**
+ **[Activate Pro at foldwork.dev](https://foldwork.dev/#pricing)**
 
 ---
 
-## 🔌 Exposed MCP Tools
+##  Exposed MCP Tools
 
-* **`get_project_map`** — Generates a hierarchical outline of module exports, structures, and internal dependencies.
+* **`get_project_map`** - Generates a hierarchical outline of module exports, structures, and internal dependencies.
   * `unfolded_files` parameter: pass specific file paths or glob patterns to receive those files uncompressed while everything else stays folded.
   * `git_context`: always includes current branch, changed files, and recent commits in the response.
   * `secrets_redacted`: count of credentials automatically redacted before sending to Claude.
@@ -72,12 +220,12 @@ curl -fsSL https://foldwork.dev/install | sh
   }
   ```
 
-* `injector_retrieve` — Resolves and retrieves the raw source code of any compressed symbol from the local cache.
-* `injector_stats` — Visualizes index status, current token savings, and CCR cache hit rates.
+* `injector_retrieve` - Resolves and retrieves the raw source code of any compressed symbol from the local cache.
+* `injector_stats` - Visualizes index status, current token savings, and CCR cache hit rates.
 
 ---
 
-## 🔒 Security
+##  Security
 
 mcp-injector automatically redacts secrets and credentials before they reach Claude's context window:
 
@@ -88,11 +236,11 @@ mcp-injector automatically redacts secrets and credentials before they reach Cla
 
 Redacted content is replaced with `[REDACTED BY MCP-INJECTOR]`. A count of redactions is included in the `get_project_map` response so you always know what was protected.
 
-Your code never leaves your machine. Redaction happens locally before compression, and is always-on — it cannot be disabled.
+Your code never leaves your machine. Redaction happens locally before compression, and is always-on - it cannot be disabled.
 
 ---
 
-## 🗑️ Uninstall
+##  Uninstall
 
 To remove mcp-injector completely:
 
@@ -111,7 +259,7 @@ rm -rf ~/.mcp-injector/
 
 ---
 
-## 🔐 What Gets Redacted
+##  What Gets Redacted
 
 mcp-injector automatically redacts the following before your code reaches Claude:
 
@@ -125,11 +273,11 @@ mcp-injector automatically redacts the following before your code reaches Claude
 | Generic high-entropy strings >20 chars | Detected via Shannon entropy |
 | Password / secret / token assignments | `password = "abc123"` |
 
-Redacted values are replaced with `[REDACTED BY MCP-INJECTOR]`. File paths and variable **names** are never redacted — only the values.
+Redacted values are replaced with `[REDACTED BY MCP-INJECTOR]`. File paths and variable **names** are never redacted - only the values.
 
 ---
 
-## 📄 License
+##  License
 
 Commercial. Free tier available. Source code not public.  
 Support Contact: [foldwork@proton.me](mailto:foldwork@proton.me)
