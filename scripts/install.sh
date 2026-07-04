@@ -75,7 +75,7 @@ trap 'rm -f "$TMP_BIN" "$TMP_BENCHMARK"' EXIT
 echo "Detecting release binaries for $OS-$ARCH..."
 
 DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-injector-$OS-$ARCH"
-BENCHMARK_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-benchmark-$OS-$ARCH"
+BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH"
 
 if curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
   echo -e "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
