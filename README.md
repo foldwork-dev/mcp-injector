@@ -132,4 +132,4 @@ Redacted values are replaced with `[REDACTED BY MCP-INJECTOR]`. File paths and v
 ## 📄 License
 
 Commercial. Free tier available. Source code not public.  
-Support Contact: [hello@foldwork.dev](mailto:hello@foldwork.dev)
+Support Contact: [foldwork@proton.me](mailto:foldwork@proton.me)
