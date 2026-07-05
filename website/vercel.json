@@ -1,7 +1,6 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "error": [{"statusCode": 404, "destination": "/404.html"}],
   "redirects": [
     { "source": "/install", "destination": "/install.sh", "permanent": true }
   ],
