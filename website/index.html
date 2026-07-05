@@ -943,6 +943,7 @@
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/docs" class="nav-link">Docs</a>
         <a href="#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
@@ -951,7 +952,7 @@
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
-    <p class="hero-sub">Claude Code only sees your open files. On a large codebase it misses context constantly - wrong suggestions, incomplete refactors, 'I don't have access to that file.'<br><br>mcp-injector gives Claude your entire codebase at 1/5th the token cost. Runs locally. No cloud. Free under 100K lines.</p>
+    <p class="hero-sub">Claude Code, Cursor, and VS Code read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 66-79% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 100K lines.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
@@ -1135,8 +1136,8 @@
         </div>
         
         <div class="step-card">
-          <h3 class="step-title">Claude keeps saying "I don't have access to that file"</h3>
-          <p class="step-desc">Claude Code only indexes files you have open. get_project_map gives Claude a compressed view of your entire repository structure - every module, every public interface, every dependency - so it can answer questions about code it has never seen in this session.</p>
+          <h3 class="step-title">Exhausting your context budget on large repos</h3>
+          <p class="step-desc">On large codebases, sequential file exploration consumes your context window before you even get an answer. get_project_map delivers your entire repository structure (every module, every public interface, and every dependency) in a single compressed call, leaving plenty of room for Claude to actually think.</p>
         </div>
         
         <div class="step-card">

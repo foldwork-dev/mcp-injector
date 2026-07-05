@@ -26,8 +26,7 @@ test/
 # Do publish these
 !README.md
 !VERSION
-!.gitignore
-!releases/
+releases/
 !scripts/build-release.sh
 !install.sh
 !website/go.mod
