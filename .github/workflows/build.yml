@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+defaults:
+  run:
+    working-directory: website
+
 jobs:
   test:
     name: Go tests
@@ -17,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version-file: website/go.mod
 
       - name: Run tests
         run: go test ./... -v -timeout 120s
@@ -39,7 +43,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: go.mod
+          go-version-file: website/go.mod
 
       - name: Build
         run: |
