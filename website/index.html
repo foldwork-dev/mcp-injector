@@ -813,6 +813,218 @@
         grid-template-columns: repeat(4, 1fr);
       }
     }
+
+    /* Scroll reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+
+    /* Terminal window styling */
+    .terminal-container {
+      max-width: 720px;
+      width: 100%;
+      margin: 3rem auto 0;
+    }
+    .terminal-window {
+      background-color: #080c10;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      text-align: left;
+    }
+    .terminal-header {
+      background-color: #12181f;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .terminal-dot.red { background-color: #ff5f56; }
+    .terminal-dot.yellow { background-color: #ffbd2e; }
+    .terminal-dot.green { background-color: #27c93f; }
+    .terminal-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .terminal-body {
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--text-white);
+      line-height: 1.5;
+      min-height: 280px;
+      white-space: pre-wrap;
+    }
+    .terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background-color: var(--accent);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      from, to { background-color: transparent }
+      50% { background-color: var(--accent) }
+    }
+
+    /* Calculator section styling */
+    .calc-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 2rem auto 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    @media (min-width: 768px) {
+      .calc-card {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+    .calc-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+    .calc-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .calc-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+    .calc-value {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+    }
+    .calc-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      margin: 0.5rem 0;
+    }
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      transition: background 0.15s ease-in-out;
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+    }
+    .calc-slider::-webkit-slider-thumb:hover {
+      background: var(--accent-hover);
+    }
+    .calc-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      transition: background 0.15s ease-in-out;
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+    }
+    .calc-slider::-moz-range-thumb:hover {
+      background: var(--accent-hover);
+    }
+    .calc-outputs {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .calc-result-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .calc-savings-badge {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+      font-family: var(--font-mono);
+      text-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+    .calc-breakdown {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      gap: 1rem;
+    }
+    .calc-breakdown-item {
+      flex: 1;
+    }
+    .calc-breakdown-val {
+      font-family: var(--font-mono);
+      color: var(--text-white);
+      font-size: 0.9375rem;
+      margin-top: 0.25rem;
+    }
+    .calc-breakdown-val.raw {
+      color: #f87171;
+    }
+    .calc-breakdown-val.comp {
+      color: var(--success);
+    }
   </style>
 
   <!-- Schema.org Structured Data -->
@@ -958,10 +1170,25 @@
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
     </div>
     <p class="hero-caption">Free for codebases under 100,000 lines. No signup required.</p>
+
+    <!-- Animated Terminal Demo -->
+    <div class="terminal-container">
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-title">bash - mcp-benchmark</div>
+        </div>
+        <div class="terminal-body" id="terminal-body"><span class="terminal-cursor"></span></div>
+      </div>
+    </div>
   </header>
 
   <!-- Benchmarks Section -->
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Real numbers on real codebases</h2>
@@ -1085,7 +1312,7 @@
 </section>
 
   <!-- How It Works Section -->
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">How it works</h2>
@@ -1124,7 +1351,7 @@
     </div>
   </section>
 
-  <section class="section" id="use-cases">
+  <section class="section reveal" id="use-cases">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">How developers use it</h2>
@@ -1158,7 +1385,7 @@
     </div>
   </section>
   <!-- Install Section -->
-  <section class="section" id="install">
+  <section class="section reveal" id="install">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Get started in 30 seconds</h2>
@@ -1222,8 +1449,54 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
     </div>
   </section>
 
+  <!-- Savings Calculator Section -->
+  <section class="section reveal" id="calculator">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Calculate your savings</h2>
+        <p class="section-sub">Estimate your monthly token and API cost reduction using mcp-injector.</p>
+      </div>
+
+      <div class="calc-card">
+        <div class="calc-inputs">
+          <div class="calc-group">
+            <div class="calc-label-row">
+              <label for="calc-loc">Codebase Size (Lines of Code)</label>
+              <span id="val-loc" class="calc-value">250,000 LOC</span>
+            </div>
+            <input type="range" id="calc-loc" class="calc-slider" min="10000" max="1000000" step="10000" value="250000">
+          </div>
+
+          <div class="calc-group">
+            <div class="calc-label-row">
+              <label for="calc-sessions">Claude Prompts / Sessions per Day</label>
+              <span id="val-sessions" class="calc-value">10 sessions</span>
+            </div>
+            <input type="range" id="calc-sessions" class="calc-slider" min="1" max="50" step="1" value="10">
+          </div>
+        </div>
+
+        <div class="calc-outputs">
+          <span class="calc-result-title">Estimated Monthly Savings</span>
+          <div id="calc-savings" class="calc-savings-badge">$0.00</div>
+          
+          <div class="calc-breakdown">
+            <div class="calc-breakdown-item">
+              <div>Without mcp-injector</div>
+              <div id="cost-raw" class="calc-breakdown-val raw">$0.00</div>
+            </div>
+            <div class="calc-breakdown-item">
+              <div>With mcp-injector</div>
+              <div id="cost-comp" class="calc-breakdown-val comp">$0.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Pricing Section -->
-  <section class="section" id="pricing">
+  <section class="section reveal" id="pricing">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Simple pricing</h2>
@@ -1275,7 +1548,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
   </section>
 
   <!-- FAQ Section -->
-  <section class="section">
+  <section class="section reveal">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Common questions</h2>
@@ -1502,6 +1775,118 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           }
         });
       });
+
+      // Scroll-reveal Intersection Observer
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15
+      });
+      revealElements.forEach(el => revealObserver.observe(el));
+
+      // Animated Terminal Demo Logic
+      const terminalBody = document.getElementById('terminal-body');
+      if (terminalBody) {
+        const terminalText = [
+          { text: "$ mcp-benchmark ./my-project\n", type: "input" },
+          { text: "[mcp-benchmark] Scanning codebase... (47 files detected)\n", type: "system" },
+          { text: "[mcp-benchmark] Parsing AST signatures...\n", type: "system" },
+          { text: "[mcp-benchmark] Tokenizing using cl100k_base...\n\n", type: "system" },
+          { text: "+--------------------------------------------------------+\n", type: "table" },
+          { text: "| Metric                 | Raw           | Compressed   |\n", type: "table" },
+          { text: "+--------------------------------------------------------+\n", type: "table" },
+          { text: "| Total Lines            | 19,840        | 4,726        |\n", type: "table" },
+          { text: "| Est. Sonnet Tokens     | 198,400       | 72,600       |\n", type: "table" },
+          { text: "| Cache Hit Potential    | 0%            | 100% (det.)  |\n", type: "table" },
+          { text: "+--------------------------------------------------------+\n", type: "table" },
+          { text: "| Token Savings: 63.4%                                  |\n", type: "table" },
+          { text: "+--------------------------------------------------------+\n\n", type: "table" },
+          { text: "[mcp-benchmark] Recommendation: Install mcp-injector (Free Tier)\n", type: "success" }
+        ];
+
+        let currentLine = 0;
+        let currentChar = 0;
+        let outputHtml = "";
+
+        function typeTerminal() {
+          if (currentLine >= terminalText.length) {
+            terminalBody.innerHTML = outputHtml + '<span class="terminal-cursor"></span>';
+            return;
+          }
+
+          const lineObj = terminalText[currentLine];
+          const lineContent = lineObj.text;
+          
+          if (lineObj.type === "input") {
+            if (currentChar < lineContent.length) {
+              const typedText = lineContent.substring(0, currentChar + 1);
+              terminalBody.innerHTML = outputHtml + typedText.replace('$', '<span style="color: var(--accent); font-weight: bold;">$</span>') + '<span class="terminal-cursor"></span>';
+              currentChar++;
+              setTimeout(typeTerminal, 60);
+            } else {
+              outputHtml += lineContent.replace('$', '<span style="color: var(--accent); font-weight: bold;">$</span>');
+              currentLine++;
+              currentChar = 0;
+              setTimeout(typeTerminal, 400);
+            }
+          } else {
+            let lineClass = "";
+            if (lineObj.type === "success") lineClass = "color: var(--success); font-weight: 600;";
+            if (lineObj.type === "table") lineClass = "color: var(--text-muted);";
+            
+            const styledLine = lineClass ? `<span style="${lineClass}">${lineContent}</span>` : lineContent;
+            outputHtml += styledLine;
+            terminalBody.innerHTML = outputHtml + '<span class="terminal-cursor"></span>';
+            currentLine++;
+            
+            let delay = 150;
+            if (lineObj.type === "table") delay = 30;
+            setTimeout(typeTerminal, delay);
+          }
+        }
+
+        setTimeout(typeTerminal, 800);
+      }
+
+      // Savings Calculator Logic
+      const sliderLoc = document.getElementById('calc-loc');
+      const sliderSessions = document.getElementById('calc-sessions');
+      const valLoc = document.getElementById('val-loc');
+      const valSessions = document.getElementById('val-sessions');
+      const resultSavings = document.getElementById('calc-savings');
+      const resultRaw = document.getElementById('cost-raw');
+      const resultComp = document.getElementById('cost-comp');
+
+      function calculateSavings() {
+        const loc = parseInt(sliderLoc.value);
+        const sessions = parseInt(sliderSessions.value);
+
+        valLoc.textContent = loc.toLocaleString() + ' LOC';
+        valSessions.textContent = sessions + ' session' + (sessions > 1 ? 's' : '');
+
+        const tRaw = loc * 6;
+        const tComp = tRaw * 0.28;
+
+        const rawMonthly = sessions * 30 * (tRaw * 1.92 / 1000000);
+        const compMonthly = sessions * 30 * (tComp * 0.57 / 1000000);
+        const savingsMonthly = Math.max(0, rawMonthly - compMonthly);
+
+        resultRaw.textContent = '$' + rawMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        resultComp.textContent = '$' + compMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        resultSavings.textContent = '$' + savingsMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      if (sliderLoc && sliderSessions && valLoc && valSessions && resultSavings && resultRaw && resultComp) {
+        sliderLoc.addEventListener('input', calculateSavings);
+        sliderSessions.addEventListener('input', calculateSavings);
+        calculateSavings();
+      }
     });
 
     // Copy to clipboard function (needs to be global as it's referenced inline in onclick attributes)
