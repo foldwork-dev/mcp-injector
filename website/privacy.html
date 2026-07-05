@@ -26,7 +26,9 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background-color: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { background-color: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; 
+      overflow-wrap: break-word;
+      word-wrap: break-word;}
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -48,6 +50,25 @@
     .footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); }
     .footer a { color: var(--text-muted); margin: 0 0.5rem; }
     .footer a:hover { color: var(--text-white); }
+  
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--text-white);
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+      word-break: normal;
+      overflow-wrap: normal;
+    }
+    
   </style>
 </head>
 <body>
