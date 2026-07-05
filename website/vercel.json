@@ -14,6 +14,10 @@
       "headers": [{"key": "Content-Type", "value": "text/plain"}]
     },
     {
+      "source": "/llms.txt",
+      "headers": [{"key": "Content-Type", "value": "text/plain; charset=utf-8"}]
+    },
+    {
       "source": "/og-image.png",
       "headers": [
         {"key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400"}

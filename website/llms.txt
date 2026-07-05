@@ -55,6 +55,11 @@ mcp-injector is commercial software. Source not public. Binary releases: https:/
 
 The free benchmark tool (mcp-benchmark) is open source: https://github.com/foldwork-dev/mcp-benchmark
 
+## References
+
+- Codebase Cost Benchmarks: https://foldwork.dev/benchmarks
+- Repomix Comparison: https://foldwork.dev/vs/repomix
+
 ## Contact
 
 foldwork@proton.me

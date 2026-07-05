@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repomix vs mcp-injector Comparison - mcp-injector</title>
+  <meta name="description" content="Compare Repomix and mcp-injector. Learn the differences between one-shot codebase bundling and persistent, branch-aware local MCP context compression.">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/vs/repomix">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Repomix vs mcp-injector Comparison - mcp-injector">
+  <meta property="og:description" content="Compare Repomix and mcp-injector. Learn how mcp-injector delivers branch-aware, compressed context via MCP compared to static code bundling.">
+  <meta property="og:url" content="https://foldwork.dev/vs/repomix">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Repomix vs mcp-injector Comparison - mcp-injector">
+  <meta name="twitter:description" content="Compare Repomix and mcp-injector. Choose the right codebase context loader for your LLM workflow.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --border-focus: rgba(124, 58, 237, 0.4);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); text-decoration: none; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-nav);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-white);
+      letter-spacing: -0.025em;
+    }
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-white);
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--accent);
+      color: var(--text-white);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+    .nav-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Page Header */
+    .header-section {
+      padding: 5rem 0 3rem;
+      text-align: center;
+    }
+    .page-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+    }
+    .page-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .summary-text {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* Table CSS */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 4rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .compare-table th {
+      background-color: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-white);
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+    }
+    .compare-table td {
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .compare-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .compare-table tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+    
+    .status-yes {
+      color: var(--success);
+      font-weight: 600;
+    }
+    .status-no {
+      color: var(--text-muted);
+    }
+    .status-partial {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .narrative-p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      margin-top: 5rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .footer-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-link {
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    @media (max-width: 768px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .header-section {
+        padding: 3rem 0 2rem;
+      }
+      .page-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header-section">
+      <h1 class="page-title">Repomix vs mcp-injector</h1>
+      <p class="page-subtitle">An honest, feature-by-feature architectural comparison for developers evaluating codebase context tools.</p>
+    </header>
+
+    <div class="summary-text">
+      <p>Both <strong>Repomix</strong> and <strong>mcp-injector</strong> help developers send their local codebase context to Large Language Models (LLMs) like Claude. However, they approach this problem with entirely different philosophies. Repomix is a simple, one-shot packaging CLI. mcp-injector is a persistent, branch-aware daemon running locally to compress and stream files on-demand via the Model Context Protocol (MCP).</p>
+    </div>
+
+    <div class="table-container">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width: 30%;">Feature / Aspect</th>
+            <th style="width: 35%;">mcp-injector</th>
+            <th style="width: 35%;">Repomix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Integration Model</strong></td>
+            <td><span class="status-yes">✅ Native MCP Server</span><br><small style="color: var(--text-muted);">Integrates directly as a tool in Claude Desktop, Cursor, and VS Code. IDE queries it dynamically.</small></td>
+            <td><span class="status-no">❌ Static File Exporter</span><br><small style="color: var(--text-muted);">Generates a single output file (e.g. repomix-output.txt) that you manually attach or paste into chat.</small></td>
+          </tr>
+          <tr>
+            <td><strong>File Watching</strong></td>
+            <td><span class="status-yes">✅ Real-time & Incremental</span><br><small style="color: var(--text-muted);">Daemon watches files (inotify/FSEvents). Instantly indexes changes so the LLM gets current files.</small></td>
+            <td><span class="status-no">❌ Manual Re-run</span><br><small style="color: var(--text-muted);">You must run the CLI again manually every time you change code to re-bundle the file.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Git Branch Awareness</strong></td>
+            <td><span class="status-yes">✅ Automatic on Checkout</span><br><small style="color: var(--text-muted);">Installs a git post-checkout hook. Automatically re-indexes the workspace on branch switch.</small></td>
+            <td><span class="status-no">❌ None</span><br><small style="color: var(--text-muted);">Branch switching does not affect output unless CLI is manually run again.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Token Compression</strong></td>
+            <td><span class="status-yes">✅ AST Body Folding (66-79% reduction)</span><br><small style="color: var(--text-muted);">Folds function/method bodies. Claude sees the signatures/exports first, saving massive token counts.</small></td>
+            <td><span class="status-no">❌ Plain Text Packing</span><br><small style="color: var(--text-muted);">Aggregates whole files as-is. Performs basic minification/comment stripping but no structural compression.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Prompt Caching (KV)</strong></td>
+            <td><span class="status-yes">✅ 100% Deterministic (High cache hit)</span><br><small style="color: var(--text-muted);">Files sorted alphabetically, timestamps/volatile metadata stripped. Maximum KV prompt cache hits.</small></td>
+            <td><span class="status-partial">⚠️ Partial</span><br><small style="color: var(--text-muted);">Orders files deterministically but output fluctuates easily, leading to frequent cache misses.</small></td>
+          </tr>
+          <tr>
+            <td><strong>On-Demand Detail Retrieval</strong></td>
+            <td><span class="status-yes">✅ Native CCR (Compress-Cache-Retrieve)</span><br><small style="color: var(--text-muted);">Claude can dynamically fetch full uncompressed file bodies on-demand via the injector_retrieve tool.</small></td>
+            <td><span class="status-no">❌ All or Nothing</span><br><small style="color: var(--text-muted);">Either the entire file is fully in the prompt context or it is not included at all.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Secret Redaction</strong></td>
+            <td><span class="status-yes">✅ Always-On Local Filter</span><br><small style="color: var(--text-muted);"> встроенный Shannon entropy filter. Dynamic credential redaction (API keys, JWTs) happens locally.</small></td>
+            <td><span class="status-no">❌ None</span><br><small style="color: var(--text-muted);">Relies entirely on manual file exclusions to prevent credential leakage.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Licensing & Source</strong></td>
+            <td><span class="status-no">❌ Proprietary Binary</span><br><small style="color: var(--text-muted);">Commercial license. Free tier under 100K lines. Pro tier: $12/month. Source code closed.</small></td>
+            <td><span class="status-yes">✅ Open Source (MIT)</span><br><small style="color: var(--text-muted);">Fully free and open source. Available on npm. Community-driven.</small></td>
+          </tr>
+          <tr>
+            <td><strong>Supported Languages</strong></td>
+            <td><span class="status-partial">⚠️ 7 Languages (AST analysis)</span><br><small style="color: var(--text-muted);">Go, Python, TypeScript, JavaScript, Java, C++, Rust.</small></td>
+            <td><span class="status-yes">✅ 30+ Languages</span><br><small style="color: var(--text-muted);">Plaintext packaging supports any file extension.</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">When to use Repomix</h2>
+    <p class="narrative-p">Repomix is an excellent, lightweight CLI utility for one-off tasks. If you want to bundle a small codebase or folder into a single file to copy/paste into a web UI (like Claude.ai web interface, ChatGPT, or Gemini Advanced) for a quick review, Repomix is the right tool. It is open source, free, and works instantly without running daemons.</p>
+
+    <h2 class="section-title">When to use mcp-injector</h2>
+    <p class="narrative-p">mcp-injector is designed for developers who write code inside IDEs (Cursor, VS Code, Claude Code) for hours every day. Because it integrates natively via the Model Context Protocol, the LLM retrieves codebase structure on-demand during active chat. By folding code bodies structurally and ensuring strict byte-by-byte outputs, it leverages Claude's prompt caching to save significant money on API bills while keeping response times fast.</p>
+
+    <h2 class="section-title">Summary Comparison</h2>
+    <p class="narrative-p">Think of Repomix as a manual "zip file exporter" optimized for the web chat UI. Think of mcp-injector as a high-performance local context daemon optimized for professional IDE AI assistant workflows.</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

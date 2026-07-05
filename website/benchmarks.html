@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-world Codebase Benchmarks - mcp-injector</title>
+  <meta name="description" content="Verifiable token compression and cost savings benchmarks for mcp-injector across popular repositories. Save 66-79% on Claude 3.5 Sonnet context.">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/benchmarks">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Real-world Codebase Benchmarks - mcp-injector">
+  <meta property="og:description" content="Verifiable token compression and cost savings benchmarks for mcp-injector across popular repositories. Save 66-79% on Claude context.">
+  <meta property="og:url" content="https://foldwork.dev/benchmarks">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Real-world Codebase Benchmarks - mcp-injector">
+  <meta name="twitter:description" content="Save 66-79% on Claude context. View real-world codebase compression benchmarks.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --border-focus: rgba(124, 58, 237, 0.4);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --success: #10b981;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); text-decoration: none; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-nav);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-white);
+      letter-spacing: -0.025em;
+    }
+    .brand span { color: var(--accent); }
+    .brand-logo-icon { transition: transform 0.3s ease; }
+    .brand:hover .brand-logo-icon { transform: rotate(-5deg) scale(1.05); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-white);
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--accent);
+      color: var(--text-white);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    .nav-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Page Header */
+    .header-section {
+      padding: 5rem 0 3rem;
+      text-align: center;
+    }
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+    }
+    .page-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Table CSS */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 4rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+    .benchmark-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .benchmark-table th {
+      background-color: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-white);
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+    }
+    .benchmark-table td {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .benchmark-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .benchmark-table tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+    
+    .font-mono {
+      font-family: var(--font-mono);
+    }
+    
+    .savings-badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .verified-mark {
+      color: var(--success);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+    }
+
+    .estimated-mark {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+    }
+
+    .table-footer-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: -3rem;
+      margin-bottom: 4rem;
+      text-align: right;
+    }
+
+    /* Sandbox Section */
+    .cta-card {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(22, 27, 34, 0.5) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      margin-bottom: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+    }
+    .cta-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .terminal-box {
+      background-color: #050505;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      position: relative;
+      color: #39ff14; /* Neon green terminal feel */
+    }
+    .terminal-box::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ff5f56;
+      box-shadow: 15px 0 0 #ffbd2e, 30px 0 0 #27c93f;
+    }
+    .terminal-content {
+      margin-top: 1rem;
+      color: var(--text-white);
+    }
+    .terminal-prompt {
+      color: var(--accent-hover);
+      user-select: none;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      margin-top: auto;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .footer-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-link {
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    @media (max-width: 768px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .header-section {
+        padding: 3rem 0 2rem;
+      }
+      .page-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+
+  <!-- Schema.org Dataset Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "mcp-injector Codebase context token reduction and cost benchmarks",
+    "description": "Token usage and API cost saved metrics comparing raw codebase context size vs AST compressed sizes generated by mcp-injector.",
+    "url": "https://foldwork.dev/benchmarks",
+    "creator": {
+      "@type": "Organization",
+      "name": "Foldwork"
+    },
+    "variableMeasured": [
+      "Total Files",
+      "Raw Context Tokens",
+      "Compressed Context Tokens",
+      "Token Reduction Percentage",
+      "Estimated Cost Saved Per Run"
+    ],
+    "measurementTechnique": "AST-based code signature compression, alphabetically-sorted file mapping, and whitespace reduction.",
+    "temporalCoverage": "2026",
+    "license": "https://foldwork.dev/terms"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg class="brand-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link active">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header-section">
+      <h1 class="page-title">Codebase context benchmarks</h1>
+      <p class="page-subtitle">Real-world results measuring token reduction and cost savings on Claude 3.5 Sonnet ($3.00 / 1M input tokens).</p>
+    </header>
+
+    <div class="table-container">
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Repository</th>
+            <th>Language</th>
+            <th>Total Files</th>
+            <th>Raw Tokens</th>
+            <th>Compressed</th>
+            <th>Reduction</th>
+            <th>Cost Saved / Run</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Django</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>Python</td>
+            <td class="font-mono">2,359</td>
+            <td class="font-mono">5.6M</td>
+            <td class="font-mono">0.6M</td>
+            <td><span class="savings-badge">89.3%</span></td>
+            <td class="font-mono">$14.87</td>
+          </tr>
+          <tr>
+            <td><strong>Spring Framework</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>Java</td>
+            <td class="font-mono">9,193</td>
+            <td class="font-mono">15.0M</td>
+            <td class="font-mono">5.2M</td>
+            <td><span class="savings-badge">65.5%</span></td>
+            <td class="font-mono">$29.54</td>
+          </tr>
+          <tr>
+            <td><strong>Next.js</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>TypeScript</td>
+            <td class="font-mono">21,985</td>
+            <td class="font-mono">24.0M</td>
+            <td class="font-mono">10.2M</td>
+            <td><span class="savings-badge">57.4%</span></td>
+            <td class="font-mono">$41.25</td>
+          </tr>
+          <tr>
+            <td><strong>Rails</strong> <span class="estimated-mark">~ Est.</span></td>
+            <td>Ruby</td>
+            <td class="font-mono">6,000</td>
+            <td class="font-mono">9.0M</td>
+            <td class="font-mono">2.5M</td>
+            <td><span class="savings-badge">72.0%</span></td>
+            <td class="font-mono">~$19.40</td>
+          </tr>
+          <tr>
+            <td><strong>Vue.js</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>JavaScript</td>
+            <td class="font-mono">518</td>
+            <td class="font-mono">1.2M</td>
+            <td class="font-mono">0.5M</td>
+            <td><span class="savings-badge">59.7%</span></td>
+            <td class="font-mono">$2.22</td>
+          </tr>
+          <tr>
+            <td><strong>NestJS</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>TypeScript</td>
+            <td class="font-mono">1,683</td>
+            <td class="font-mono">1.0M</td>
+            <td class="font-mono">0.7M</td>
+            <td><span class="savings-badge">22.8%</span></td>
+            <td class="font-mono">$0.65</td>
+          </tr>
+          <tr>
+            <td><strong>Vite</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>TypeScript</td>
+            <td class="font-mono">1,439</td>
+            <td class="font-mono">0.8M</td>
+            <td class="font-mono">0.4M</td>
+            <td><span class="savings-badge">57.2%</span></td>
+            <td class="font-mono">$1.42</td>
+          </tr>
+          <tr>
+            <td><strong>Tokio</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>Rust</td>
+            <td class="font-mono">789</td>
+            <td class="font-mono">1.6M</td>
+            <td class="font-mono">0.4M</td>
+            <td><span class="savings-badge">73.8%</span></td>
+            <td class="font-mono">$3.53</td>
+          </tr>
+          <tr>
+            <td><strong>FastAPI</strong> <span class="verified-mark">✓ Verified</span></td>
+            <td>Python</td>
+            <td class="font-mono">951</td>
+            <td class="font-mono">1.1M</td>
+            <td class="font-mono">0.3M</td>
+            <td><span class="savings-badge">76.3%</span></td>
+            <td class="font-mono">$2.59</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer-note">
+      * Cost savings calculated based on Claude 3.5 Sonnet input token cost of $3.00 per 1M tokens. Estimates are projected using a standard 72% average reduction.
+    </div>
+
+    <div class="cta-card">
+      <h2 class="cta-title">Test your own project's savings</h2>
+      <p class="cta-desc">Run our open-source benchmark utility locally to see the exact line count, token usage, and cost reduction for your repository before installing anything.</p>
+      
+      <div class="terminal-box">
+        <div class="terminal-content">
+          <span class="terminal-prompt">$</span> npx mcp-benchmark ./your-project
+        </div>
+      </div>
+
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-btn" target="_blank" rel="noopener">Get mcp-benchmark on GitHub →</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

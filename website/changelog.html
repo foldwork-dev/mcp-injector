@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog & Releases - mcp-injector</title>
+  <meta name="description" content="View releases and changelog for mcp-injector. Follow the development of AST codebase context compression and MCP tooling updates.">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/changelog">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Changelog & Releases - mcp-injector">
+  <meta property="og:description" content="Track new features, performance updates, and bug fixes for mcp-injector.">
+  <meta property="og:url" content="https://foldwork.dev/changelog">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog & Releases - mcp-injector">
+  <meta name="twitter:description" content="Track new features, performance updates, and bug fixes for mcp-injector.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --border-focus: rgba(124, 58, 237, 0.4);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); text-decoration: none; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-nav);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-white);
+      letter-spacing: -0.025em;
+    }
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-white);
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--accent);
+      color: var(--text-white);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+    .nav-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Page Header */
+    .header-section {
+      padding: 5rem 0 3rem;
+      text-align: left;
+    }
+    .page-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+    }
+    .page-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 650px;
+    }
+
+    /* Changelog Entry CSS */
+    .changelog-entry {
+      border-left: 2px solid var(--border);
+      padding-left: 2rem;
+      position: relative;
+      margin-bottom: 4rem;
+    }
+    .changelog-entry::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      border: 2px solid var(--bg);
+    }
+    .version-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .version-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-white);
+      font-family: var(--font-mono);
+    }
+    .version-date {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .changelog-group {
+      margin-bottom: 2rem;
+    }
+    .group-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 0.75rem;
+    }
+    .changelog-list {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .changelog-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .changelog-list li strong {
+      color: var(--text-white);
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      margin-top: 5rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .footer-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-link {
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    @media (max-width: 768px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .header-section {
+        padding: 3rem 0 2rem;
+      }
+      .page-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+
+  <!-- Schema.org Release Article Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "mcp-injector Changelog",
+    "description": "Product updates, release notes, and changelog history for mcp-injector AST codebase context compression.",
+    "url": "https://foldwork.dev/changelog"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header-section">
+      <h1 class="page-title">Changelog</h1>
+      <p class="page-subtitle">All notable changes, fixes, and improvements to the mcp-injector platform.</p>
+    </header>
+
+    <article class="changelog-entry">
+      <div class="version-header">
+        <h2 class="version-title">v0.1.0</h2>
+        <span class="version-date">July 4, 2026</span>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Initial Release</h3>
+        <p style="margin-bottom: 1rem;">This is the first public release of mcp-injector. Core architecture highlights include:</p>
+        <ul class="changelog-list">
+          <li><strong>AST body folding</strong> for Go, Python, TypeScript, JavaScript, Java, and Rust, achieving 66-79% token reduction on popular real-world repositories.</li>
+          <li><strong>Persistent SQLite WAL-mode catalog</strong> powered by highly optimized background FSEvents/inotify file watchers.</li>
+          <li><strong>Canonical determinism</strong> guaranteeing byte-identical output across consecutive runs for maximum Anthropic KV cache hits.</li>
+          <li><strong>Branch-aware re-indexing</strong> using a lightweight git hook that triggers atomic catalog swaps on branch checkout.</li>
+          <li><strong>Always-on secret/credential filtering</strong> using Shannon entropy and 16 custom patterns to redact values locally before context delivery.</li>
+          <li><strong>Offline Ed25519 license validation</strong> for Pro tiers, preserving a zero-telemetry, offline-first execution model.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Exposed MCP Tools</h3>
+        <ul class="changelog-list">
+          <li><code>get_project_map</code>: Fetches the compressed catalog structure, module hierarchy, and dependency stubs.</li>
+          <li><code>injector_retrieve</code>: Recovers raw, full-body implementations for specific files/methods on-demand.</li>
+          <li><code>injector_stats</code>: Reports file counts, current compression ratio, and active workspace status.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
