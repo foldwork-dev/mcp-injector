@@ -880,7 +880,18 @@
       color: var(--text-white);
       line-height: 1.5;
       min-height: 280px;
-      white-space: pre-wrap;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .terminal-body::-webkit-scrollbar {
+      height: 4px;
+    }
+    .terminal-body::-webkit-scrollbar-track {
+      background: #080c10;
+    }
+    .terminal-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
     }
     .terminal-cursor {
       display: inline-block;
@@ -1024,6 +1035,27 @@
     }
     .calc-breakdown-val.comp {
       color: var(--success);
+    }
+
+    @media (max-width: 600px) {
+      .terminal-body {
+        font-size: 0.7rem;
+        padding: 0.75rem;
+        min-height: 230px;
+      }
+      .calc-card {
+        padding: 1.25rem;
+        gap: 1.5rem;
+      }
+      .calc-savings-badge {
+        font-size: 2rem;
+      }
+      .calc-breakdown {
+        font-size: 0.75rem;
+      }
+      .calc-breakdown-val {
+        font-size: 0.875rem;
+      }
     }
   </style>
 
