@@ -1,0 +1,77 @@
+name: Bug Report
+description: Report a problem with mcp-injector
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before submitting, please check the [troubleshooting guide](https://foldwork.dev/docs#troubleshooting) and search [open issues](https://github.com/foldwork-dev/mcp-injector/issues).
+
+        **Do not report security vulnerabilities here.** See [SECURITY.md](../../.github/SECURITY.md).
+
+  - type: input
+    id: version
+    attributes:
+      label: mcp-injector version
+      description: Run `mcp-injector --version` and paste the output
+      placeholder: "v0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Linux (x86_64)
+        - Linux (ARM64)
+        - Windows (x86_64)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ide
+    attributes:
+      label: IDE / client
+      options:
+        - Claude Desktop
+        - Cursor
+        - VS Code (Continue)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Set MCP_WORKSPACE to ...
+        2. Ask Claude to call get_project_map
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: If available, paste daemon output or IDE MCP logs.
+      render: text

@@ -1,0 +1,44 @@
+name: Feature Request
+description: Suggest an improvement or new capability
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an improvement. We read every request. Please describe the problem you are trying to solve rather than jumping straight to a specific solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the situation that motivates this request.
+      placeholder: "When working on a large monorepo, I find that..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: If you have a specific idea, describe it here. This is optional.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+      description: Any workarounds or alternative approaches you have tried?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Your tier
+      options:
+        - Free tier
+        - Pro subscriber
+        - Not sure
+    validations:
+      required: false

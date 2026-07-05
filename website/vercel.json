@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "error": [{"statusCode": 404, "destination": "/404.html"}],
   "redirects": [
     { "source": "/install", "destination": "/install.sh", "permanent": true }
   ],
@@ -10,8 +11,20 @@
       "headers": [{"key": "Content-Type", "value": "application/xml"}]
     },
     {
-      "source": "/robots.txt", 
+      "source": "/robots.txt",
       "headers": [{"key": "Content-Type", "value": "text/plain"}]
+    },
+    {
+      "source": "/og-image.png",
+      "headers": [
+        {"key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400"}
+      ]
+    },
+    {
+      "source": "/install.sh",
+      "headers": [
+        {"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"}
+      ]
     }
   ]
 }

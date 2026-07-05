@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — mcp-injector by Foldwork</title>
+  <meta name="description" content="Privacy Policy for mcp-injector and foldwork.dev. We collect minimal data. Your code never leaves your machine.">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/privacy">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .navbar { position: sticky; top: 0; z-index: 100; background-color: var(--bg-nav); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 4rem; }
+    .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.125rem; color: var(--text-white); text-decoration: none; letter-spacing: -0.025em; }
+    .brand span { color: var(--accent); }
+    .nav-btn { display: inline-flex; align-items: center; background-color: var(--accent); color: var(--text-white); font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; }
+    .nav-btn:hover { background-color: var(--accent-hover); }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+    h1 { font-size: 2rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 3rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-white); margin: 2.5rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    p { margin-bottom: 1.25rem; font-size: 0.9375rem; }
+    ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; font-size: 0.9375rem; }
+
+    .footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); }
+    .footer a { color: var(--text-muted); margin: 0 0.5rem; }
+    .footer a:hover { color: var(--text-white); }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <a href="/#pricing" class="nav-btn">Get Pro →</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: July 5, 2026</p>
+
+    <p>This Privacy Policy explains how Foldwork ("we," "our," or "us") collects, uses, and protects information when you use mcp-injector, the foldwork.dev website, or any related services.</p>
+
+    <h2>What data mcp-injector collects</h2>
+    <p>mcp-injector runs entirely on your local machine. It does not transmit your source code, file contents, or project structure to any external server. All indexing, compression, and secret redaction happen locally before any data is sent to an AI provider (Anthropic, etc.).</p>
+    <p>mcp-injector collects no telemetry, usage statistics, or crash reports. There are zero outbound network connections from the daemon except for one: license key validation for Pro subscribers. License validation uses a challenge-response mechanism and does not transmit your code or file paths.</p>
+
+    <h2>What data foldwork.dev collects</h2>
+    <p>When you visit foldwork.dev, standard web server logs may record your IP address, browser user agent, and page visited. These logs are retained by our hosting provider (Vercel) for up to 30 days for operational purposes.</p>
+    <p>We do not use advertising trackers, third-party analytics, or persistent cookies for tracking purposes on this website.</p>
+
+    <h2>Payment data</h2>
+    <p>Payments for Pro subscriptions are processed by Lemon Squeezy. We do not store your credit card number, billing address, or payment details. When you purchase a Pro license, Lemon Squeezy handles payment processing and issues a license key to your email address. Please review <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Lemon Squeezy's Privacy Policy</a> for details on how they handle payment data.</p>
+
+    <h2>License key activation</h2>
+    <p>When you activate a Pro license key, the mcp-injector daemon makes a one-time validation request to our licensing API. This request includes your license key and a machine-derived identifier. It does not include your source code, file paths, or personal information. After activation, license validation runs entirely offline.</p>
+
+    <h2>Email</h2>
+    <p>If you contact us at foldwork@proton.me, we retain your email address and message for the purposes of responding to your inquiry. We do not add you to any mailing list without explicit consent.</p>
+
+    <h2>Data retention</h2>
+    <p>Local index data created by mcp-injector is stored in <b>~/.mcp-injector/</b> on your machine. We have no access to this data. You can delete it at any time by running <b>rm -rf ~/.mcp-injector/</b>.</p>
+
+    <h2>Your rights</h2>
+    <p>If you are in the European Economic Area (EEA) or the United Kingdom, you have the right to access, correct, or delete any personal data we hold about you. To exercise these rights, contact us at foldwork@proton.me.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated date. Continued use of our services after changes constitutes acceptance of the updated policy.</p>
+
+    <h2>Contact</h2>
+    <p>Questions or concerns? Email us at <a href="mailto:foldwork@proton.me">foldwork@proton.me</a>.</p>
+  </div>
+
+  <footer class="footer">
+    <div>
+      Foldwork © 2026 &nbsp;·&nbsp;
+      <a href="/">Home</a>
+      <a href="/docs">Docs</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="mailto:foldwork@proton.me">Contact</a>
+    </div>
+  </footer>
+</body>
+</html>

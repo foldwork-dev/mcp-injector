@@ -1,0 +1,61 @@
+# mcp-injector
+
+> mcp-injector is a local MCP (Model Context Protocol) daemon that compresses an entire software codebase using AST body folding and serves it to AI coding assistants at 1/5th the normal token cost.
+
+## What it does
+
+mcp-injector runs as a background process on a developer's machine. It pre-indexes a repository into a local SQLite database, then exposes an MCP server that Claude Code, Cursor, and VS Code can connect to. When an AI assistant requests context, instead of reading raw source files, it receives a compressed snapshot where function bodies are folded into signatures (AST body folding). This reduces token usage by 66–79% on real codebases.
+
+It does not send any data to external servers. All indexing and compression happens locally.
+
+## Core mechanics
+
+- **AST body folding**: Function bodies are replaced with `{ ... }` stubs. Only signatures, struct definitions, and interface declarations are retained. The AI still understands the full architecture.
+- **Canonical determinism**: Output is byte-identical on every run. This causes Anthropic's KV prompt cache to fire instead of miss, reducing effective cost by an additional 40–90%.
+- **Incremental indexing**: Uses inotify (Linux) and FSEvents (macOS) to watch for file changes. The index is always current without manual re-runs.
+- **Branch-aware re-indexing**: Installs a post-checkout git hook. Switching branches triggers automatic re-indexing within seconds.
+- **Secret redaction**: Shannon entropy analysis detects API keys, JWTs, private key headers, and high-entropy strings. Redacts values as `[REDACTED: high entropy]` before they reach the AI context window.
+
+## MCP tools exposed
+
+- `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3) and `unfolded_files` (paths or globs to bypass compression for).
+- `injector_retrieve` — Returns the full uncompressed source of any file.
+- `injector_stats` — Returns compression ratio, cache hit rate, workspace line count, and license status.
+
+## Supported languages
+
+Go, Python, TypeScript, JavaScript, Java, C++, Rust
+
+## Supported IDEs
+
+Claude Desktop, Cursor, VS Code (via Continue extension)
+
+## Supported platforms
+
+Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64)
+
+## Pricing
+
+Free: workspaces under 100,000 lines of code. No sign-up required.
+Pro: $12/month or $99/year. Unlimited workspace size. License key activated via environment variable.
+
+## Installation
+
+```
+curl -fsSL https://foldwork.dev/install | sh
+```
+
+## Documentation
+
+Full documentation: https://foldwork.dev/docs
+
+## Source
+
+mcp-injector is commercial software. Source not public. Binary releases: https://github.com/foldwork-dev/mcp-injector/releases
+
+The free benchmark tool (mcp-benchmark) is open source: https://github.com/foldwork-dev/mcp-benchmark
+
+## Contact
+
+foldwork@proton.me
+https://foldwork.dev
