@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="220" height="20" role="img" aria-label="mcp-injector: 66-79% tokens saved">
-  <title>mcp-injector: 66-79% tokens saved</title>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="220" height="20" role="img" aria-label="mcp-injector: 30-89% tokens saved">
+  <title>mcp-injector: 30-89% tokens saved</title>
   <linearGradient id="s" x2="0" y2="100%">
     <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
     <stop offset="1" stop-opacity=".1"/>
@@ -15,7 +15,7 @@
   <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
     <text aria-hidden="true" x="460" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="700">mcp-injector</text>
     <text x="460" y="140" transform="scale(.1)" fill="#fff" textLength="700">mcp-injector</text>
-    <text aria-hidden="true" x="1500" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="1100">66-79% saved</text>
-    <text x="1500" y="140" transform="scale(.1)" fill="#fff" textLength="1100">66-79% saved</text>
+    <text aria-hidden="true" x="1500" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="1100">30-89% saved</text>
+    <text x="1500" y="140" transform="scale(.1)" fill="#fff" textLength="1100">30-89% saved</text>
   </g>
 </svg>

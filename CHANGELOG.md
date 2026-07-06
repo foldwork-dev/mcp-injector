@@ -7,7 +7,7 @@ All notable changes to mcp-injector are documented here.
 ### Initial Release
 
 **Core features:**
-- AST body folding for Go, Python, TypeScript, JavaScript, Java, and Rust - 66-79% token reduction on real codebases
+- AST body folding for Go, Python, TypeScript, JavaScript, Java, and Rust - 30-89% token reduction on real codebases
 - Persistent SQLite WAL-mode catalog with inotify/FSEvents file watchers
 - Canonical determinism - byte-identical output on every run for Anthropic KV prompt cache hits
 - Branch-aware re-indexing via post-checkout git hook
@@ -30,7 +30,7 @@ All notable changes to mcp-injector are documented here.
 - Pro ($12/month): unlimited workspace size + advanced features
 
 **Supported IDEs:**
-- Claude Desktop, Cursor, VS Code (Continue extension)
+- Claude Desktop, Cursor, VS Code, Windsurf
 - Auto-detection and configuration on install
 
 **Supported platforms:**

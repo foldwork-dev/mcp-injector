@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mcp-injector for VS Code with Continue — Compress Codebase Context | Foldwork</title>
-  <meta name="description" content="Integrate mcp-injector with VS Code using the Continue extension. Reduce context token usage by 66-79% using AST-based codebase compression. Fully local, no data leaves your machine.">
-  <meta name="keywords" content="mcp-injector VS Code, Continue extension MCP, VS Code codebase compression, Continue MCP server">
+  <title>mcp-injector for VS Code — Compress Codebase Context | Foldwork</title>
+  <meta name="description" content="Integrate mcp-injector with VS Code natively. Reduce context token usage by 30-89% using AST-based codebase compression. Fully local, no data leaves your machine.">
+  <meta name="keywords" content="mcp-injector VS Code, VS Code MCP, VS Code codebase compression, VS Code MCP server">
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/for/vscode">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
@@ -15,16 +15,16 @@
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="Foldwork">
-  <meta property="og:title" content="mcp-injector for VS Code with Continue">
-  <meta property="og:description" content="Connect mcp-injector to VS Code &amp; Continue. Optimize local developer context. Offline license validation &amp; secure local redaction.">
+  <meta property="og:title" content="mcp-injector for VS Code">
+  <meta property="og:description" content="Connect mcp-injector to VS Code. Optimize local developer context. Offline license validation & secure local redaction.">
   <meta property="og:url" content="https://foldwork.dev/for/vscode">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://foldwork.dev/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="mcp-injector for VS Code with Continue">
-  <meta name="twitter:description" content="Connect mcp-injector to VS Code. Save 66-79% on context tokens.">
+  <meta name="twitter:title" content="mcp-injector for VS Code">
+  <meta name="twitter:description" content="Connect mcp-injector to VS Code. Save 30-89% on context tokens.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
 
   <!-- Schema.org Structured Data -->
@@ -41,12 +41,12 @@
       },
       {
         "@type": "HowTo",
-        "name": "How to connect mcp-injector to VS Code with Continue",
-        "description": "Configure mcp-injector as an MCP server in VS Code using the Continue extension to compress codebase context and reduce LLM token costs.",
+        "name": "How to connect mcp-injector to VS Code",
+        "description": "Configure mcp-injector as an MCP server in VS Code to compress codebase context and reduce LLM token costs.",
         "step": [
           { "@type": "HowToStep", "position": 1, "name": "Install the daemon", "text": "Run: curl -fsSL https://foldwork.dev/install | sh" },
-          { "@type": "HowToStep", "position": 2, "name": "Configure Continue", "text": "Edit ~/.continue/config.json and add mcp-injector under the mcp servers block." },
-          { "@type": "HowToStep", "position": 3, "name": "Verify in Continue", "text": "Open VS Code, open Continue chat, and type @mcp-injector to verify the tool list loads." }
+          { "@type": "HowToStep", "position": 2, "name": "Configure VS Code", "text": "Edit .vscode/mcp.json and add mcp-injector under the mcpServers block." },
+          { "@type": "HowToStep", "position": 3, "name": "Verify in VS Code", "text": "Open VS Code chat, and verify the get_project_map tool is available." }
         ]
       }
     ]
@@ -365,39 +365,35 @@
 
   <div class="container">
     <header class="header-section">
-      <h1 class="page-title">mcp-injector for VS Code (Continue)</h1>
-      <p class="page-subtitle">Configure VS Code with the Continue extension to query mcp-injector and compress local context.</p>
+      <h1 class="page-title">mcp-injector for VS Code</h1>
+      <p class="page-subtitle">Configure VS Code natively to query mcp-injector and compress local context.</p>
     </header>
 
     <div class="docs-section">
-      <h2>Why use mcp-injector with Continue?</h2>
-      <p>Continue is a popular open-source autopilot for VS Code. Unlike other extensions, it features full-featured configuration files allowing external MCP servers. Running mcp-injector side-by-side with Continue ensures your large codebase references are automatically compressed using AST folding, avoiding context bloat and maximizing response accuracy.</p>
+      <h2>Why use mcp-injector with VS Code?</h2>
+      <p>VS Code now natively supports the Model Context Protocol (MCP). Running mcp-injector alongside VS Code ensures your large codebase references are automatically compressed using AST folding, avoiding context bloat and maximizing response accuracy for your AI extensions.</p>
     </div>
 
     <div class="docs-section">
       <h2>1. Install the daemon</h2>
-      <p>Download and run the setup script:</p>
+      <p>Download and run the setup script inside your project workspace:</p>
       <div class="code-block">
         curl -fsSL https://foldwork.dev/install | sh
       </div>
+      <p>If you run the installer from within a git repository, it will automatically configure <code>.vscode/mcp.json</code> for you.</p>
     </div>
 
     <div class="docs-section">
-      <h2>2. Configure Continue Extension</h2>
-      <p>Continue configuration is managed via a `config.json` file. To register mcp-injector:</p>
-      <ol>
-        <li>Open VS Code.</li>
-        <li>Open the Continue config file by clicking the gear icon in the bottom right of the Continue sidebar, or edit <code>~/.continue/config.json</code>.</li>
-        <li>Locate or create the <code>"contextProviders"</code> and <code>"mcp"</code> properties.</li>
-        <li>Register the MCP server command in the configuration list:</li>
-      </ol>
+      <h2>2. Manual Configuration (Optional)</h2>
+      <p>If you didn't run the installer in your project directory, you can configure VS Code manually by creating a <b>.vscode/mcp.json</b> file in your workspace:</p>
       <pre class="code-block">
 {
-  "contextProviders": [],
-  "slashCommands": [],
-  "mcp": {
+  "mcpServers": {
     "mcp-injector": {
-      "command": "/usr/local/bin/mcp-injector"
+      "command": "mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "${workspaceFolder}"
+      }
     }
   }
 }</pre>
@@ -405,7 +401,7 @@
 
     <div class="docs-section">
       <h2>3. Verification</h2>
-      <p>Open your workspace folder. Run the command to talk to mcp-injector. In the chat box, type <code>@mcp-injector</code> or use the slash tool to verify that the tool list loads successfully.</p>
+      <p>Open your workspace folder in VS Code. Start a chat with your AI assistant and ensure the <code>get_project_map</code> and <code>injector_retrieve</code> tools are available and working.</p>
     </div>
   </div>
 

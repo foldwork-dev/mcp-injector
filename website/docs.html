@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO Meta Tags -->
-  <title>Documentation — mcp-injector | Foldwork</title>
-  <meta name="description" content="Official documentation for mcp-injector. Install the local MCP daemon, configure Claude Code, Cursor, and VS Code, and start compressing your codebase context by 66-79%.">
-  <meta name="keywords" content="mcp-injector documentation, mcp-injector install, Claude Code MCP setup, Cursor MCP server, codebase compression docs">
-  <meta name="author" content="Foldwork">
+  <meta name="description" content="Official documentation for mcp-injector. Install the local MCP daemon, configure Claude Code, Cursor, VS Code, and Windsurf, and start compressing your codebase context by 30-89%.">
   <link rel="canonical" href="https://foldwork.dev/docs">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/og-image.png">
@@ -18,7 +15,7 @@
   <!-- Open Graph -->
   <meta property="og:site_name" content="Foldwork">
   <meta property="og:title" content="Documentation — mcp-injector | Foldwork">
-  <meta property="og:description" content="Everything you need to install, configure, and troubleshoot mcp-injector. Compress your codebase for Claude, Cursor, and VS Code.">
+  <meta property="og:description" content="Everything you need to install, configure, and troubleshoot mcp-injector. Compress your codebase for Claude, Cursor, VS Code, and Windsurf.">
   <meta property="og:url" content="https://foldwork.dev/docs">
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://foldwork.dev/og-image.png">
@@ -44,7 +41,7 @@
       {
         "@type": "TechArticle",
         "headline": "mcp-injector Documentation",
-        "description": "Complete guide to installing, configuring, and using mcp-injector — the local MCP daemon that compresses codebases for Claude, Cursor, and VS Code.",
+        "description": "Complete guide to installing, configuring, and using mcp-injector — the local MCP daemon that compresses codebases for Claude, Cursor, VS Code, and Windsurf.",
         "url": "https://foldwork.dev/docs",
         "dateModified": "2026-07-06",
         "author": { "@type": "Organization", "name": "Foldwork" },
@@ -53,7 +50,7 @@
       {
         "@type": "HowTo",
         "name": "How to install mcp-injector",
-        "description": "Install and configure the mcp-injector MCP daemon to compress your codebase for Claude Code, Cursor, or VS Code.",
+        "description": "Install and configure the mcp-injector MCP daemon to compress your codebase for Claude Code, Cursor, VS Code, or Windsurf.",
         "step": [
           { "@type": "HowToStep", "position": 1, "name": "Download and install", "text": "Run: curl -fsSL https://foldwork.dev/install | sh" },
           { "@type": "HowToStep", "position": 2, "name": "Configure your IDE", "text": "Add mcp-injector to your IDE MCP configuration with the MCP_WORKSPACE environment variable pointing to your project." },
@@ -611,7 +608,7 @@
         <h3>System requirements</h3>
         <ul>
           <li>macOS 12+, Linux (any modern distro), Windows 10+</li>
-          <li>Claude Desktop, Cursor, or VS Code with Continue extension</li>
+          <li>Claude Desktop, Cursor, VS Code, or Windsurf</li>
           <li>Git (for branch-aware re-indexing feature)</li>
         </ul>
 
@@ -697,7 +694,7 @@
         <ul>
           <li>macOS: <b>~/Library/Application Support/Claude/claude_desktop_config.json</b></li>
           <li>Linux: <b>~/.config/Claude/claude_desktop_config.json</b></li>
-          <li>Windows: <b>%APPDATA%/Claude/claude_desktop_config.json</b></li>
+          <li>Windows: <b>%APPDATA%\Claude\claude_desktop_config.json</b></li>
         </ul>
         <p>Add this entry to the <b>mcpServers</b> object:</p>
         <div class="code-wrapper">
@@ -725,9 +722,9 @@
         </div>
         <p>Cursor automatically resolves <b>${workspaceFolder}</b> to the open project folder. This enables one Cursor configuration to work across all your projects.</p>
 
-        <h3>VS Code with Continue</h3>
-        <p>Config file path: <b>~/.continue/config.json</b></p>
-        <p>Add the configuration to the <b>mcpServers</b> array in your Continue configuration file. Refer to the Continue documentation for exact formatting details.</p>
+        <h3>VS Code</h3>
+        <p>Config file path: <b>.vscode/mcp.json</b> (in your workspace)</p>
+        <p>VS Code now natively supports MCP. You can configure it by creating an <b>mcp.json</b> file inside your workspace's <b>.vscode</b> directory. The installer script handles this automatically.</p>
 
         <h3>Running multiple projects</h3>
         <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
@@ -801,15 +798,12 @@ fixtures/</code></pre>
         </ol>
 
         <h3>Pro license activation</h3>
-        <p>Activate your Pro subscription license key by adding it to the environment section of your IDE MCP configuration:</p>
+        <p>Activate your Pro subscription license key by running the following command in your terminal:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('license-config', this)">Copy</button>
-          <pre id="license-config" class="code-block"><code>"env": {
-  "MCP_WORKSPACE": "/path/to/project",
-  "MCP_LICENSE_KEY": "your-license-key-here"
-}</code></pre>
+          <pre id="license-config" class="code-block"><code>mcp-injector --activate your-license-key-here</code></pre>
         </div>
-        <p>License validation runs offline. No outbound network connections are required after activation.</p>
+        <p>This will write your license to <b>~/.mcp-injector/license.key</b>. License validation runs offline. No outbound network connections are required after activation.</p>
       </section>
 
       <!-- Section: Troubleshooting -->

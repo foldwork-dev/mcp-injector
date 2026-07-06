@@ -105,20 +105,27 @@ printf "%b\n" "${GREEN}✓${NC} Binaries installed successfully."
 CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
+WINDSURF_CONFIG=""
 
 if [ \"$OS\" = \"darwin\" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  VSCODE_CONFIG="$HOME/.continue/config.json"
+  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
 elif [ \"$OS\" = \"windows\" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
-  VSCODE_CONFIG="${USERPROFILE:-}/.continue/config.json"
+  WINDSURF_CONFIG="${USERPROFILE:-}/.windsurf/mcp.json"
 else
   # Linux
   CLAUDE_CONFIG="$HOME/.config/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  VSCODE_CONFIG="$HOME/.continue/config.json"
+  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
+fi
+
+if [ -d "$PWD/.git" ]; then
+  VSCODE_CONFIG="$PWD/.vscode/mcp.json"
+else
+  VSCODE_CONFIG=""
 fi
 
 # Function to merge config using python
@@ -164,7 +171,8 @@ except Exception as e:
 # 5. Configure IDEs
 CLAUDE_STATUS="✗ Claude Desktop not detected"
 CURSOR_STATUS="✗ Cursor not detected"
-VSCODE_STATUS="✗ VS Code with Continue not detected"
+VSCODE_STATUS="✗ VS Code native MCP requires workspace"
+WINDSURF_STATUS="✗ Windsurf not detected"
 
 # Check Claude Desktop parent dir or config existence
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
@@ -188,14 +196,26 @@ if [ -d "$CURSOR_DIR" ] || [ -f "$CURSOR_CONFIG" ]; then
   fi
 fi
 
-# Check VS Code Continue parent dir or config existence
-VSCODE_DIR=$(dirname "$VSCODE_CONFIG")
-if [ -d "$VSCODE_DIR" ] || [ -f "$VSCODE_CONFIG" ]; then
+# Check VS Code native MCP (workspace local)
+if [ -n "$VSCODE_CONFIG" ]; then
   res=$(merge_config "$VSCODE_CONFIG" "$BIN_DEST")
-  if [ \"$res\" = \"SUCCESS\" ]; then
-    VSCODE_STATUS="✓ VS Code with Continue configured"
+  if [ "$res" = "SUCCESS" ]; then
+    VSCODE_STATUS="✓ VS Code configured for this workspace"
   else
-    VSCODE_STATUS="⚠ VS Code with Continue: manual config required: $res"
+    VSCODE_STATUS="⚠ VS Code: manual config required: $res"
+  fi
+else
+  VSCODE_STATUS="⚠ VS Code: Not in a git repository. Run installer inside your project to auto-configure .vscode/mcp.json."
+fi
+
+# Check Windsurf
+WINDSURF_DIR=$(dirname "$WINDSURF_CONFIG")
+if [ -d "$WINDSURF_DIR" ] || [ -f "$WINDSURF_CONFIG" ]; then
+  res=$(merge_config "$WINDSURF_CONFIG" "$BIN_DEST")
+  if [ "$res" = "SUCCESS" ]; then
+    WINDSURF_STATUS="✓ Windsurf configured"
+  else
+    WINDSURF_STATUS="⚠ Windsurf: manual config required: $res"
   fi
 fi
 
@@ -218,10 +238,16 @@ else
   printf "%b\n" "  $CURSOR_STATUS"
 fi
 
-if echo \"$VSCODE_STATUS\" | grep -q \"^✓\"; then
+if echo "$VSCODE_STATUS" | grep -q "^✓"; then
   printf "%b\n" "  ${GREEN}$VSCODE_STATUS${NC}"
 else
   printf "%b\n" "  $VSCODE_STATUS"
+fi
+
+if echo "$WINDSURF_STATUS" | grep -q "^✓"; then
+  printf "%b\n" "  ${GREEN}$WINDSURF_STATUS${NC}"
+else
+  printf "%b\n" "  $WINDSURF_STATUS"
 fi
 echo ""
 

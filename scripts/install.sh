@@ -2,7 +2,7 @@
 # ─── mcp-injector Zero-Config Installer ───────────────────────────────────────
 #
 # Detects OS and architecture, downloads/installs the binaries, and configures
-# Claude Desktop, Cursor, and VS Code.
+# Claude Desktop, Cursor, VS Code, and Windsurf.
 # ─────────────────────────────────────────────────────────────────────────────
 set -eu
 
@@ -46,9 +46,14 @@ case "$ARCH" in
 esac
 
 # 2. Setup paths
+EXE_EXT=""
+if [ "$OS" = "windows" ]; then
+  EXE_EXT=".exe"
+fi
+
 INSTALL_DIR="/usr/local/bin"
-BIN_DEST="$INSTALL_DIR/mcp-injector"
-BENCHMARK_DEST="$INSTALL_DIR/mcp-benchmark"
+BIN_DEST="$INSTALL_DIR/mcp-injector${EXE_EXT}"
+BENCHMARK_DEST="$INSTALL_DIR/mcp-benchmark${EXE_EXT}"
 
 # Check permissions
 USE_SUDO=""
@@ -60,8 +65,8 @@ if [ "$OS" != "windows" ]; then
       else
         INSTALL_DIR="$HOME/.local/bin"
         mkdir -p "$INSTALL_DIR"
-        BIN_DEST="$INSTALL_DIR/mcp-injector"
-        BENCHMARK_DEST="$INSTALL_DIR/mcp-benchmark"
+        BIN_DEST="$INSTALL_DIR/mcp-injector${EXE_EXT}"
+        BENCHMARK_DEST="$INSTALL_DIR/mcp-benchmark${EXE_EXT}"
       fi
     fi
   fi
@@ -74,15 +79,15 @@ trap 'rm -f "$TMP_BIN" "$TMP_BENCHMARK"' EXIT
 # 3. Download / Install
 echo "Detecting release binaries for $OS-$ARCH..."
 
-DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-injector-$OS-$ARCH"
-BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH"
+DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-injector-$OS-$ARCH${EXE_EXT}"
+BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH${EXE_EXT}"
 
 if curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
   printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
 else
   printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
-  if [ -f "./mcp-injector" ]; then
-    cp "./mcp-injector" "$TMP_BIN"
+  if [ -f "./mcp-injector${EXE_EXT}" ]; then
+    cp "./mcp-injector${EXE_EXT}" "$TMP_BIN"
   elif command -v go > /dev/null 2>&1; then
     go build -o "$TMP_BIN" .
   else
@@ -95,10 +100,10 @@ if curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
   printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
 else
   printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local benchmark binary..."
-  if [ -f "./mcp-benchmark" ]; then
-    cp "./mcp-benchmark" "$TMP_BENCHMARK"
-  elif [ -f "./benchmark" ]; then
-    cp "./benchmark" "$TMP_BENCHMARK"
+  if [ -f "./mcp-benchmark${EXE_EXT}" ]; then
+    cp "./mcp-benchmark${EXE_EXT}" "$TMP_BENCHMARK"
+  elif [ -f "./benchmark${EXE_EXT}" ]; then
+    cp "./benchmark${EXE_EXT}" "$TMP_BENCHMARK"
   elif command -v go > /dev/null 2>&1; then
     go build -o "$TMP_BENCHMARK" ./cmd/benchmark
   else
@@ -124,20 +129,27 @@ printf "%b\n" "${GREEN}✓${NC} Binaries installed successfully."
 CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
+WINDSURF_CONFIG=""
 
 if [ \"$OS\" = \"darwin\" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  VSCODE_CONFIG="$HOME/.continue/config.json"
+  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
 elif [ \"$OS\" = \"windows\" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
-  VSCODE_CONFIG="${USERPROFILE:-}/.continue/config.json"
+  WINDSURF_CONFIG="${USERPROFILE:-}/.windsurf/mcp.json"
 else
   # Linux
   CLAUDE_CONFIG="$HOME/.config/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  VSCODE_CONFIG="$HOME/.continue/config.json"
+  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
+fi
+
+if [ -d "$PWD/.git" ]; then
+  VSCODE_CONFIG="$PWD/.vscode/mcp.json"
+else
+  VSCODE_CONFIG=""
 fi
 
 # Function to merge config using python
@@ -187,7 +199,8 @@ except Exception as e:
 # 5. Configure IDEs
 CLAUDE_STATUS="✗ Claude Desktop not detected"
 CURSOR_STATUS="✗ Cursor not detected"
-VSCODE_STATUS="✗ VS Code with Continue not detected"
+VSCODE_STATUS="✗ VS Code native MCP requires workspace"
+WINDSURF_STATUS="✗ Windsurf not detected"
 
 # Check Claude Desktop parent dir or config existence
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
@@ -211,14 +224,26 @@ if [ -d "$CURSOR_DIR" ] || [ -f "$CURSOR_CONFIG" ]; then
   fi
 fi
 
-# Check VS Code Continue parent dir or config existence
-VSCODE_DIR=$(dirname "$VSCODE_CONFIG")
-if [ -d "$VSCODE_DIR" ] || [ -f "$VSCODE_CONFIG" ]; then
+# Check VS Code native MCP (workspace local)
+if [ -n "$VSCODE_CONFIG" ]; then
   res=$(merge_config "$VSCODE_CONFIG" "$BIN_DEST")
-  if [ \"$res\" = \"SUCCESS\" ]; then
-    VSCODE_STATUS="✓ VS Code with Continue configured"
+  if [ "$res" = "SUCCESS" ]; then
+    VSCODE_STATUS="✓ VS Code configured for this workspace"
   else
-    VSCODE_STATUS="⚠ VS Code with Continue: manual config required: $res"
+    VSCODE_STATUS="⚠ VS Code: manual config required: $res"
+  fi
+else
+  VSCODE_STATUS="⚠ VS Code: Not in a git repository. Run installer inside your project to auto-configure .vscode/mcp.json."
+fi
+
+# Check Windsurf
+WINDSURF_DIR=$(dirname "$WINDSURF_CONFIG")
+if [ -d "$WINDSURF_DIR" ] || [ -f "$WINDSURF_CONFIG" ]; then
+  res=$(merge_config "$WINDSURF_CONFIG" "$BIN_DEST")
+  if [ "$res" = "SUCCESS" ]; then
+    WINDSURF_STATUS="✓ Windsurf configured"
+  else
+    WINDSURF_STATUS="⚠ Windsurf: manual config required: $res"
   fi
 fi
 
@@ -241,10 +266,16 @@ else
   printf "%b\n" "  $CURSOR_STATUS"
 fi
 
-if echo \"$VSCODE_STATUS\" | grep -q \"^✓\"; then
+if echo "$VSCODE_STATUS" | grep -q "^✓"; then
   printf "%b\n" "  ${GREEN}$VSCODE_STATUS${NC}"
 else
   printf "%b\n" "  $VSCODE_STATUS"
+fi
+
+if echo "$WINDSURF_STATUS" | grep -q "^✓"; then
+  printf "%b\n" "  ${GREEN}$WINDSURF_STATUS${NC}"
+else
+  printf "%b\n" "  $WINDSURF_STATUS"
 fi
 
 # Warn if installed to user home bin and not in PATH
@@ -258,7 +289,7 @@ if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
 fi
 
 # Notify if no IDE configured
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$WINDSURF_STATUS" | grep -q "✓"; then
   echo ""
   printf "%b\n" "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
   printf "%b\n" "  To manually integrate mcp-injector with your AI tools, please refer to"
@@ -269,7 +300,7 @@ echo ""
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$WINDSURF_STATUS" | grep -q "✓"; then
   echo "  Installation complete! Please configure your IDE/client manually."
 else
   echo "  You're all set. Restart your IDE and mcp-injector will be active."

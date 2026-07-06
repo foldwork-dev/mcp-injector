@@ -1,6 +1,6 @@
 # mcp-injector
 
-Claude Code only sees the files you have open. On a large codebase this means constant missed context. This leads to wrong suggestions, incomplete refactors, and "I don't have access to that file."
+Claude Code reads raw files on demand, quickly exhausting your context window and budget. On a large codebase, this leads to slow responses and high API costs.
 
 mcp-injector fixes this. It runs as a background daemon, pre-indexes your entire repository into a local SQLite catalog, and serves a compressed snapshot of your whole codebase to Claude on every query at roughly 1/5th the normal token cost.
 
@@ -14,9 +14,9 @@ Estimate the impact of AST code compression on large open-source repositories (c
 
 |  Repository |  Total Files |  Raw Context Tokens |  Compressed Context Tokens |  Token Reduction |  Cost Saved / Run |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Django** | 2,359 | 5.5M | 1.5M | **72.6%** | **$12.09** |
-| **Spring Framework** | 9,193 | 15.0M | 5.0M | **66.4%** | **$29.94** |
-| **Next.js** | 21,848 | 23.8M | 4.9M | **79.2%** | **$56.65** |
+| **Django** | 2,359 | 5.6M | 0.6M | **89.3%** | **$15.00** |
+| **Spring Framework** | 9,193 | 15.0M | 5.2M | **65.3%** | **$29.40** |
+| **Next.js** | 21,985 | 24.0M | 10.2M | **57.5%** | **$41.40** |
 
 *Numbers are reproducible. Run the open-source benchmark tool on any public repository:*  
  **[mcp-benchmark repository](https://github.com/foldwork-dev/mcp-benchmark)**
@@ -32,15 +32,15 @@ mcp-benchmark ./your-project
 
 ════════════════════════════════════════════════════════════════════════════════
   mcp-benchmark - context
-  Tier 3 compression  |  $3.00/1M tokens  |  2026-07-04T16:29:02Z
+  Tier 3 compression  |  $3.00/1M tokens  |  2026-07-06T12:00:00Z
 ════════════════════════════════════════════════════════════════════════════════
 
 FILE                                          RAW TOKENS    COMPRESSED     SAVED   COST SAVED*
 ──────────────────────────────────────────────────────────────────────────────────────────
-cmd/license-gen/main.go                            3,633           214     94.1%       $0.0100
-main.go                                           17,555         1,917     89.1%       $0.0470
-website/api/webhook.go                             2,682           295     89.0%       $0.0070
-main_test.go                                       1,576           353     77.6%       $0.0040
+cmd/license-gen/main.go                            3,633           214     94.1%       $0.0103
+main.go                                           17,555         1,917     89.1%       $0.0469
+website/api/webhook.go                             2,682           295     89.0%       $0.0072
+main_test.go                                       1,576           353     77.6%       $0.0037
 ──────────────────────────────────────────────────────────────────────────────────────────
 TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0680
 
@@ -60,7 +60,7 @@ Install the daemon locally and configure your IDEs:
 curl -fsSL https://foldwork.dev/install | sh
 ```
 
-*Automatically configures **Claude Desktop**, **Cursor IDE**, and **VS Code (Continue)**.*
+*Automatically configures **Claude Desktop**, **Cursor IDE**, and **VS Code**.*
 
 ---
 
@@ -82,7 +82,7 @@ If your project is under 100,000 lines, mcp-injector is completely free. The ben
 curl -fsSL https://foldwork.dev/install | sh
 ```
 
-The installer auto-detects Claude Desktop, Cursor, and VS Code and writes the MCP config automatically. You should see output like:
+The installer auto-detects Claude Desktop, Cursor, VS Code, and Windsurf and writes the MCP config automatically. You should see output like:
 
 ```text
 * mcp-injector v0.1.0 installed to /usr/local/bin/mcp-injector
@@ -179,9 +179,11 @@ If the auto-installer does not detect your IDE, add this to your MCP config manu
 
 Config file locations:
 - Claude Desktop (Mac): `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Claude Desktop (Windows): `%APPDATA%\Claude\claude_desktop_config.json`
 - Claude Desktop (Linux): `~/.config/Claude/claude_desktop_config.json`
 - Cursor: `~/.cursor/mcp.json`
-- VS Code (Continue): `~/.continue/config.json`
+- VS Code: `.vscode/mcp.json`
+- Windsurf: `~/.windsurf/mcp.json`
 
 ---
 
@@ -255,10 +257,13 @@ sudo rm /usr/local/bin/mcp-injector
 # Remove index cache and logs
 rm -rf ~/.mcp-injector/
 
-# Remove from Claude Desktop config (edit manually):
-# ~/.config/Claude/claude_desktop_config.json   (Linux)
-# ~/Library/Application Support/Claude/claude_desktop_config.json  (macOS)
-# Remove the "mcp-injector" entry from mcpServers
+# Remove from IDE MCP config (edit manually):
+# Claude Desktop (Linux): ~/.config/Claude/claude_desktop_config.json
+# Claude Desktop (macOS): ~/Library/Application Support/Claude/claude_desktop_config.json
+# Cursor: ~/.cursor/mcp.json
+# VS Code: .vscode/mcp.json
+# Windsurf: ~/.windsurf/mcp.json
+# (Remove the "mcp-injector" entry from mcpServers)
 ```
 
 ---
