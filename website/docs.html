@@ -741,13 +741,14 @@
         <p>mcp-injector exposes three tools. Claude calls these tools automatically when relevant. You can also prompt Claude to call them explicitly.</p>
 
         <h3>get_project_map</h3>
-        <p>This tool returns a compressed view of the codebase.</p>
+        <p>This tool returns a compressed view of the codebase. It automatically detects <b>Java packages</b> and <b>Spring component types</b> (e.g. controllers, services, repositories) to organize modules semantically rather than just by directory path.</p>
         <p>Prompt: <b>"Use get_project_map to show me this project"</b></p>
         <p>Parameters:</p>
         <ul>
           <li><b>tier</b> (1, 2, or 3): compression level. Default is 3. Tier 1 does not compress. Tier 2 folds function bodies but keeps signatures. Tier 3 folds bodies and strips comments.</li>
           <li><b>unfolded_files</b>: array of file paths or glob patterns to serve at full resolution.</li>
         </ul>
+        <p>The response includes a <code>dependency_graph</code> showing inter-module dependencies and a <code>layer_summary</code> for an instant architectural overview of the system.</p>
         <p>Example prompt: <b>"Get the project map but show me src/auth/handler.go at full resolution"</b></p>
 
         <h3>injector_retrieve</h3>
@@ -778,7 +779,7 @@ dist/
 testdata/
 fixtures/</code></pre>
         </div>
-        <p>Files matching these patterns are excluded from the index. They will not appear in <b>get_project_map</b> and cannot be retrieved via <b>injector_retrieve</b>. mcp-injector also respects your existing <b>.gitignore</b> file automatically.</p>
+        <p>Files matching these patterns are excluded from the index. They will not appear in <b>get_project_map</b> and cannot be retrieved via <b>injector_retrieve</b>. mcp-injector also respects your existing <b>.gitignore</b> file automatically. Changes to <b>.gitignore</b> or <b>.mcp-ignore</b> are dynamically reloaded; newly ignored files are purged from the index instantly without requiring a daemon restart.</p>
 
         <h3>Adjusting default compression tier</h3>
         <p>The default compression tier is 3. If you want to change the default behavior, prompt Claude to use a lower tier:</p>
