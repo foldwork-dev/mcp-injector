@@ -83,8 +83,11 @@ else
   printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
   if [ -f "./mcp-injector" ]; then
     cp "./mcp-injector" "$TMP_BIN"
-  else
+  elif command -v go > /dev/null 2>&1; then
     go build -o "$TMP_BIN" .
+  else
+    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
+    exit 1
   fi
 fi
 
@@ -96,8 +99,11 @@ else
     cp "./mcp-benchmark" "$TMP_BENCHMARK"
   elif [ -f "./benchmark" ]; then
     cp "./benchmark" "$TMP_BENCHMARK"
-  else
+  elif command -v go > /dev/null 2>&1; then
     go build -o "$TMP_BENCHMARK" ./cmd/benchmark
+  else
+    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
+    exit 1
   fi
 fi
 
@@ -161,9 +167,13 @@ try:
     if 'mcpServers' not in data:
         data['mcpServers'] = {}
     
+    workspace_val = '\${workspaceFolder}'
+    if 'claude_desktop_config' in filepath:
+        workspace_val = '/absolute/path/to/your/project'
+
     data['mcpServers']['mcp-injector'] = {
         'command': binpath,
-        'env': { 'MCP_WORKSPACE': '\${workspaceFolder}' }
+        'env': { 'MCP_WORKSPACE': workspace_val }
     }
     
     with open(filepath, 'w') as f:
@@ -184,7 +194,7 @@ CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
 if [ -d "$CLAUDE_DIR" ] || [ -f "$CLAUDE_CONFIG" ]; then
   res=$(merge_config "$CLAUDE_CONFIG" "$BIN_DEST")
   if [ \"$res\" = \"SUCCESS\" ]; then
-    CLAUDE_STATUS="✓ Claude Desktop configured"
+    CLAUDE_STATUS="✓ Claude Desktop configured (IMPORTANT: edit config to set actual MCP_WORKSPACE path)"
   else
     CLAUDE_STATUS="⚠ Claude Desktop: manual config required: $res"
   fi
@@ -256,10 +266,6 @@ if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS" | grep -q "✓"; then
 fi
 echo ""
 
-# 7. Run post-install benchmark
-echo "Running benchmark on current directory..."
-echo ""
-"$BENCHMARK_DEST" . || true
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
