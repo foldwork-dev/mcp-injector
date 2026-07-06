@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Repomix vs mcp-injector Comparison - mcp-injector</title>
-  <meta name="description" content="Compare Repomix and mcp-injector. Learn the differences between one-shot codebase bundling and persistent, branch-aware local MCP context compression.">
+  <title>Repomix vs mcp-injector — Detailed Comparison | Foldwork</title>
+  <meta name="description" content="Compare Repomix and mcp-injector side by side. One is a one-shot CLI packer; the other is a persistent MCP daemon with AST compression, branch awareness, and prompt cache optimization.">
+  <meta name="keywords" content="repomix vs mcp-injector, repomix alternative, mcp-injector comparison, codebase context tool comparison">
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/vs/repomix">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Repomix vs mcp-injector Comparison - mcp-injector">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="Repomix vs mcp-injector — Detailed Comparison">
   <meta property="og:description" content="Compare Repomix and mcp-injector. Learn how mcp-injector delivers branch-aware, compressed context via MCP compared to static code bundling.">
   <meta property="og:url" content="https://foldwork.dev/vs/repomix">
   <meta property="og:type" content="website">
@@ -19,9 +23,10 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Repomix vs mcp-injector Comparison - mcp-injector">
+  <meta name="twitter:title" content="Repomix vs mcp-injector — Detailed Comparison">
   <meta name="twitter:description" content="Compare Repomix and mcp-injector. Choose the right codebase context loader for your LLM workflow.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -335,7 +340,49 @@
         text-align: left;
       }
     }
-  </style>
+    <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foldwork.dev" },
+          { "@type": "ListItem", "position": 2, "name": "Comparisons", "item": "https://foldwork.dev/vs/repomix" },
+          { "@type": "ListItem", "position": 3, "name": "Repomix vs mcp-injector" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "name": "Repomix vs mcp-injector — Detailed Comparison",
+        "url": "https://foldwork.dev/vs/repomix",
+        "description": "Side-by-side comparison of Repomix and mcp-injector covering integration model, token compression, prompt caching, branch awareness, and secret redaction.",
+        "publisher": { "@type": "Organization", "name": "Foldwork", "url": "https://foldwork.dev" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the main difference between Repomix and mcp-injector?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Repomix is a one-shot CLI tool that packs your repository into a single file each time you run it. mcp-injector is a persistent local MCP daemon that pre-indexes your codebase into a SQLite catalog and serves compressed context on-demand to your IDE via the Model Context Protocol." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does mcp-injector have better prompt caching than Repomix?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. mcp-injector guarantees byte-identical output on every run through canonical determinism — alphabetical file sorting and metadata stripping — so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix output fluctuates across runs, causing frequent cache misses." }
+          },
+          {
+            "@type": "Question",
+            "name": "When should I use Repomix instead of mcp-injector?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Repomix is a good choice for one-off tasks: bundling a small codebase to paste into a web chat UI like Claude.ai or ChatGPT. It is open source, free, and requires no daemon. mcp-injector is designed for professional IDE workflows with Claude Code, Cursor, or VS Code, where persistent context and prompt cache savings matter." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -419,7 +466,7 @@
           </tr>
           <tr>
             <td><strong>Secret Redaction</strong></td>
-            <td><span class="status-yes">✅ Always-On Local Filter</span><br><small style="color: var(--text-muted);"> встроенный Shannon entropy filter. Dynamic credential redaction (API keys, JWTs) happens locally.</small></td>
+            <td><span class="status-yes">✅ Always-On Local Filter</span><br><small style="color: var(--text-muted);">Built-in Shannon entropy filter. Dynamic credential redaction (API keys, JWTs, private key headers) happens locally before any context reaches the LLM.</small></td>
             <td><span class="status-no">❌ None</span><br><small style="color: var(--text-muted);">Relies entirely on manual file exclusions to prevent credential leakage.</small></td>
           </tr>
           <tr>

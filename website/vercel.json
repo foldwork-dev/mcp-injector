@@ -2,31 +2,58 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/install", "destination": "/install.sh", "permanent": true }
+    { "source": "/install", "destination": "/install.sh", "permanent": true },
+    { "source": "/compare/repomix", "destination": "/vs/repomix", "permanent": true },
+    { "source": "/compare/code2prompt", "destination": "/vs/code2prompt", "permanent": true }
   ],
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/(.*).html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
       "source": "/sitemap.xml",
-      "headers": [{"key": "Content-Type", "value": "application/xml"}]
+      "headers": [{ "key": "Content-Type", "value": "application/xml" }]
     },
     {
       "source": "/robots.txt",
-      "headers": [{"key": "Content-Type", "value": "text/plain"}]
+      "headers": [{ "key": "Content-Type", "value": "text/plain" }]
     },
     {
       "source": "/llms.txt",
-      "headers": [{"key": "Content-Type", "value": "text/plain; charset=utf-8"}]
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+    },
+    {
+      "source": "/site.webmanifest",
+      "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }]
     },
     {
       "source": "/og-image.png",
       "headers": [
-        {"key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400"}
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/badge/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     },
     {
       "source": "/install.sh",
       "headers": [
-        {"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"}
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     }
   ]

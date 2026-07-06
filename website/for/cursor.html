@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compress Your Codebase for Cursor IDE - mcp-injector</title>
-  <meta name="description" content="Integrate mcp-injector with Cursor IDE via MCP. Reduce context token usage by 66-79% and optimize Claude 3.5 Sonnet queries with AST compression.">
+  <title>mcp-injector for Cursor IDE — Cut Context Token Costs | Foldwork</title>
+  <meta name="description" content="Integrate mcp-injector with Cursor IDE via MCP. Reduce context token usage by 66-79% using AST body folding. Branch-aware, always-on, fully local.">
+  <meta name="keywords" content="mcp-injector Cursor, Cursor MCP server, Cursor context compression, reduce Cursor AI costs">
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/for/cursor">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Compress Your Codebase for Cursor IDE - mcp-injector">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="mcp-injector for Cursor IDE — Cut Context Token Costs">
   <meta property="og:description" content="Connect mcp-injector to Cursor. Structural AST folding saves 66-79% on context tokens. Fully local and offline.">
   <meta property="og:url" content="https://foldwork.dev/for/cursor">
   <meta property="og:type" content="website">
@@ -19,9 +23,35 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Compress Your Codebase for Cursor IDE - mcp-injector">
+  <meta name="twitter:title" content="mcp-injector for Cursor IDE — Cut Context Token Costs">
   <meta name="twitter:description" content="Connect mcp-injector to Cursor. Structural AST folding saves 66-79% on context tokens.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foldwork.dev" },
+          { "@type": "ListItem", "position": 2, "name": "For Cursor IDE" }
+        ]
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to connect mcp-injector to Cursor IDE",
+        "description": "Configure mcp-injector as an MCP server in Cursor IDE to compress codebase context by 66-79% and reduce AI API costs.",
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "Install the daemon", "text": "Run: curl -fsSL https://foldwork.dev/install | sh" },
+          { "@type": "HowToStep", "position": 2, "name": "Add MCP server in Cursor", "text": "Open Cursor Settings → Features → MCP → Add New MCP Server. Command: /usr/local/bin/mcp-injector" },
+          { "@type": "HowToStep", "position": 3, "name": "Verify in Cursor Chat", "text": "Open Cursor Chat (Cmd+L) and type: Use get_project_map to check the structure of this workspace." }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

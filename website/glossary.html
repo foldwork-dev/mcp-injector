@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary — mcp-injector Key Terms | Foldwork</title>
+  <meta name="description" content="Definitions of key terms used in mcp-injector: AST body folding, Model Context Protocol (MCP), canonical determinism, KV prompt cache, compression tier, CCR pattern, and Shannon entropy.">
+  <meta name="keywords" content="AST body folding definition, MCP server definition, canonical determinism, KV prompt cache Claude, compression tier, Shannon entropy secrets">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/glossary">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="Glossary — mcp-injector Key Terms">
+  <meta property="og:description" content="Definitions of AST body folding, MCP, canonical determinism, KV prompt cache, and other core terms used in mcp-injector.">
+  <meta property="og:url" content="https://foldwork.dev/glossary">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Glossary — mcp-injector Key Terms | Foldwork">
+  <meta name="twitter:description" content="Definitions of AST body folding, canonical determinism, KV prompt cache, and more.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foldwork.dev" },
+          { "@type": "ListItem", "position": 2, "name": "Glossary" }
+        ]
+      },
+      {
+        "@type": "DefinedTermSet",
+        "name": "mcp-injector Glossary",
+        "url": "https://foldwork.dev/glossary",
+        "description": "Key technical terms used in mcp-injector documentation and marketing.",
+        "hasDefinedTerm": [
+          {
+            "@type": "DefinedTerm",
+            "name": "AST Body Folding",
+            "termCode": "ast-body-folding",
+            "description": "A compression technique where function, method, and class bodies in source code are replaced with stub markers (e.g. { ... }) while keeping signatures, type definitions, and interface declarations intact. The result is a skeleton view of the codebase that conveys full architectural understanding at a fraction of the original token count.",
+            "url": "https://foldwork.dev/glossary#ast-body-folding"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "Model Context Protocol (MCP)",
+            "termCode": "mcp",
+            "description": "An open standard developed by Anthropic that defines how AI assistants (like Claude) can interact with external tools, data sources, and services. An MCP server exposes tools that the AI can call during a conversation. mcp-injector runs as a local MCP server.",
+            "url": "https://foldwork.dev/glossary#mcp"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "Canonical Determinism",
+            "termCode": "canonical-determinism",
+            "description": "The property of producing byte-identical output on every run given the same input. mcp-injector achieves this by sorting files alphabetically, stripping volatile metadata (timestamps, process IDs), and applying a fixed compression algorithm. Canonical determinism is essential for maximising Anthropic KV prompt cache hit rates.",
+            "url": "https://foldwork.dev/glossary#canonical-determinism"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "KV Prompt Cache",
+            "termCode": "kv-prompt-cache",
+            "description": "A server-side caching mechanism used by Anthropic's Claude API. When the same token sequence appears at the start of a prompt, Anthropic reuses the previously computed key-value attention states instead of recomputing them. This reduces input token costs by 40-90%. Byte-identical prompt output from mcp-injector guarantees cache hits across sessions.",
+            "url": "https://foldwork.dev/glossary#kv-prompt-cache"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "Compression Tier",
+            "termCode": "compression-tier",
+            "description": "mcp-injector's three-level compression system. Tier 1: no compression, raw file content. Tier 2: AST body folding only — function bodies replaced with stubs, comments preserved. Tier 3 (default): AST body folding plus comment stripping for maximum token reduction.",
+            "url": "https://foldwork.dev/glossary#compression-tier"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "CCR (Compress-Cache-Retrieve)",
+            "termCode": "ccr",
+            "description": "The three-phase context delivery pattern used by mcp-injector. Phase 1 (Compress): the project map is served at high compression via get_project_map. Phase 2 (Cache): the compressed output is cached by Anthropic's KV cache. Phase 3 (Retrieve): Claude fetches full file bodies on-demand via injector_retrieve only when needed.",
+            "url": "https://foldwork.dev/glossary#ccr"
+          },
+          {
+            "@type": "DefinedTerm",
+            "name": "Shannon Entropy",
+            "termCode": "shannon-entropy",
+            "description": "A mathematical measure of information density in a string, measured in bits per character. High-entropy strings (above ~4.5 bits/char) are statistically unlikely to be human-readable text and are often randomly generated secrets like API keys, tokens, or passwords. mcp-injector uses Shannon entropy analysis to detect and redact credentials before they reach Claude's context window.",
+            "url": "https://foldwork.dev/glossary#shannon-entropy"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg:#0d1117;--bg-card:#161b22;--bg-nav:rgba(13,17,23,0.75);
+      --border:rgba(240,246,252,0.1);--text:#c9d1d9;--text-muted:#8b949e;
+      --text-white:#f0f6fc;--accent:#7c3aed;--accent-hover:#9061f9;
+      --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --font-mono:'JetBrains Mono',Consolas,"Liberation Mono",Menlo,monospace;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background-color:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    a{color:var(--accent);text-decoration:none;transition:color 0.2s;}
+    a:hover{color:var(--accent-hover);}
+    .container{max-width:800px;margin:0 auto;padding:0 1.5rem;}
+    .navbar{position:sticky;top:0;z-index:100;background-color:var(--bg-nav);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-container{display:flex;align-items:center;justify-content:space-between;height:4rem;}
+    .brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:1.125rem;color:var(--text-white);letter-spacing:-0.025em;}
+    .brand span{color:var(--accent);}
+    .nav-links{display:flex;align-items:center;gap:1.5rem;}
+    .nav-link{color:var(--text-muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+    .nav-link:hover{color:var(--text-white);}
+    .nav-btn{display:inline-flex;align-items:center;background-color:var(--accent);color:var(--text-white);font-size:0.875rem;font-weight:600;padding:0.5rem 1rem;border-radius:6px;transition:background-color 0.2s;}
+    .nav-btn:hover{background-color:var(--accent-hover);}
+    .mobile-menu-toggle{display:none;background:none;border:none;color:var(--text-white);cursor:pointer;padding:0.5rem;z-index:101;}
+    @media(max-width:767px){
+      .mobile-menu-toggle{display:block;}
+      .nav-links{display:flex !important;position:absolute;top:100%;left:0;right:0;background-color:rgba(13,17,23,0.98);border-bottom:1px solid var(--border);flex-direction:column;align-items:stretch;gap:0;padding:1rem 1.5rem 1.5rem;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .25s,transform .25s,visibility .25s;box-shadow:0 10px 30px rgba(0,0,0,0.5);pointer-events:none;z-index:100;}
+      .nav-links.active{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
+      .nav-link{display:block !important;padding:0.875rem 0;font-size:1rem;border-bottom:1px solid rgba(240,246,252,0.05);}
+      .nav-btn{margin-top:1.25rem;width:100%;padding:0.75rem;font-size:1rem;}
+    }
+    .page-header{padding:5rem 0 3rem;}
+    .page-title{font-size:2.25rem;font-weight:800;color:var(--text-white);letter-spacing:-0.04em;margin-bottom:0.75rem;}
+    .page-subtitle{font-size:1.05rem;color:var(--text-muted);}
+    .term-list{margin:2.5rem 0 5rem;display:flex;flex-direction:column;gap:0;}
+    .term-entry{padding:2rem 0;border-bottom:1px solid var(--border);scroll-margin-top:6rem;}
+    .term-entry:first-child{border-top:1px solid var(--border);}
+    .term-name{font-size:1.25rem;font-weight:700;color:var(--text-white);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;}
+    .term-anchor{font-size:0.875rem;font-weight:400;color:var(--text-muted);font-family:var(--font-mono);}
+    .term-anchor:hover{color:var(--accent);}
+    .term-def{font-size:0.9375rem;color:var(--text);margin-bottom:1rem;}
+    .term-example{background-color:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-white);overflow-x:auto;white-space:pre;}
+    .term-links{margin-top:0.75rem;font-size:0.875rem;}
+    .footer{border-top:1px solid var(--border);padding:3rem 0;font-size:0.8125rem;color:var(--text-muted);}
+    .footer-container{display:flex;flex-direction:column;align-items:center;gap:1.5rem;text-align:center;}
+    .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;}
+    .footer-link{color:var(--text-muted);transition:color .2s;}
+    .footer-link:hover{color:var(--text-white);}
+    @media(min-width:768px){.footer-container{flex-direction:row;justify-content:space-between;text-align:left;}}
+    code{font-family:var(--font-mono);font-size:0.875rem;background-color:rgba(255,255,255,0.06);padding:0.15rem 0.4rem;border-radius:4px;color:var(--text-white);}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-label="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-title">Glossary</h1>
+      <p class="page-subtitle">Definitions of key technical terms used in mcp-injector documentation.</p>
+    </header>
+
+    <main>
+      <dl class="term-list">
+
+        <div id="ast-body-folding" class="term-entry">
+          <dt class="term-name">
+            AST Body Folding
+            <a href="#ast-body-folding" class="term-anchor">#ast-body-folding</a>
+          </dt>
+          <dd class="term-def">
+            A compression technique where function, method, and class bodies in source code are replaced with stub markers while keeping signatures, type definitions, and interface declarations intact. The result is a skeleton view of the entire codebase that conveys full architectural understanding at a fraction of the original token count — typically 57–89% fewer tokens than the raw source.
+          </dd>
+          <pre class="term-example">// Before (full source — 12 tokens in body)
+func ProcessPayment(amount float64, userID string) error {
+    user, err := db.GetUser(userID)
+    if err != nil { return err }
+    return stripe.Charge(user.Card, amount)
+}
+
+// After AST body folding (body → stub)
+func ProcessPayment(amount float64, userID string) error { ... }</pre>
+          <dd class="term-links">See also: <a href="#compression-tier">Compression Tier</a>, <a href="/benchmarks">Benchmarks</a></dd>
+        </div>
+
+        <div id="mcp" class="term-entry">
+          <dt class="term-name">
+            Model Context Protocol (MCP)
+            <a href="#mcp" class="term-anchor">#mcp</a>
+          </dt>
+          <dd class="term-def">
+            An open standard developed by Anthropic that defines how AI assistants can interact with external tools, data sources, and services during a conversation. An MCP server exposes named tools that the AI can call. mcp-injector runs as a local MCP server, exposing <code>get_project_map</code>, <code>injector_retrieve</code>, and <code>injector_stats</code> as callable tools.
+          </dd>
+          <dd class="term-links">See also: <a href="/docs#using-the-mcp-tools">MCP Tools documentation</a></dd>
+        </div>
+
+        <div id="canonical-determinism" class="term-entry">
+          <dt class="term-name">
+            Canonical Determinism
+            <a href="#canonical-determinism" class="term-anchor">#canonical-determinism</a>
+          </dt>
+          <dd class="term-def">
+            The property of producing byte-identical output on every run given the same input. mcp-injector achieves this by sorting files alphabetically, stripping volatile metadata (timestamps, PIDs), and applying a fixed compression pipeline. Canonical determinism is essential for maximising Anthropic KV prompt cache hit rates — if the prompt prefix is not identical byte-for-byte, the cache misses and full input token costs apply.
+          </dd>
+          <dd class="term-links">See also: <a href="#kv-prompt-cache">KV Prompt Cache</a></dd>
+        </div>
+
+        <div id="kv-prompt-cache" class="term-entry">
+          <dt class="term-name">
+            KV Prompt Cache
+            <a href="#kv-prompt-cache" class="term-anchor">#kv-prompt-cache</a>
+          </dt>
+          <dd class="term-def">
+            A server-side caching mechanism in Anthropic's Claude API. When the same token sequence appears at the start of a prompt, Anthropic reuses the previously computed key-value attention states instead of recomputing them from scratch. This reduces effective input token costs by 40–90% on cache hits. Because mcp-injector produces byte-identical output, the first session pays full price and every subsequent session on the same codebase hits the cache.
+          </dd>
+          <dd class="term-links">See also: <a href="#canonical-determinism">Canonical Determinism</a>, <a href="/vs/repomix">vs Repomix</a></dd>
+        </div>
+
+        <div id="compression-tier" class="term-entry">
+          <dt class="term-name">
+            Compression Tier
+            <a href="#compression-tier" class="term-anchor">#compression-tier</a>
+          </dt>
+          <dd class="term-def">
+            mcp-injector's three-level compression system passed as the <code>tier</code> parameter to <code>get_project_map</code>:
+            <ul style="margin:0.75rem 0 0.75rem 1.5rem;">
+              <li><strong>Tier 1</strong> — No compression. Raw file content served as-is.</li>
+              <li><strong>Tier 2</strong> — AST body folding only. Function bodies replaced with stubs; comments preserved.</li>
+              <li><strong>Tier 3</strong> (default) — AST body folding plus comment stripping. Maximum token reduction.</li>
+            </ul>
+            Individual files can bypass compression entirely using the <code>unfolded_files</code> parameter.
+          </dd>
+          <dd class="term-links">See also: <a href="#ast-body-folding">AST Body Folding</a>, <a href="/docs#using-the-mcp-tools">get_project_map</a></dd>
+        </div>
+
+        <div id="ccr" class="term-entry">
+          <dt class="term-name">
+            CCR (Compress-Cache-Retrieve)
+            <a href="#ccr" class="term-anchor">#ccr</a>
+          </dt>
+          <dd class="term-def">
+            The three-phase context delivery pattern used by mcp-injector for maximum efficiency:
+            <ol style="margin:0.75rem 0 0.75rem 1.5rem;">
+              <li><strong>Compress</strong> — Claude calls <code>get_project_map</code> to receive the entire codebase as compressed signatures.</li>
+              <li><strong>Cache</strong> — The compressed output is cached by Anthropic's KV prompt cache. Subsequent sessions reuse this cache.</li>
+              <li><strong>Retrieve</strong> — Claude calls <code>injector_retrieve</code> only for specific files it needs to inspect at full resolution, avoiding full-context re-delivery.</li>
+            </ol>
+          </dd>
+          <dd class="term-links">See also: <a href="#kv-prompt-cache">KV Prompt Cache</a>, <a href="/docs#using-the-mcp-tools">MCP Tools</a></dd>
+        </div>
+
+        <div id="shannon-entropy" class="term-entry">
+          <dt class="term-name">
+            Shannon Entropy
+            <a href="#shannon-entropy" class="term-anchor">#shannon-entropy</a>
+          </dt>
+          <dd class="term-def">
+            A mathematical measure of information density in a string, measured in bits per character. A string where each character is equally probable has maximum entropy (~6 bits/char for alphanumeric). Normal English text has ~4 bits/char. High-entropy strings above 4.5 bits/char are statistically unlikely to be human-readable and are often randomly generated secrets such as API keys, bearer tokens, or passwords. mcp-injector uses Shannon entropy analysis alongside 11 regex patterns to detect and redact credentials before they reach Claude's context window.
+          </dd>
+          <dd class="term-links">See also: <a href="/docs">Security documentation</a></dd>
+        </div>
+
+      </dl>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div>Foldwork © 2026</div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.mobile-menu-toggle');
+    const nav = document.querySelector('.nav-links');
+    const menuSVG = '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+    const closeSVG = '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    if (btn && nav) {
+      btn.addEventListener('click', e => { e.stopPropagation(); const open = nav.classList.toggle('active'); btn.setAttribute('aria-expanded', open); btn.innerHTML = open ? closeSVG : menuSVG; });
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); btn.innerHTML = menuSVG; }));
+      document.addEventListener('click', e => { if (!nav.contains(e.target) && !btn.contains(e.target)) { nav.classList.remove('active'); btn.setAttribute('aria-expanded','false'); btn.innerHTML = menuSVG; } });
+    }
+  </script>
+</body>
+</html>

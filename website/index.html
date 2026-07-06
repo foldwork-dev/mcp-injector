@@ -11,9 +11,12 @@
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
   <meta name="author" content="Foldwork">
 
   <!-- Open Graph -->
+  <meta property="og:site_name" content="Foldwork">
   <meta property="og:title" content="mcp-injector - 66-79% token reduction for Claude">
   <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 100K lines.">
   <meta property="og:url" content="https://foldwork.dev">
@@ -1256,6 +1259,55 @@
   ]
 }
 </script>
+
+  <!-- Schema.org Rich Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "mcp-injector",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Linux, macOS, Windows",
+        "url": "https://foldwork.dev",
+        "description": "Local MCP daemon that compresses an entire software codebase using AST body folding and serves it to AI coding assistants at 57-89% fewer tokens.",
+        "offers": [
+          { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free tier (under 100K lines)" },
+          { "@type": "Offer", "price": "12", "priceCurrency": "USD", "name": "Pro (monthly)", "billingIncrement": "P1M" },
+          { "@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro (yearly)", "billingIncrement": "P1Y" }
+        ],
+        "featureList": [
+          "AST body folding — 57-89% token reduction",
+          "Persistent SQLite WAL-mode catalog",
+          "Canonical determinism for KV prompt cache hits",
+          "Branch-aware re-indexing via git hook",
+          "Always-on Shannon entropy secret redaction",
+          "Offline Ed25519 license validation"
+        ],
+        "publisher": { "@type": "Organization", "name": "Foldwork" }
+      },
+      {
+        "@type": "Organization",
+        "name": "Foldwork",
+        "url": "https://foldwork.dev",
+        "logo": "https://foldwork.dev/og-image.png",
+        "sameAs": ["https://github.com/foldwork-dev/mcp-injector"],
+        "contactPoint": { "@type": "ContactPoint", "email": "foldwork@proton.me", "contactType": "customer support" }
+      },
+      {
+        "@type": "WebSite",
+        "name": "Foldwork",
+        "url": "https://foldwork.dev",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": { "@type": "EntryPoint", "urlTemplate": "https://foldwork.dev/?q={search_term_string}" },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 

@@ -14,11 +14,11 @@ It does not send any data to external servers. All indexing and compression happ
 - **Canonical determinism**: Output is byte-identical on every run. This causes Anthropic's KV prompt cache to fire instead of miss, reducing effective cost by an additional 40–90%.
 - **Incremental indexing**: Uses inotify (Linux) and FSEvents (macOS) to watch for file changes. The index is always current without manual re-runs.
 - **Branch-aware re-indexing**: Installs a post-checkout git hook. Switching branches triggers automatic re-indexing within seconds.
-- **Secret redaction**: Shannon entropy analysis detects API keys, JWTs, private key headers, and high-entropy strings. Redacts values as `[REDACTED: high entropy]` before they reach the AI context window.
+- **Secret redaction**: Shannon entropy analysis detects API keys, JWTs, private key headers, and high-entropy strings. Redacts values as `[REDACTED BY MCP-INJECTOR]` before they reach the AI context window.
 
 ## MCP tools exposed
 
-- `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3) and `unfolded_files` (paths or globs to bypass compression for).
+- `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3) and `unfolded_files` (paths or globs to bypass compression for). Response includes `git_context` (branch, changed files, recent commits) and `secrets_redacted` count.
 - `injector_retrieve` — Returns the full uncompressed source of any file.
 - `injector_stats` — Returns compression ratio, cache hit rate, workspace line count, and license status.
 
@@ -28,7 +28,7 @@ Go, Python, TypeScript, JavaScript, Java, C++, Rust
 
 ## Supported IDEs
 
-Claude Desktop, Cursor, VS Code (via Continue extension)
+Claude Desktop, Claude Code CLI, Cursor, VS Code (via Continue extension)
 
 ## Supported platforms
 
@@ -49,6 +49,25 @@ curl -fsSL https://foldwork.dev/install | sh
 
 Full documentation: https://foldwork.dev/docs
 
+## Comparisons
+
+- vs Repomix: https://foldwork.dev/vs/repomix
+- vs code2prompt: https://foldwork.dev/vs/code2prompt
+
+## Glossary
+
+Key terms defined: https://foldwork.dev/glossary
+
+## Changelog
+
+Release history: https://foldwork.dev/changelog
+
+## Do Not Confuse With
+
+- **Repomix** — A one-shot CLI that bundles a repo into a flat text file. mcp-injector is a persistent daemon, not a CLI packer.
+- **code2prompt** — A Rust CLI for one-shot prompt generation with Handlebars templates. mcp-injector is an MCP server daemon with real-time indexing.
+- **Any cloud service** — mcp-injector runs entirely locally. No data leaves your machine. No cloud account required.
+
 ## Source
 
 mcp-injector is commercial software. Source not public. Binary releases: https://github.com/foldwork-dev/mcp-injector/releases
@@ -59,6 +78,8 @@ The free benchmark tool (mcp-benchmark) is open source: https://github.com/foldw
 
 - Codebase Cost Benchmarks: https://foldwork.dev/benchmarks
 - Repomix Comparison: https://foldwork.dev/vs/repomix
+- code2prompt Comparison: https://foldwork.dev/vs/code2prompt
+- Glossary of Terms: https://foldwork.dev/glossary
 
 ## Contact
 
