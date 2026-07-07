@@ -152,6 +152,12 @@ else
   VSCODE_CONFIG=""
 fi
 
+if [ -d "$PWD/.git" ] || [ -f "$PWD/package.json" ] || [ -f "$PWD/go.mod" ]; then
+  export FALLBACK_WORKSPACE="$PWD"
+else
+  export FALLBACK_WORKSPACE="/absolute/path/to/your/project"
+fi
+
 # Function to merge config using python
 merge_config() {
   local cfg_file="$1"
@@ -182,7 +188,7 @@ try:
     
     workspace_val = '\${workspaceFolder}'
     if 'claude_desktop_config' in filepath or 'windsurf' in filepath:
-        workspace_val = '/absolute/path/to/your/project'
+        workspace_val = os.environ.get('FALLBACK_WORKSPACE', '/absolute/path/to/your/project')
 
     data[key]['mcp-injector'] = {
         'command': binpath,
@@ -208,7 +214,11 @@ CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
 if [ -d "$CLAUDE_DIR" ] || [ -f "$CLAUDE_CONFIG" ]; then
   res=$(merge_config "$CLAUDE_CONFIG" "$BIN_DEST")
   if [ "$res" = "SUCCESS" ]; then
-    CLAUDE_STATUS="✓ Claude Desktop configured (IMPORTANT: edit config to set actual MCP_WORKSPACE path)"
+    if [ "$FALLBACK_WORKSPACE" = "$PWD" ]; then
+      CLAUDE_STATUS="✓ Claude Desktop configured for $PWD"
+    else
+      CLAUDE_STATUS="⚠ Claude Desktop: configured with placeholder path. Re-run installer inside a repository to auto-configure paths."
+    fi
   else
     CLAUDE_STATUS="⚠ Claude Desktop: manual config required: $res"
   fi
@@ -242,7 +252,11 @@ DEVIN_DIR=$(dirname "$DEVIN_CONFIG")
 if [ -d "$DEVIN_DIR" ] || [ -f "$DEVIN_CONFIG" ]; then
   res=$(merge_config "$DEVIN_CONFIG" "$BIN_DEST")
   if [ "$res" = "SUCCESS" ]; then
-    DEVIN_STATUS="✓ Devin Desktop configured"
+    if [ "$FALLBACK_WORKSPACE" = "$PWD" ]; then
+      DEVIN_STATUS="✓ Devin Desktop configured for $PWD"
+    else
+      DEVIN_STATUS="⚠ Devin Desktop: configured with placeholder path. Re-run installer inside a repository to auto-configure paths."
+    fi
   else
     DEVIN_STATUS="⚠ Devin Desktop: manual config required: $res"
   fi

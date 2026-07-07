@@ -752,7 +752,7 @@
 
         <h3>Running multiple projects</h3>
         <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
-        <p>Option A: Update <b>MCP_WORKSPACE</b> in your IDE configuration manually when switching projects.</p>
+        <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -sL https://foldwork.dev/install.sh | bash</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude and Devin Desktop to point to the new project.</p>
         <p>Option B: Run a separate daemon instance for each project on a different configuration. Each daemon maintains its own index at <b>~/.mcp-injector/cache/&lt;workspace-hash&gt;.db</b> to avoid conflicts.</p>
       </section>
 
