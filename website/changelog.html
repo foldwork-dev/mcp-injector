@@ -396,6 +396,25 @@
     </header>
     <article class="changelog-entry">
       <div class="version-header">
+        <h2 class="version-title">v0.2.1</h2>
+        <span class="version-date">July 7, 2026</span>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Agent UX (AX) Overhaul</h3>
+        <p style="margin-bottom: 1rem;">This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.</p>
+        <ul class="changelog-list">
+          <li><strong>Zero-Friction Search:</strong> <code>injector_search</code> now returns <code>line_start</code>, <code>line_end</code>, <code>symbol_type</code>, and a <code>context_snippet</code> so agents can instantly verify symbols without wasting tokens on full file retrievals.</li>
+          <li><strong>Smart Search Ranking:</strong> The BM25 search engine now explicitly ranks symbol definitions (classes, functions, methods) above references and comments to eliminate search noise.</li>
+          <li><strong>Sync Transparency:</strong> <code>injector_sync</code> now returns an array of <code>files_reindexed</code> so agents receive immediate, concrete proof that their OS-level edits were picked up by the daemon.</li>
+          <li><strong>Agent Proactivity:</strong> We updated the MCP tool description for <code>get_project_map</code> to inject a system prompt override that commands conservative AI agents to proactively use the tool when exploring unfamiliar architectures.</li>
+          <li><strong>Explicit Fold Markers:</strong> Replaced ambiguous <code>... (folded)</code> stubs with explicit <code># FOLD START</code> and <code># FOLD END</code> markers to prevent LLM confusion when reading heavily compressed files.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="changelog-entry">
+      <div class="version-header">
         <h2 class="version-title">v0.2.0</h2>
         <span class="version-date">July 7, 2026</span>
       </div>
