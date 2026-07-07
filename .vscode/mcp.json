@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "mcp-injector": {
+      "command": "/home/febinbiju/.local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "${workspaceFolder}"
+      }
+    }
+  }
+}

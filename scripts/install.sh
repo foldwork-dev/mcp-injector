@@ -2,7 +2,7 @@
 # ─── mcp-injector Zero-Config Installer ───────────────────────────────────────
 #
 # Detects OS and architecture, downloads/installs the binaries, and configures
-# Claude Desktop, Cursor, VS Code, and Windsurf.
+# Claude Desktop, Cursor, VS Code, and Devin Desktop.
 # ─────────────────────────────────────────────────────────────────────────────
 set -eu
 
@@ -129,21 +129,21 @@ printf "%b\n" "${GREEN}✓${NC} Binaries installed successfully."
 CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
-WINDSURF_CONFIG=""
+DEVIN_CONFIG=""
 
 if [ "$OS" = "darwin" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
+  DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
 elif [ "$OS" = "windows" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
-  WINDSURF_CONFIG="${USERPROFILE:-}/.windsurf/mcp.json"
+  DEVIN_CONFIG="${USERPROFILE:-}/.codeium/windsurf/mcp_config.json"
 else
   # Linux
   CLAUDE_CONFIG="$HOME/.config/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
-  WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
+  DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
 fi
 
 if [ -d "$PWD/.git" ]; then
@@ -176,12 +176,12 @@ try:
     if not isinstance(data, dict):
         data = {}
     
-    key = 'servers' if 'mcp.json' in filepath else 'mcpServers'
+    key = 'servers' if '.vscode' in filepath else 'mcpServers'
     if key not in data:
         data[key] = {}
     
     workspace_val = '\${workspaceFolder}'
-    if 'claude_desktop_config' in filepath:
+    if 'claude_desktop_config' in filepath or 'windsurf' in filepath:
         workspace_val = '/absolute/path/to/your/project'
 
     data[key]['mcp-injector'] = {
@@ -201,7 +201,7 @@ except Exception as e:
 CLAUDE_STATUS="✗ Claude Desktop not detected"
 CURSOR_STATUS="✗ Cursor not detected"
 VSCODE_STATUS="✗ VS Code native MCP requires workspace"
-WINDSURF_STATUS="✗ Windsurf not detected"
+DEVIN_STATUS="✗ Devin Desktop not detected"
 
 # Check Claude Desktop parent dir or config existence
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
@@ -237,14 +237,14 @@ else
   VSCODE_STATUS="⚠ VS Code: Not in a git repository. Run installer inside your project to auto-configure .vscode/mcp.json."
 fi
 
-# Check Windsurf
-WINDSURF_DIR=$(dirname "$WINDSURF_CONFIG")
-if [ -d "$WINDSURF_DIR" ] || [ -f "$WINDSURF_CONFIG" ]; then
-  res=$(merge_config "$WINDSURF_CONFIG" "$BIN_DEST")
+# Check Devin Desktop
+DEVIN_DIR=$(dirname "$DEVIN_CONFIG")
+if [ -d "$DEVIN_DIR" ] || [ -f "$DEVIN_CONFIG" ]; then
+  res=$(merge_config "$DEVIN_CONFIG" "$BIN_DEST")
   if [ "$res" = "SUCCESS" ]; then
-    WINDSURF_STATUS="✓ Windsurf configured"
+    DEVIN_STATUS="✓ Devin Desktop configured"
   else
-    WINDSURF_STATUS="⚠ Windsurf: manual config required: $res"
+    DEVIN_STATUS="⚠ Devin Desktop: manual config required: $res"
   fi
 fi
 
@@ -273,10 +273,10 @@ else
   printf "%b\n" "  $VSCODE_STATUS"
 fi
 
-if echo "$WINDSURF_STATUS" | grep -q "^✓"; then
-  printf "%b\n" "  ${GREEN}$WINDSURF_STATUS${NC}"
+if echo "$DEVIN_STATUS" | grep -q "^✓"; then
+  printf "%b\n" "  ${GREEN}$DEVIN_STATUS${NC}"
 else
-  printf "%b\n" "  $WINDSURF_STATUS"
+  printf "%b\n" "  $DEVIN_STATUS"
 fi
 
 # Warn if installed to user home bin and not in PATH
@@ -290,7 +290,7 @@ if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
 fi
 
 # Notify if no IDE configured
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$WINDSURF_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
   echo ""
   printf "%b\n" "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
   printf "%b\n" "  To manually integrate mcp-injector with your AI tools, please refer to"
@@ -301,7 +301,7 @@ echo ""
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$WINDSURF_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
   echo "  Installation complete! Please configure your IDE/client manually."
 else
   echo "  You're all set. Restart your IDE and mcp-injector will be active."

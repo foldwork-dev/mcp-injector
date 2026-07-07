@@ -1,7 +1,7 @@
 {
   "name": "mcp-injector — Foldwork",
   "short_name": "mcp-injector",
-  "description": "Local MCP daemon. 30-89% token compression for Claude Code, Cursor, VS Code, and Windsurf.",
+  "description": "Local MCP daemon. 30-89% token compression for Claude Code, Cursor, VS Code, and Devin Desktop.",
   "start_url": "/",
   "display": "browser",
   "theme_color": "#7c3aed",

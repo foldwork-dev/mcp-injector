@@ -68,7 +68,7 @@ This update solidifies the daemon for AI coding agent workflows by eliminating r
 - Pro ($12/month): unlimited workspace size + advanced features
 
 **Supported IDEs:**
-- Claude Desktop, Cursor, VS Code, Windsurf
+- Claude Desktop, Cursor, VS Code, Devin Desktop
 - Auto-detection and configuration on install
 
 **Supported platforms:**

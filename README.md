@@ -82,7 +82,7 @@ If your project is under 100,000 lines, mcp-injector is completely free. The ben
 curl -fsSL https://foldwork.dev/install | sh
 ```
 
-The installer auto-detects Claude Desktop, Cursor, VS Code, and Windsurf and writes the MCP config automatically. You should see output like:
+The installer auto-detects Claude Desktop, Cursor, VS Code, and Devin Desktop and writes the MCP config automatically. You should see output like:
 
 ```text
 * mcp-injector v0.2.0 installed to /usr/local/bin/mcp-injector
@@ -183,7 +183,7 @@ Config file locations:
 - Claude Desktop (Linux): `~/.config/Claude/claude_desktop_config.json`
 - Cursor: `~/.cursor/mcp.json`
 - VS Code: `.vscode/mcp.json`
-- Windsurf: `~/.windsurf/mcp.json`
+- Devin Desktop: `~/.devin/mcp.json`
 
 ---
 
@@ -269,7 +269,7 @@ rm -rf ~/.mcp-injector/
 # Claude Desktop (macOS): ~/Library/Application Support/Claude/claude_desktop_config.json
 # Cursor: ~/.cursor/mcp.json
 # VS Code: .vscode/mcp.json
-# Windsurf: ~/.windsurf/mcp.json
+# Devin Desktop: ~/.devin/mcp.json
 # (Remove the "mcp-injector" entry from mcpServers)
 ```
 

@@ -436,7 +436,7 @@
         <tbody>
           <tr>
             <td><strong>Integration Model</strong></td>
-            <td><span class="status-yes">✅ Native MCP Server</span><br><small style="color: var(--text-muted);">Integrates directly as a tool in Claude Desktop, Cursor, VS Code, and Windsurf. IDE queries it dynamically.</small></td>
+            <td><span class="status-yes">✅ Native MCP Server</span><br><small style="color: var(--text-muted);">Integrates directly as a tool in Claude Desktop, Cursor, VS Code, and Devin Desktop. IDE queries it dynamically.</small></td>
             <td><span class="status-no">❌ Static File Exporter</span><br><small style="color: var(--text-muted);">Generates a single output file (e.g. repomix-output.txt) that you manually attach or paste into chat.</small></td>
           </tr>
           <tr>
@@ -487,7 +487,7 @@
     <p class="narrative-p">Repomix is an excellent, lightweight CLI utility for one-off tasks. If you want to bundle a small codebase or folder into a single file to copy/paste into a web UI (like Claude.ai web interface, ChatGPT, or Gemini Advanced) for a quick review, Repomix is the right tool. It is open source, free, and works instantly without running daemons.</p>
 
     <h2 class="section-title">When to use mcp-injector</h2>
-    <p class="narrative-p">mcp-injector is designed for developers who write code inside IDEs (Cursor, VS Code, Windsurf, Claude Code) for hours every day. Because it integrates natively via the Model Context Protocol, the LLM retrieves codebase structure on-demand during active chat. By folding code bodies structurally and ensuring strict byte-by-byte outputs, it leverages Claude's prompt caching to save significant money on API bills while keeping response times fast.</p>
+    <p class="narrative-p">mcp-injector is designed for developers who write code inside IDEs (Cursor, VS Code, Devin Desktop, Claude Code) for hours every day. Because it integrates natively via the Model Context Protocol, the LLM retrieves codebase structure on-demand during active chat. By folding code bodies structurally and ensuring strict byte-by-byte outputs, it leverages Claude's prompt caching to save significant money on API bills while keeping response times fast.</p>
 
     <h2 class="section-title">Summary Comparison</h2>
     <p class="narrative-p">Think of Repomix as a manual "zip file exporter" optimized for the web chat UI. Think of mcp-injector as a high-performance local context daemon optimized for professional IDE AI assistant workflows.</p>
