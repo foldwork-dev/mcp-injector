@@ -683,6 +683,14 @@
           <li>Claude references the correct branch name.</li>
           <li>Token usage in your Claude dashboard decreases over time.</li>
         </ul>
+
+        <h3>Checking your ROI (Savings Dashboard)</h3>
+        <p>To see your real-time token savings and estimated dollars saved, run the status dashboard in your terminal:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('injector-status', this)">Copy</button>
+          <pre id="injector-status" class="code-block"><code>mcp-injector status</code></pre>
+        </div>
+        <p>This CLI dashboard proves the exact ROI value the daemon is delivering on your codebase by comparing raw tokens against AST-compressed tokens.</p>
       </section>
 
       <!-- Section: IDE Setup -->
@@ -858,6 +866,15 @@ fixtures/</code></pre>
       <!-- Section: Limitations -->
       <section id="limitations" class="docs-section">
         <h2>Limitations</h2>
+        
+        <h3>Supported Languages & Fallbacks</h3>
+        <p>mcp-injector provides full AST compression (body stripping, signature preservation, and deterministic sorting) for Tier 1 supported languages. All other languages safely fall back to standard text indexing—they will not crash, but they will not receive advanced token compression.</p>
+        <ul>
+          <li><b>Tier 1 (Full AST Compression):</b> Python, Go, Rust, Java, TypeScript, JavaScript, C++, C, C#, and Ruby.</li>
+          <li><b>Text Fallback:</b> Any language not listed above is safely indexed as standard plaintext.</li>
+        </ul>
+
+        <h3>Other known limitations</h3>
         <p>mcp-injector works well on most codebases but has the following known limitations:</p>
         <ul>
           <li><b>Files over 5MB are skipped.</b> Large generated outputs or data assets are excluded from indexing.</li>
