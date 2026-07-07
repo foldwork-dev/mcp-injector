@@ -45,7 +45,7 @@
         "description": "Configure mcp-injector as an MCP server in VS Code to compress codebase context and reduce LLM token costs.",
         "step": [
           { "@type": "HowToStep", "position": 1, "name": "Install the daemon", "text": "Run: curl -fsSL https://foldwork.dev/install | sh" },
-          { "@type": "HowToStep", "position": 2, "name": "Configure VS Code", "text": "Edit .vscode/mcp.json and add mcp-injector under the mcpServers block." },
+          { "@type": "HowToStep", "position": 2, "name": "Configure VS Code", "text": "Edit .vscode/mcp.json and add mcp-injector under the servers block." },
           { "@type": "HowToStep", "position": 3, "name": "Verify in VS Code", "text": "Open VS Code chat, and verify the get_project_map tool is available." }
         ]
       }
@@ -388,7 +388,7 @@
       <p>If you didn't run the installer in your project directory, you can configure VS Code manually by creating a <b>.vscode/mcp.json</b> file in your workspace:</p>
       <pre class="code-block">
 {
-  "mcpServers": {
+  "servers": {
     "mcp-injector": {
       "command": "mcp-injector",
       "env": {

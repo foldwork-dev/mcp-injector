@@ -176,14 +176,15 @@ try:
     if not isinstance(data, dict):
         data = {}
     
-    if 'mcpServers' not in data:
-        data['mcpServers'] = {}
+    key = 'servers' if 'mcp.json' in filepath else 'mcpServers'
+    if key not in data:
+        data[key] = {}
     
     workspace_val = '\${workspaceFolder}'
     if 'claude_desktop_config' in filepath:
         workspace_val = '/absolute/path/to/your/project'
 
-    data['mcpServers']['mcp-injector'] = {
+    data[key]['mcp-injector'] = {
         'command': binpath,
         'env': { 'MCP_WORKSPACE': workspace_val }
     }
