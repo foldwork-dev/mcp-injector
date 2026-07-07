@@ -1553,6 +1553,9 @@
         <div class="step-card">
           <h3 class="step-title">Preventing accidental secret leaks</h3>
           <p class="step-desc">Security teams block AI tools because developers accidentally leak AWS and SSH keys. mcp-injector includes a local Shannon entropy filter that dynamically masks high-entropy secrets from the AST before they ever leave your machine.</p>
+          <ul style="margin-top: 1rem; color: var(--text-muted); font-size: 0.95rem; padding-left: 1.5rem; line-height: 1.5;">
+            <li style="margin-bottom: 0.5rem;"><strong>Air-Gapped Ready:</strong> Pro license validation uses strictly offline Ed25519 cryptography. The daemon never makes an outbound network request, even to verify your subscription. No telemetry, no exceptions.</li>
+          </ul>
         </div>
 
         <div class="step-card">

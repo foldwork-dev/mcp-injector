@@ -231,6 +231,10 @@ Config file locations:
 * **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
 * **`injector_sync`** - Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project.
 
+### Check your ROI (Savings Dashboard)
+
+You can run `mcp-injector status` in your terminal at any time. This CLI dashboard visually proves your exact token savings and estimated dollars saved by comparing your raw codebase tokens against the AST-compressed tokens in real-time.
+
 ---
 
 ##  Security
@@ -241,6 +245,7 @@ mcp-injector automatically redacts secrets and credentials before they reach Cla
 - JWT tokens and bearer tokens
 - High-entropy strings detected via Shannon entropy analysis
 - Private key headers (`-----BEGIN RSA PRIVATE KEY-----`)
+- **Air-Gapped Ready:** Pro license validation uses strictly offline Ed25519 cryptography. The daemon never makes an outbound network request, even to verify your subscription.
 
 Redacted content is replaced with `[REDACTED BY MCP-INJECTOR]`. A count of redactions is included in the `get_project_map` response so you always know what was protected.
 
