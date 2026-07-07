@@ -227,9 +227,9 @@ Config file locations:
   ```
 
 * **`injector_retrieve`** - Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters for surgical snippet extraction.
-* **`injector_search`** - BM25 full-text search over indexed symbols. Returns exact `FilePath` locations to feed directly into `injector_retrieve`.
+* **`injector_search`** - BM25 full-text search over indexed symbols. Returns line ranges, symbol types, and context snippets so you can skip redundant file retrievals.
 * **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
-* **`injector_sync`** - Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project.
+* **`injector_sync`** - Synchronously waits for the daemon to finish indexing pending filesystem edits. Returns a list of exactly which files were reindexed to confirm changes.
 
 ### Check your ROI (Savings Dashboard)
 

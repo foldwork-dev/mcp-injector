@@ -749,7 +749,7 @@
         </div>
 
         <h3>get_project_map</h3>
-        <p>This tool returns a compressed view of the codebase. It automatically detects <b>Java packages</b> and <b>Spring component types</b> (e.g. controllers, services, repositories) to organize modules semantically rather than just by directory path.</p>
+        <p>This tool returns a compressed view of the codebase. It automatically detects <b>Java packages</b> and <b>Spring component types</b> (e.g. controllers, services, repositories) to organize modules semantically rather than just by directory path. Feel free to use this proactively when exploring unfamiliar architectures.</p>
         <p>Prompt: <b>"Use get_project_map to show me this project"</b></p>
         <p>Parameters:</p>
         <ul>
@@ -760,7 +760,7 @@
         <p>Example prompt: <b>"Get the project map but show me src/auth/handler.go at full resolution"</b></p>
 
         <h3>injector_search</h3>
-        <p>This tool performs a fast BM25 full-text search over indexed symbols in the local SQLite catalog. Results include the file path (<code>FilePath</code> field) so you can immediately call <code>injector_retrieve</code> without a secondary lookup.</p>
+        <p>This tool performs a fast BM25 full-text search over indexed symbols in the local SQLite catalog. Results are ranked with definitions first, and include the <code>line_start</code>, <code>line_end</code>, and a <code>context_snippet</code> so you can immediately verify the symbol without a secondary lookup.</p>
         <p>Prompt: <b>"Search the codebase for AuthenticationService"</b></p>
 
         <h3>injector_retrieve</h3>
@@ -774,7 +774,7 @@
         <p>The response includes indexed files, workspace line count, compression ratio, cache hit rate, and Pro license status.</p>
 
         <h3>injector_sync</h3>
-        <p>Waits for all pending file index updates to complete. Call this after writing to a file and before calling <code>get_project_map</code> to ensure the index reflects your latest changes. Returns when the index is fully up to date.</p>
+        <p>Waits for all pending file index updates to complete. Call this after writing to a file and before calling <code>get_project_map</code> to ensure the index reflects your latest changes. Returns a list of the exact files reindexed (<code>files_reindexed</code>) so you can verify your edits were processed.</p>
         <p>Prompt: <b>"Sync the index before getting the project map"</b></p>
       </section>
 
