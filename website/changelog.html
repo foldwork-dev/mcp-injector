@@ -394,6 +394,25 @@
       <h1 class="page-title">Changelog</h1>
       <p class="page-subtitle">All notable changes, fixes, and improvements to the mcp-injector platform.</p>
     </header>
+    <article class="changelog-entry">
+      <div class="version-header">
+        <h2 class="version-title">v0.2.0</h2>
+        <span class="version-date">July 7, 2026</span>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Agent UX & Stability Fixes</h3>
+        <p style="margin-bottom: 1rem;">This update solidifies the daemon for AI coding agent workflows by eliminating race conditions and fixing concurrency crashes under heavy load.</p>
+        <ul class="changelog-list">
+          <li><strong>Architectural Stability:</strong> Migrated from WASM to native <code>modernc.org/sqlite</code> to fix OOM panics and database locking issues. Fixed interleaved JSON-RPC payloads by introducing Mutex-locked atomic <code>stdout</code> writes.</li>
+          <li><strong>Synchronous File Indexing:</strong> Introduced the <code>injector_sync</code> tool to let AI agents intentionally wait for pending filesystem edits to finish indexing, removing race conditions between writing files and querying the map.</li>
+          <li><strong>Surgical Context Extraction:</strong> <code>injector_retrieve</code> now accepts <code>start_line</code> and <code>end_line</code> arguments to retrieve exact snippets rather than massive file dumps.</li>
+          <li><strong>Actionable Search Results:</strong> <code>injector_search</code> now explicitly returns the relative <code>FilePath</code> for each matched symbol to allow immediate, zero-guesswork retrieval by AI agents.</li>
+          <li><strong>Java Module Intelligence:</strong> Implemented robust parsing for Java packages and Spring annotations (<code>@RestController</code>, <code>@Service</code>, etc.) to semantically group enterprise Spring Boot applications inside a new <code>layer_summary</code> output.</li>
+          <li><strong>Read-Only Warnings:</strong> The daemon now explicitly warns AI agents via the MCP handshake and JSON responses to prevent them from attempting to modify folded, read-only code.</li>
+        </ul>
+      </div>
+    </article>
 
     <article class="changelog-entry">
       <div class="version-header">

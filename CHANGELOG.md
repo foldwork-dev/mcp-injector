@@ -2,6 +2,27 @@
 
 All notable changes to mcp-injector are documented here.
 
+## [0.2.0] - 2026-07-07
+
+### Agent UX & Stability Fixes
+
+This update solidifies the daemon for AI coding agent workflows by eliminating race conditions and fixing concurrency crashes under heavy load.
+
+**Architectural Stability:**
+- Migrated from WASM to native `modernc.org/sqlite` to fix OOM panics and database locking issues.
+- Fixed interleaved JSON-RPC payloads by introducing Mutex-locked atomic `stdout` writes.
+- Built-in SQLite self-healing: automatically detects "database disk image is malformed" and rebuilds the cache natively.
+
+**Agent UX Improvements:**
+- `injector_sync` (NEW): Synchronously waits for pending filesystem edits to finish indexing, removing race conditions between writing files and querying the map.
+- Surgical Context Extraction: `injector_retrieve` now accepts `start_line` and `end_line` arguments to retrieve exact snippets rather than massive file dumps.
+- Actionable Search Results: `injector_search` now explicitly returns the relative `FilePath` for each matched symbol to allow immediate, zero-guesswork retrieval by AI agents.
+- Java Module Intelligence: Implemented robust parsing for Java packages and Spring annotations (`@RestController`, `@Service`, etc.) to semantically group enterprise Spring Boot applications inside a new `layer_summary` output.
+- Read-Only Warnings: The daemon now explicitly warns AI agents via the MCP handshake and JSON responses to prevent them from attempting to modify folded, read-only code.
+
+**Developer Experience:**
+- Added `mcp-injector status` CLI command to display a terminal dashboard of indexed lines, token compression, and estimated cost savings.
+
 ## [0.1.0] - 2026-07-04
 
 ### Initial Release

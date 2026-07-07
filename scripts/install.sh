@@ -131,11 +131,11 @@ CURSOR_CONFIG=""
 VSCODE_CONFIG=""
 WINDSURF_CONFIG=""
 
-if [ \"$OS\" = \"darwin\" ]; then
+if [ "$OS" = "darwin" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   WINDSURF_CONFIG="$HOME/.windsurf/mcp.json"
-elif [ \"$OS\" = \"windows\" ]; then
+elif [ "$OS" = "windows" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
   WINDSURF_CONFIG="${USERPROFILE:-}/.windsurf/mcp.json"
@@ -206,7 +206,7 @@ WINDSURF_STATUS="✗ Windsurf not detected"
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
 if [ -d "$CLAUDE_DIR" ] || [ -f "$CLAUDE_CONFIG" ]; then
   res=$(merge_config "$CLAUDE_CONFIG" "$BIN_DEST")
-  if [ \"$res\" = \"SUCCESS\" ]; then
+  if [ "$res" = "SUCCESS" ]; then
     CLAUDE_STATUS="✓ Claude Desktop configured (IMPORTANT: edit config to set actual MCP_WORKSPACE path)"
   else
     CLAUDE_STATUS="⚠ Claude Desktop: manual config required: $res"
@@ -217,7 +217,7 @@ fi
 CURSOR_DIR=$(dirname "$CURSOR_CONFIG")
 if [ -d "$CURSOR_DIR" ] || [ -f "$CURSOR_CONFIG" ]; then
   res=$(merge_config "$CURSOR_CONFIG" "$BIN_DEST")
-  if [ \"$res\" = \"SUCCESS\" ]; then
+  if [ "$res" = "SUCCESS" ]; then
     CURSOR_STATUS="✓ Cursor configured"
   else
     CURSOR_STATUS="⚠ Cursor: manual config required: $res"
@@ -254,13 +254,13 @@ printf "%b\n" "  Installation Summary"
 printf "%b\n" "${GREEN}===================================================================${NC}"
 printf "%b\n" "  ✓ mcp-injector installed to $BIN_DEST"
 printf "%b\n" "  ✓ mcp-benchmark installed to $BENCHMARK_DEST"
-if echo \"$CLAUDE_STATUS\" | grep -q \"^✓\"; then
+if echo "$CLAUDE_STATUS" | grep -q "^✓"; then
   printf "%b\n" "  ${GREEN}$CLAUDE_STATUS${NC}"
 else
   printf "%b\n" "  $CLAUDE_STATUS"
 fi
 
-if echo \"$CURSOR_STATUS\" | grep -q \"^✓\"; then
+if echo "$CURSOR_STATUS" | grep -q "^✓"; then
   printf "%b\n" "  ${GREEN}$CURSOR_STATUS${NC}"
 else
   printf "%b\n" "  $CURSOR_STATUS"

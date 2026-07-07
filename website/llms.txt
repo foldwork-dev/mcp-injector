@@ -19,8 +19,10 @@ It does not send any data to external servers. All indexing and compression happ
 ## MCP tools exposed
 
 - `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3) and `unfolded_files` (paths or globs to bypass compression for). Response includes `git_context` (branch, changed files, recent commits) and `secrets_redacted` count.
-- `injector_retrieve` — Returns the full uncompressed source of any file.
+- `injector_retrieve` — Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters.
+- `injector_search` — BM25 full-text search over indexed symbols. Returns exact `FilePath` locations.
 - `injector_stats` — Returns compression ratio, cache hit rate, workspace line count, and license status.
+- `injector_sync` — Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project.
 
 ## Supported languages
 

@@ -14,7 +14,7 @@ body:
     attributes:
       label: mcp-injector version
       description: Run `mcp-injector --version` and paste the output
-      placeholder: "v0.1.0"
+      placeholder: "v0.2.0"
     validations:
       required: true
 

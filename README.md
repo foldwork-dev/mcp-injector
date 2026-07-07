@@ -85,7 +85,7 @@ curl -fsSL https://foldwork.dev/install | sh
 The installer auto-detects Claude Desktop, Cursor, VS Code, and Windsurf and writes the MCP config automatically. You should see output like:
 
 ```text
-* mcp-injector v0.1.0 installed to /usr/local/bin/mcp-injector
+* mcp-injector v0.2.0 installed to /usr/local/bin/mcp-injector
 * Claude Desktop configured
 * Cursor configured
 Restart your IDE and mcp-injector will be active.
@@ -226,8 +226,10 @@ Config file locations:
   }
   ```
 
-* `injector_retrieve` - Resolves and retrieves the raw source code of any compressed symbol from the local cache.
-* `injector_stats` - Visualizes index status, current token savings, and CCR cache hit rates.
+* **`injector_retrieve`** - Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters for surgical snippet extraction.
+* **`injector_search`** - BM25 full-text search over indexed symbols. Returns exact `FilePath` locations to feed directly into `injector_retrieve`.
+* **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
+* **`injector_sync`** - Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project.
 
 ---
 
