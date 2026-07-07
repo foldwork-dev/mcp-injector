@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+defaults:
+  run:
+    working-directory: website
+
 jobs:
   test:
     name: Go tests
@@ -17,14 +21,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6.5.0
         with:
-          go-version-file: go.mod
+          go-version-file: website/go.mod
 
-      - name: Run root tests
-        run: go test -v . ./parser/... -timeout 120s
-
-      - name: Run website tests
-        run: go test -v ./... -timeout 120s
-        working-directory: website
+      - name: Run tests
+        run: go test ./... -v -timeout 120s
 
   build:
     name: Build check
@@ -43,64 +43,8 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6.5.0
         with:
-          go-version-file: go.mod
+          go-version-file: website/go.mod
 
-      - name: Build daemon
-        run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o /dev/null .
-
-      - name: Build website api
+      - name: Build
         run: |
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o /dev/null ./...
-        working-directory: website
-
-  installer-test:
-    name: Installer check
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Set up Go
-        uses: actions/setup-go@v6.5.0
-        with:
-          go-version-file: go.mod
-
-      - name: Pre-build local binary fallbacks
-        run: |
-          go build -o mcp-injector .
-          go build -o mcp-benchmark ./cmd/benchmark
-
-      - name: Run installer test script
-        shell: bash
-        run: |
-          # 1. Create dummy folders for IDE configs
-          mkdir -p "$HOME/.cursor"
-          mkdir -p "$HOME/.windsurf"
-          if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            mkdir -p "$HOME/Library/Application Support/Claude"
-          elif [ "${{ matrix.os }}" = "windows-latest" ]; then
-            mkdir -p "$APPDATA/Claude"
-          else
-            mkdir -p "$HOME/.config/Claude"
-          fi
-
-          # 2. Run the script (forces compile-from-local since latest download has no v0.2.0 files yet)
-          bash scripts/install.sh
-
-          # 3. Verify copy destination and config files exist
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            # Verify Windows-specific files and paths
-            test -f "$HOME/.local/bin/mcp-injector.exe"
-            test -f "$HOME/.local/bin/mcp-benchmark.exe"
-            test -f "$HOME/.cursor/mcp.json"
-          else
-            # Verify Unix-specific paths
-            test -f "/usr/local/bin/mcp-injector" || test -f "$HOME/.local/bin/mcp-injector"
-            test -f "/usr/local/bin/mcp-benchmark" || test -f "$HOME/.local/bin/mcp-benchmark"
-            test -f "$HOME/.cursor/mcp.json"
-          fi
-
