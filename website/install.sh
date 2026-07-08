@@ -187,7 +187,7 @@ try:
         data[key] = {}
     
     workspace_val = '\${workspaceFolder}'
-    if 'claude_desktop_config' in filepath or 'windsurf' in filepath:
+    if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath:
         workspace_val = os.environ.get('FALLBACK_WORKSPACE', '/absolute/path/to/your/project')
 
     data[key]['mcp-injector'] = {
@@ -229,7 +229,11 @@ CURSOR_DIR=$(dirname "$CURSOR_CONFIG")
 if [ -d "$CURSOR_DIR" ] || [ -f "$CURSOR_CONFIG" ]; then
   res=$(merge_config "$CURSOR_CONFIG" "$BIN_DEST")
   if [ "$res" = "SUCCESS" ]; then
-    CURSOR_STATUS="✓ Cursor configured"
+    if [ "$FALLBACK_WORKSPACE" = "$PWD" ]; then
+      CURSOR_STATUS="✓ Cursor configured for $PWD"
+    else
+      CURSOR_STATUS="⚠ Cursor: configured with placeholder path. Re-run installer inside a repository to auto-configure paths."
+    fi
   else
     CURSOR_STATUS="⚠ Cursor: manual config required: $res"
   fi

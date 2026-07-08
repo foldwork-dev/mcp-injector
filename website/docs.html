@@ -718,17 +718,16 @@
 
         <h3>Cursor</h3>
         <p>Config file path: <b>~/.cursor/mcp.json</b></p>
-        <p>Cursor supports the workspace folder variable. You can use the following configuration structure:</p>
+        <p>Cursor uses a global configuration file. Add this entry to your <b>mcpServers</b> object:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('cursor-config', this)">Copy</button>
           <pre id="cursor-config" class="code-block"><code>"mcp-injector": {
   "command": "/usr/local/bin/mcp-injector",
   "env": {
-    "MCP_WORKSPACE": "${workspaceFolder}"
+    "MCP_WORKSPACE": "/absolute/path/to/your/project"
   }
 }</code></pre>
         </div>
-        <p>Cursor automatically resolves <b>${workspaceFolder}</b> to the open project folder. This enables one Cursor configuration to work across all your projects.</p>
 
         <h3>VS Code</h3>
         <p>Config file path: <b>.vscode/mcp.json</b> (in your workspace)</p>
