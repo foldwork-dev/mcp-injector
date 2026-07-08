@@ -728,6 +728,9 @@
   }
 }</code></pre>
         </div>
+        <div class="github-alert-important">
+          <p><strong>IMPORTANT:</strong> Cursor does not dynamically evaluate the <code>${workspaceFolder}</code> variable in global config files. You MUST use a hardcoded absolute path.</p>
+        </div>
 
         <h3>VS Code</h3>
         <p>Config file path: <b>.vscode/mcp.json</b> (in your workspace)</p>
@@ -751,7 +754,7 @@
 
         <h3>Running multiple projects</h3>
         <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
-        <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -sL https://foldwork.dev/install.sh | bash</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude and Devin Desktop to point to the new project.</p>
+        <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -fsSL https://foldwork.dev/install | sh</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude Desktop, Cursor, and Devin Desktop to point to the new project.</p>
         <p>Option B: Run a separate daemon instance for each project on a different configuration. Each daemon maintains its own index at <b>~/.mcp-injector/cache/&lt;workspace-hash&gt;.db</b> to avoid conflicts.</p>
       </section>
 
@@ -885,7 +888,7 @@ fixtures/</code></pre>
         <h3>Supported Languages & Fallbacks</h3>
         <p>mcp-injector provides full AST compression (body stripping, signature preservation, and deterministic sorting) for Tier 1 supported languages. All other languages safely fall back to standard text indexing—they will not crash, but they will not receive advanced token compression.</p>
         <ul>
-          <li><b>Tier 1 (Full AST Compression):</b> Python, Go, Rust, Java, TypeScript, JavaScript, C++, C, C#, and Ruby.</li>
+          <li><b>Tier 1 (Full AST Compression):</b> Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust.</li>
           <li><b>Text Fallback:</b> Any language not listed above is safely indexed as standard plaintext.</li>
         </ul>
 

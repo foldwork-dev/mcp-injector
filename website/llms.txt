@@ -26,11 +26,11 @@ It does not send any data to external servers. All indexing and compression happ
 
 ## Supported languages
 
-Go, Python, TypeScript, JavaScript, Java, C++, Rust
+Go, Python, Java, TypeScript, JavaScript, C++, C, C#, Rust
 
 ## Supported IDEs
 
-Claude Desktop, Claude Code CLI, Cursor, VS Code, Devin Desktop
+Claude Desktop, Cursor, VS Code, Devin Desktop
 
 ## Supported platforms
 

@@ -1243,7 +1243,7 @@
           "name": "What languages are supported?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Go, Python, TypeScript, JavaScript, Java, and Rust. Other file types pass through unmodified."
+            "text": "Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. Other file types pass through unmodified."
           }
         },
         {
@@ -1472,7 +1472,7 @@
         </div>
       </div>
 
-      <p class="bench-footnote">* Based on Claude 3.5 Sonnet introductory pricing: $3.00/1M input tokens. Compression tier 3 (fold + strip). Reproducible: clone any repo above and run mcp-benchmark yourself.</p>
+      <p class="bench-footnote">* Based on Claude Sonnet 5 standard pricing: $3.00/1M input tokens. Current introductory rate is $2.00/1M input tokens (through Aug 31, 2026). Compression tier 3 (fold + strip). Reproducible: clone any repo above and run mcp-benchmark yourself.</p>
     </div>
   </section>
 
@@ -1508,7 +1508,7 @@
         <div class="step-card">
           <div class="step-num-icon" alt="AST body folding compression"></div>
           <h3 class="step-title">AST body folding</h3>
-          <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, TypeScript, JavaScript, Java, Rust. Compression is fully reversible - Claude can retrieve full source when needed.</p>
+          <p class="step-desc">Strips function bodies, keeps signatures and imports. Supports Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. Compression is fully reversible - Claude can retrieve full source when needed.</p>
         </div>
 
         <!-- Step 3 -->
@@ -1701,7 +1701,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           <div class="price-amt">$0 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ forever</span></div>
           <ul class="price-features">
             <li class="price-feature"><span>✓</span> Codebases under 100,000 lines</li>
-            <li class="price-feature"><span>✓</span> All languages (Go, Python, TS, JS, Java, Rust)</li>
+            <li class="price-feature"><span>✓</span> All languages (Go, Python, Java, TS, JS, C++, C, C#, Rust)</li>
             <li class="price-feature"><span>✓</span> Instant codebase structure map</li>
             <li class="price-feature"><span>✓</span> Incremental file indexing</li>
             <li class="price-feature"><span>✓</span> No signup, no license key</li>
@@ -1755,7 +1755,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Headroom uses Contextually Compressed Retrieval (CCR) to compress context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism - alphabetical file sorting and metadata stripping - so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
+            <p>Headroom uses Compress-Cache-Retrieve (CCR) to compress context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism - alphabetical file sorting and metadata stripping - so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously.</p>
           </div>
         </div>
 
@@ -1790,7 +1790,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>Go, Python, TypeScript, JavaScript, Java, and Rust. Other file types pass through unmodified.</p>
+            <p>Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. Other file types pass through unmodified.</p>
           </div>
         </div>
 
@@ -2058,8 +2058,9 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
         const tRaw = loc * 6;
         const tComp = tRaw * 0.28;
 
-        const rawMonthly = sessions * 30 * (tRaw * 1.92 / 1000000);
-        const compMonthly = sessions * 30 * (tComp * 0.57 / 1000000);
+        // TODO: Revisit pricing on Sept 1, 2026 when the Claude Sonnet 5 introductory rate ($2.00/1M) steps up to the standard rate ($3.00/1M).
+        const rawMonthly = sessions * 30 * (tRaw * 2.00 / 1000000); // Raw input: $2.00/1M
+        const compMonthly = sessions * 30 * (tComp * 0.20 / 1000000); // Cached input: 10% of base rate ($0.20/1M)
         const savingsMonthly = Math.max(0, rawMonthly - compMonthly);
 
         resultRaw.textContent = '$' + rawMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
