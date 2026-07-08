@@ -15,19 +15,13 @@ import (
 	"time"
 )
 
-// WebhookPayload represents the Lemon Squeezy webhook event payload structure.
+// WebhookPayload represents the Dodo Payments webhook event payload structure.
 type WebhookPayload struct {
-	Meta struct {
-		EventName string `json:"event_name"`
-	} `json:"meta"`
+	Type string `json:"type"`
 	Data struct {
-		ID         string `json:"id"`
-		Type       string `json:"type"`
-		Attributes struct {
-			UserEmail   string `json:"user_email"`
-			Status      string `json:"status"`
-			VariantName string `json:"variant_name"`
-		} `json:"attributes"`
+		Customer struct {
+			Email string `json:"email"`
+		} `json:"customer"`
 	} `json:"data"`
 }
 
@@ -60,8 +54,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ─── 1. Verify Webhook Signature ──────────────────────────────────────────
-	signatureHeader := r.Header.Get("X-Signature")
-	webhookSecret := os.Getenv("LEMON_SQUEEZY_WEBHOOK_SECRET")
+	signatureHeader := r.Header.Get("webhook-signature")
+	webhookSecret := os.Getenv("DODO_PAYMENTS_WEBHOOK_SECRET")
 
 	if webhookSecret != "" {
 		if signatureHeader == "" || !verifyHMACSignature(body, signatureHeader, webhookSecret) {
@@ -70,7 +64,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// Log a warning in development mode if the secret isn't configured yet
-		fmt.Println("WARNING: LEMON_SQUEEZY_WEBHOOK_SECRET is not set. Skipping signature check.")
+		fmt.Println("WARNING: DODO_PAYMENTS_WEBHOOK_SECRET is not set. Skipping signature check.")
 	}
 
 	// ─── 2. Parse Webhook Event JSON ──────────────────────────────────────────
@@ -80,17 +74,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	eventName := payload.Meta.EventName
-	userEmail := strings.TrimSpace(payload.Data.Attributes.UserEmail)
-	status := strings.ToLower(payload.Data.Attributes.Status)
-	variantName := payload.Data.Attributes.VariantName
+	eventName := payload.Type
+	userEmail := strings.TrimSpace(payload.Data.Customer.Email)
 
-	fmt.Printf("Received event: %s, email: %s, status: %s, variant: %s\n", eventName, userEmail, status, variantName)
+	fmt.Printf("Received event: %s, email: %s\n", eventName, userEmail)
 
-	// We only issue licenses for successful orders or active subscriptions
-	shouldProcess := (eventName == "order_created" && status == "paid") ||
-		(eventName == "subscription_created" && status == "active") ||
-		(eventName == "subscription_payment_success")
+	// We only issue licenses for successful payments
+	shouldProcess := (eventName == "payment.succeeded" || eventName == "subscription.active")
 
 	if !shouldProcess {
 		w.WriteHeader(http.StatusOK)
@@ -121,7 +111,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// Determine plan length (Monthly vs Yearly)
 	now := time.Now().UTC()
 	var duration time.Duration
-	if strings.Contains(strings.ToLower(variantName), "yearly") || strings.Contains(strings.ToLower(variantName), "year") {
+	
+	// Check if the raw JSON payload contains the Dodo Payments Yearly Product ID
+	if bytes.Contains(body, []byte("pdt_0Niklo22a1291GSTiEXmy")) {
 		duration = 370 * 24 * time.Hour // 1 year + 5 days grace period
 	} else {
 		duration = 35 * 24 * time.Hour  // 1 month + 5 days grace period
