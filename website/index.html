@@ -9,7 +9,7 @@
   <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 30-89%. Free for codebases under 100K lines.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
-  <link rel="icon" type="image/png" href="/mcp_injector_checkout_logo_clean.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/og-image.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#7c3aed">
@@ -73,9 +73,28 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-    
       overflow-wrap: break-word;
-      word-wrap: break-word;}
+      word-wrap: break-word;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
 
     a {
       color: inherit;
@@ -1321,7 +1340,11 @@
   <nav class="navbar">
     <div class="container nav-container">
       <a href="#" class="brand">
-        <img src="/mcp_injector_checkout_logo_clean.png" width="24" height="24" style="flex-shrink: 0; border-radius: 4px; mix-blend-mode: screen;" alt="mcp-injector logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" style="flex-shrink: 0;">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
         Foldwork<span>.dev</span>
       </a>
       <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
