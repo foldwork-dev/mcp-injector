@@ -126,7 +126,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var duration time.Duration
 
 	// Check if the raw JSON payload contains the Dodo Payments Yearly Product ID
-	if bytes.Contains(body, []byte("pdt_0Niklo22a1291GSTiEXmy")) {
+	if bytes.Contains(body, []byte("pdt_0NipTwQvleXFAze0ndedX")) {
 		duration = 370 * 24 * time.Hour // 1 year + 5 days grace period
 	} else {
 		duration = 35 * 24 * time.Hour // 1 month + 5 days grace period
