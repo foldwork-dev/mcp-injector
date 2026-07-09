@@ -60,9 +60,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	if webhookSecret != "" {
 		headers := http.Header{}
-		headers.Set("svix-id", r.Header.Get("svix-id"))
-		headers.Set("svix-timestamp", r.Header.Get("svix-timestamp"))
-		headers.Set("svix-signature", r.Header.Get("svix-signature"))
+		headers.Set("svix-id", r.Header.Get("webhook-id"))
+		headers.Set("svix-timestamp", r.Header.Get("webhook-timestamp"))
+		headers.Set("svix-signature", r.Header.Get("webhook-signature"))
 
 		wh, err := svix.NewWebhook(webhookSecret)
 		if err != nil {
