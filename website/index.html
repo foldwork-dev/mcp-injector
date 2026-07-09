@@ -9,7 +9,7 @@
   <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 30-89%. Free for codebases under 100K lines.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="/mcp_injector_checkout_logo_clean.png">
   <link rel="apple-touch-icon" href="/og-image.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#7c3aed">
@@ -376,6 +376,8 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 2rem;
+      height: 100%;
+      box-sizing: border-box;
     }
 
     .step-num-icon {
@@ -821,6 +823,10 @@
 
       .steps-grid {
         grid-template-columns: repeat(4, 1fr);
+      }
+
+      .use-cases-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
@@ -1315,7 +1321,7 @@
   <nav class="navbar">
     <div class="container nav-container">
       <a href="#" class="brand">
-        <img src="/mcp_injector_checkout_logo_clean.png" width="24" height="24" style="flex-shrink: 0; border-radius: 4px;" alt="mcp-injector logo">
+        <img src="/mcp_injector_checkout_logo_clean.png" width="24" height="24" style="flex-shrink: 0; border-radius: 4px; mix-blend-mode: screen;" alt="mcp-injector logo">
         Foldwork<span>.dev</span>
       </a>
       <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
@@ -1530,7 +1536,7 @@
       <div class="section-header">
         <h2 class="section-title">How developers use it</h2>
       </div>
-      <div class="steps-grid">
+      <div class="steps-grid use-cases-grid">
         <div class="step-card">
           <h3 class="step-title">Large codebase, expensive Claude bills</h3>
           <p class="step-desc">A 500K line Spring Boot monorepo costs ~$45 per full-context Claude session. With mcp-injector: ~$15. At 10 sessions/day that's $9,000/month -> $3,000/month. The $12/month Pro subscription pays for itself in the first hour.</p>
@@ -1549,7 +1555,7 @@
         <div class="step-card">
           <h3 class="step-title">Preventing accidental secret leaks</h3>
           <p class="step-desc">Security teams block AI tools because developers accidentally leak AWS and SSH keys. mcp-injector includes a local Shannon entropy filter that dynamically masks high-entropy secrets from the AST before they ever leave your machine.</p>
-          <ul style="margin-top: 1rem; color: var(--text-muted); font-size: 0.95rem; padding-left: 1.5rem; line-height: 1.5;">
+          <ul style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.8125rem; padding-left: 1.25rem; line-height: 1.5; text-align: left;">
             <li style="margin-bottom: 0.5rem;"><strong>Air-Gapped Ready:</strong> Pro license validation uses strictly offline Ed25519 cryptography. The daemon never makes an outbound network request, even to verify your subscription. No telemetry, no exceptions.</li>
           </ul>
         </div>
@@ -1557,6 +1563,11 @@
         <div class="step-card">
           <h3 class="step-title">Zero bloat. Sub-150MB footprint.</h3>
           <p class="step-desc">Written in pure Go, mcp-injector is incredibly lightweight. A massive 50-million token, 45,000-file enterprise monorepo takes just 25 seconds to index and idles at under 130MB of RAM. No Electron, no JVM, no dependency hell.</p>
+        </div>
+
+        <div class="step-card">
+          <h3 class="step-title">Instantly map unfamiliar architectures</h3>
+          <p class="step-desc">When joining a new team or diving into a large open-source project, understanding the architecture takes weeks. mcp-injector generates a complete structural map of the repository in seconds, letting you immediately ask Claude targeted architectural questions without drowning it in boilerplate.</p>
         </div>
       </div>
     </div>
@@ -1718,7 +1729,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <li class="price-feature"><span>✓</span> Team licensing (3 seats)</li>
             <li class="price-feature"><span>✓</span> Priority support</li>
           </ul>
-          <a href="https://test.checkout.dodopayments.com/buy/pdt_0NiklEEviOOun8szpqqnA?quantity=1" class="btn btn-primary price-btn" id="pro-checkout-btn">Get Pro →</a>
+          <a href="https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1" class="btn btn-primary price-btn" id="pro-checkout-btn">Get Pro →</a>
           <p class="price-subtext">At $12/month, mcp-injector pays for itself if you run a 100K+ line codebase through Claude just once.</p>
         </div>
       </div>
@@ -1905,8 +1916,9 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
       const labelYearly = document.getElementById('label-yearly');
       const proPriceAmt = document.getElementById('pro-price-amt');
 
-      const monthlyCheckoutUrl = "https://test.checkout.dodopayments.com/buy/pdt_0NiklEEviOOun8szpqqnA?quantity=1";
-      const yearlyCheckoutUrl = "https://test.checkout.dodopayments.com/buy/pdt_0Niklo22a1291GSTiEXmy?quantity=1"; 
+      const monthlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1";
+      const yearlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTwQvleXFAze0ndedX?quantity=1"; 
+
 
       function updatePricing() {
         const proCheckoutBtn = document.getElementById('pro-checkout-btn');
