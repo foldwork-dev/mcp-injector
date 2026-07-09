@@ -13,6 +13,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	svix "github.com/svix/svix-webhooks/go"
 )
 
 // WebhookPayload represents the Dodo Payments webhook event payload structure.
@@ -53,12 +55,23 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// ─── 1. Verify Webhook Signature ──────────────────────────────────────────
-	signatureHeader := r.Header.Get("webhook-signature")
+	// ─── 1. Verify Webhook Signature using Svix ───────────────────────────────
 	webhookSecret := os.Getenv("DODO_PAYMENTS_WEBHOOK_SECRET")
 
 	if webhookSecret != "" {
-		if signatureHeader == "" || !verifyHMACSignature(body, signatureHeader, webhookSecret) {
+		headers := http.Header{}
+		headers.Set("svix-id", r.Header.Get("svix-id"))
+		headers.Set("svix-timestamp", r.Header.Get("svix-timestamp"))
+		headers.Set("svix-signature", r.Header.Get("svix-signature"))
+
+		wh, err := svix.NewWebhook(webhookSecret)
+		if err != nil {
+			http.Error(w, "Invalid webhook secret configuration", http.StatusInternalServerError)
+			return
+		}
+
+		err = wh.Verify(body, headers)
+		if err != nil {
 			http.Error(w, "Invalid webhook signature", http.StatusUnauthorized)
 			return
 		}
@@ -111,12 +124,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// Determine plan length (Monthly vs Yearly)
 	now := time.Now().UTC()
 	var duration time.Duration
-	
+
 	// Check if the raw JSON payload contains the Dodo Payments Yearly Product ID
 	if bytes.Contains(body, []byte("pdt_0Niklo22a1291GSTiEXmy")) {
 		duration = 370 * 24 * time.Hour // 1 year + 5 days grace period
 	} else {
-		duration = 35 * 24 * time.Hour  // 1 month + 5 days grace period
+		duration = 35 * 24 * time.Hour // 1 month + 5 days grace period
 	}
 
 	licensePayload := LicensePayload{
