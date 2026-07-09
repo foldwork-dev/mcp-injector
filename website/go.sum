@@ -1,0 +1,6 @@
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/jarcoal/httpmock v1.3.1 h1:iUx3whfZWVf3jT01hQTO/Eo5sAYtB2/rqaUuOtpInww=
+github.com/jarcoal/httpmock v1.3.1/go.mod h1:3yb8rc4BI7TCBhFY8ng0gjuLKJNquuDNiPaZjnENuYg=
+github.com/svix/svix-webhooks v1.96.1 h1:oUH1CbP8RDuTElNLi7yIT+ojyzqje5eE8Vgxuycyg+o=
+github.com/svix/svix-webhooks v1.96.1/go.mod h1:ngWxEvc1ll097e5kjOQfLz6PqjZTep6ORvGsV4s6mYg=

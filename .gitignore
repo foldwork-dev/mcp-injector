@@ -30,5 +30,6 @@ releases/
 !scripts/build-release.sh
 !install.sh
 !website/go.mod
+!website/go.sum
 !website/api/webhook.go
 
