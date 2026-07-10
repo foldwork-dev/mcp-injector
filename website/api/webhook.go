@@ -306,16 +306,26 @@ func sendSimpleEmail(to, subject, title, p1, p2 string) error {
 <html>
 <head>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px; }
-    .footer { font-size: 0.85rem; color: #6b7280; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #374151; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f3f4f6; }
+    .email-wrapper { background: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+    h2 { color: #111827; margin-top: 0; font-size: 22px; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px; margin-bottom: 24px; }
+    .message-box { background: #f9fafb; border: 1px solid #e5e7eb; border-left: 4px solid #7c3aed; padding: 16px 20px; border-radius: 8px; margin: 20px 0; color: #1f2937; }
+    p { margin: 0 0 16px 0; }
+    p:last-child { margin-bottom: 0; }
+    .footer { font-size: 0.85rem; color: #6b7280; margin-top: 32px; border-top: 1px solid #e5e7eb; padding-top: 20px; }
   </style>
 </head>
 <body>
-  <h2>%s</h2>
-  <p>%s</p>
-  <p>%s</p>
-  <div class="footer">
-    <p>Sent by <b>Foldwork.dev</b> — High performance context compression tools for developers.</p>
+  <div class="email-wrapper">
+    <h2>%s</h2>
+    <div class="message-box">
+      <p><b>%s</b></p>
+      <p>%s</p>
+    </div>
+    <p style="font-size: 0.95rem;">If you need any help or have questions about your subscription, just reply directly to this email.</p>
+    <div class="footer">
+      Sent by <b>Foldwork.dev</b> — High performance context compression tools for developers.
+    </div>
   </div>
 </body>
 </html>`, title, p1, p2)
