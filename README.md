@@ -52,6 +52,18 @@ TOTAL (4 files)                                   25,446         2,779     89.1%
 
 ---
 
+## Tools
+
+| Tool | Description |
+|---|---|
+| `get_project_map` | Returns a compressed structural overview of the workspace. Function bodies are folded and replaced with placeholders to reduce token usage. |
+| `injector_retrieve` | Retrieves the full uncompressed source of a file from the local cache. Accepts optional `start_line` and `end_line` for range retrieval. |
+| `injector_search` | BM25-ranked full-text symbol search over the local SQLite catalog. |
+| `injector_stats` | Returns index status, current compression ratio, total files indexed, and cache hit rate. |
+| `injector_sync` | Waits for all pending file index updates to complete. Call this after writing to a file and before calling `get_project_map`. |
+
+---
+
 ##  Quick Install
 
 Install the daemon locally and configure your IDEs:
