@@ -22,6 +22,7 @@ type WebhookPayload struct {
 		Customer struct {
 			Email string `json:"email"`
 		} `json:"customer"`
+		NextBillingDate string `json:"next_billing_date"`
 	} `json:"data"`
 }
 
@@ -110,12 +111,20 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Processed payment.failed")
 		return
 	case "subscription.cancelled":
+		expiryText := "the end of your current billing period"
+		if payload.Data.NextBillingDate != "" {
+			t, err := time.Parse(time.RFC3339Nano, payload.Data.NextBillingDate)
+			if err == nil {
+				expiryText = t.Format("January 2, 2006")
+			}
+		}
+
 		sendSimpleEmail(
 			userEmail,
 			"Subscription Cancelled",
 			"Subscription Cancelled",
 			"Your mcp-injector Pro subscription has been cancelled successfully.",
-			"We're sorry to see you go! Your license key will remain active and valid until the end of your current billing period.",
+			fmt.Sprintf("We're sorry to see you go! Your license key will remain active and valid until %s.", expiryText),
 		)
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "Processed subscription.cancelled")
