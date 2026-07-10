@@ -1,5 +1,6 @@
 {
   "pricing": {
+    "model_name": "Claude Sonnet 5",
     "monthly": 12,
     "yearly": 99,
     "free_limit_loc": 100000,
@@ -23,6 +24,6 @@
     "VS Code",
     "Devin Desktop"
   ],
-  "savings_range": "30-89%",
+  "savings_range": "41-89%",
   "version": "0.2.0"
 }

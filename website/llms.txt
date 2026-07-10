@@ -4,7 +4,7 @@
 
 ## What it does
 
-mcp-injector runs as a background process on a developer's machine. It pre-indexes a repository into a local SQLite database, then exposes an MCP server that Claude Code, Cursor, VS Code, and Devin Desktop can connect to. When an AI assistant requests context, instead of reading raw source files, it receives a compressed snapshot where function bodies are folded into signatures (AST body folding). This reduces token usage by 30-89% on real codebases.
+mcp-injector runs as a background process on a developer's machine. It pre-indexes a repository into a local SQLite database, then exposes an MCP server that Claude Code, Cursor, VS Code, and Devin Desktop can connect to. When an AI assistant requests context, instead of reading raw source files, it receives a compressed snapshot where function bodies are folded into signatures (AST body folding). This reduces token usage by 41-89% on real codebases.
 
 It does not send any data to external servers. All indexing and compression happens locally.
 

@@ -6,7 +6,7 @@
   
   <!-- SEO Meta Tags -->
   <title>Foldwork | mcp-injector - Compress your codebase for Claude</title>
-  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 30-89%. Free for codebases under 100K lines.">
+  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 41-89%. Free for codebases under 100K lines.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
@@ -18,7 +18,7 @@
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="Foldwork">
-  <meta property="og:title" content="Foldwork | mcp-injector - 30-89% token reduction for Claude">
+  <meta property="og:title" content="Foldwork | mcp-injector - 41-89% token reduction for Claude">
   <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 100K lines.">
   <meta property="og:url" content="https://foldwork.dev">
   <meta property="og:type" content="website">
@@ -26,7 +26,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Foldwork | mcp-injector - 30-89% token reduction for Claude">
+  <meta name="twitter:title" content="Foldwork | mcp-injector - 41-89% token reduction for Claude">
   <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 100K lines.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
 
@@ -1185,7 +1185,7 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Linux, macOS, Windows",
       "url": "https://foldwork.dev",
-      "description": "Local MCP daemon that compresses codebases before sending them to Claude Code, Cursor, or VS Code using AST body folding. Reduces token usage by 30-89%.",
+      "description": "Local MCP daemon that compresses codebases before sending them to Claude Code, Cursor, or VS Code using AST body folding. Reduces token usage by 41-89%.",
       "offers": [
         {
           "@type": "Offer",
@@ -1237,7 +1237,7 @@
           "name": "How do I reduce Claude API costs on large codebases?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector achieves 30-89% token reduction on real projects like Django, Spring Framework, and Next.js."
+            "text": "The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector achieves 41-89% token reduction on real projects like Django, Tokio, and Gin."
           }
         },
         {
@@ -1297,14 +1297,14 @@
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Linux, macOS, Windows",
         "url": "https://foldwork.dev",
-        "description": "Local MCP daemon that compresses an entire software codebase using AST body folding and serves it to AI coding assistants at 30-89% fewer tokens.",
+        "description": "Local MCP daemon that compresses an entire software codebase using AST body folding and serves it to AI coding assistants at 41-89% fewer tokens.",
         "offers": [
           { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free tier (under 100K lines)" },
           { "@type": "Offer", "price": "12", "priceCurrency": "USD", "name": "Pro (monthly)", "billingIncrement": "P1M" },
           { "@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro (yearly)", "billingIncrement": "P1Y" }
         ],
         "featureList": [
-          "AST body folding — 30-89% token reduction",
+          "AST body folding — 41-89% token reduction",
           "Persistent SQLite WAL-mode catalog",
           "Canonical determinism for KV prompt cache hits",
           "Branch-aware re-indexing via git hook",
@@ -1368,7 +1368,7 @@
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
-    <p class="hero-sub">Claude Code, Cursor, VS Code, and Devin Desktop read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 30-89% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 100K lines.</p>
+    <p class="hero-sub">Claude Code, Cursor, VS Code, and Devin Desktop read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 41-89% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 100K lines.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
@@ -1432,68 +1432,67 @@
           </div>
         </div>
 
-        <!-- Spring -->
+        <!-- Tokio -->
         <div class="bench-card popular">
-          <span class="popular-badge">Most Popular</span>
-          <span class="bench-icon" alt="Spring Framework Java codebase benchmark">☕</span>
-          <h3 class="bench-name">Spring Framework</h3>
+          <span class="bench-icon" alt="Tokio Rust codebase benchmark">🦀</span>
+          <h3 class="bench-name">Tokio</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
               <span class="bench-stat-label">Total files scanned</span>
-              <span class="bench-stat-val">9,193</span>
+              <span class="bench-stat-val">789</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Raw context tokens</span>
-              <span class="bench-stat-val">15,032,871</span>
+              <span class="bench-stat-val">1,597,813</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Compressed context</span>
-              <span class="bench-stat-val">5,185,299</span>
+              <span class="bench-stat-val">444,164</span>
             </div>
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">65.5%</span>
+            <span class="bench-highlight-val">72.2%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$29.03</span>
+            <span class="bench-savings-val">$3.11</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$8,709/mo</span>
+            <span class="bench-savings-val">$932/mo</span>
           </div>
         </div>
 
-        <!-- Next.js -->
+        <!-- Gin -->
         <div class="bench-card">
-          <span class="bench-icon" alt="Next.js TypeScript codebase benchmark">▲</span>
-          <h3 class="bench-name">Next.js Source</h3>
+          <span class="bench-icon" alt="Gin Go codebase benchmark">🐹</span>
+          <h3 class="bench-name">Gin</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
               <span class="bench-stat-label">Total files scanned</span>
-              <span class="bench-stat-val">21,985</span>
+              <span class="bench-stat-val">99</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Raw context tokens</span>
-              <span class="bench-stat-val">23,963,330</span>
+              <span class="bench-stat-val">197,300</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Compressed context</span>
-              <span class="bench-stat-val">10,212,684</span>
+              <span class="bench-stat-val">47,718</span>
             </div>
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">57.4%</span>
+            <span class="bench-highlight-val">75.8%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$45.88</span>
+            <span class="bench-savings-val">$0.39</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$13,764/mo</span>
+            <span class="bench-savings-val">$116/mo</span>
           </div>
         </div>
       </div>
@@ -1509,7 +1508,7 @@
     comment, function body, and docstring to the model. mcp-injector 
     reduces Claude API costs by compressing your codebase at the AST 
     level before it reaches the context window, cutting token usage by 
-    30-89% without losing structural understanding. It works by 
+    41-89% without losing structural understanding. It works by 
     pre-indexing your project into a local SQLite catalog and serving 
     a compressed, deterministic snapshot to your IDE on every query.
   </p>
@@ -1753,7 +1752,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <li class="price-feature"><span>✓</span> Team licensing (3 seats)</li>
             <li class="price-feature"><span>✓</span> Priority support</li>
           </ul>
-          <a href="https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1" class="btn btn-primary price-btn" id="pro-checkout-btn">Get Pro →</a>
+          <a href="https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1&redirect_url=https://foldwork.dev/docs.html" class="btn btn-primary price-btn" id="pro-checkout-btn">Get Pro →</a>
           <p style="text-align: center; font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.75rem;">
             🔑 Your license key will be emailed to you instantly after payment.
           </p>
@@ -1857,7 +1856,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding - stripping function bodies while keeping signatures and imports - achieving 30-89% token reduction on real projects like Django, Spring Framework, and Next.js. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
+            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding - stripping function bodies while keeping signatures and imports - achieving 41-89% token reduction on real projects like Django, Tokio, and Gin. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
           </div>
         </div>
 
@@ -1943,8 +1942,8 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
       const labelYearly = document.getElementById('label-yearly');
       const proPriceAmt = document.getElementById('pro-price-amt');
 
-      const monthlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1";
-      const yearlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTwQvleXFAze0ndedX?quantity=1"; 
+      const monthlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1&redirect_url=https://foldwork.dev/docs.html";
+      const yearlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTwQvleXFAze0ndedX?quantity=1&redirect_url=https://foldwork.dev/docs.html"; 
 
 
       function updatePricing() {

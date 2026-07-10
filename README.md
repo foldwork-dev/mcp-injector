@@ -2,7 +2,7 @@
 
 Claude Code reads raw files on demand, quickly exhausting your context window and budget. On a large codebase, this leads to slow responses and high API costs.
 
-mcp-injector fixes this. It runs as a background daemon, pre-indexes your entire repository into a local SQLite catalog, and serves a compressed snapshot of your whole codebase to Claude on every query at roughly 30-89% the normal token cost.
+mcp-injector fixes this. It runs as a background daemon, pre-indexes your entire repository into a local SQLite catalog, and serves a compressed snapshot of your whole codebase to Claude on every query at roughly 41-89% the normal token cost.
 
 I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$80/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
 
@@ -15,8 +15,8 @@ Estimate the impact of AST code compression on large open-source repositories (c
 |  Repository |  Total Files |  Raw Context Tokens |  Compressed Context Tokens |  Token Reduction |  Cost Saved / Run |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Django** | 2,359 | 5,554,607 | 596,752 | **89.3%** | **$10.99** |
-| **Spring Framework** | 9,193 | 15,032,871 | 5,185,299 | **65.5%** | **$29.03** |
-| **Next.js** | 21,985 | 23,963,330 | 10,212,684 | **57.4%** | **$45.88** |
+| **Tokio** | 789 | 1,597,813 | 444,164 | **72.2%** | **$3.11** |
+| **Gin** | 99 | 197,300 | 47,718 | **75.8%** | **$0.39** |
 
 *Numbers are reproducible. Run the open-source benchmark tool on any public repository:*  
  **[mcp-benchmark repository](https://github.com/foldwork-dev/mcp-benchmark)**

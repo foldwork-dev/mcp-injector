@@ -45,7 +45,7 @@ This update solidifies the daemon for AI coding agent workflows by eliminating r
 ### Initial Release
 
 **Core features:**
-- AST body folding for Go, Python, TypeScript, JavaScript, Java, and Rust - 30-89% token reduction on real codebases
+- AST body folding for Go, Python, TypeScript, JavaScript, Java, and Rust - 41-89% token reduction on real codebases
 - Persistent SQLite WAL-mode catalog with inotify/FSEvents file watchers
 - Canonical determinism - byte-identical output on every run for Anthropic KV prompt cache hits
 - Branch-aware re-indexing via post-checkout git hook

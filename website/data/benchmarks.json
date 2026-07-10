@@ -29,6 +29,36 @@
       "cost_saved": "$45.88",
       "raw_cost": "$47.93",
       "comp_cost": "$2.04"
+    },
+    "tokio": {
+      "name": "Tokio",
+      "files_formatted": "789",
+      "raw_formatted": "1,597,813",
+      "comp_formatted": "444,164",
+      "reduction_pct": "72.2%",
+      "cost_saved": "$3.11",
+      "raw_cost": "$3.20",
+      "comp_cost": "$0.09"
+    },
+    "gin": {
+      "name": "Gin",
+      "files_formatted": "99",
+      "raw_formatted": "197,300",
+      "comp_formatted": "47,718",
+      "reduction_pct": "75.8%",
+      "cost_saved": "$0.39",
+      "raw_cost": "$0.39",
+      "comp_cost": "$0.01"
+    },
+    "automapper": {
+      "name": "AutoMapper",
+      "files_formatted": "513",
+      "raw_formatted": "616,363",
+      "comp_formatted": "362,961",
+      "reduction_pct": "41.1%",
+      "cost_saved": "$1.16",
+      "raw_cost": "$1.23",
+      "comp_cost": "$0.07"
     }
   }
 }
