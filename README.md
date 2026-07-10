@@ -101,7 +101,7 @@ Run the benchmark CLI on your project to see your token savings and line count:
 mcp-benchmark ./your-project
 ```
 
-If your project is under 100,000 lines, mcp-injector is completely free. The benchmark output shows your exact line count.
+If your project is under 50,000 lines, mcp-injector is completely free. The benchmark output shows your exact line count.
 
 ### Step 2: Install the daemon
 
@@ -229,7 +229,7 @@ Config file locations:
 
 ##  Pricing Tiers
 
-* **Free Tier:** Workspaces under 100,000 total source lines (all tools and features fully active).
+* **Free Tier:** Workspaces under 50,000 total source lines (all tools and features fully active).
 * **Pro Tier ($12/month or $99/year):** Unlocks unlimited workspace sizes and high-speed incremental diff indexing.  
  **[Activate Pro at foldwork.dev](https://foldwork.dev/#pricing)**
 

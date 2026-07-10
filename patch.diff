@@ -1,0 +1,13 @@
+--- cmd/public-benchmark/main.go
++++ cmd/public-benchmark/main.go
+@@ -73,2 +73,10 @@
+ 	},
++	"gin": {
++		displayName: "Gin",
++		cloneURL:    "https://github.com/gin-gonic/gin",
++	},
++	"automapper": {
++		displayName: "AutoMapper",
++		cloneURL:    "https://github.com/AutoMapper/AutoMapper",
++	},
+ }

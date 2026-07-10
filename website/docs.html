@@ -678,14 +678,14 @@
         </ol>
 
         <h3>Free tier vs Pro</h3>
-        <p>Free: workspaces under 100,000 lines. No license key is needed.</p>
+        <p>Free: workspaces under 50,000 lines. No license key is needed.</p>
         <p>Pro: workspaces of any size. After purchase, your license key is emailed to you automatically — just check your inbox and follow the activation instructions below.</p>
         <p>To check your workspace line count before installing, run the benchmark tool:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('check-loc', this)">Copy</button>
           <pre id="check-loc" class="code-block"><code>mcp-benchmark ./your-project</code></pre>
         </div>
-        <p>The output shows your total line count. If it is under 100,000 lines, you do not need Pro.</p>
+        <p>The output shows your total line count. If it is under 50,000 lines, you do not need Pro.</p>
       </section>
 
       <!-- Section: Verifying it works -->
@@ -900,7 +900,7 @@ fixtures/</code></pre>
         <p><b>Fix:</b> Add <b>MCP_WORKSPACE</b> to the env section of your IDE MCP configuration.</p>
 
         <h3>Free tier workspace limit message</h3>
-        <p><b>Cause:</b> Your project codebase size exceeds the 100,000 line free tier limit.</p>
+        <p><b>Cause:</b> Your project codebase size exceeds the 50,000 line free tier limit.</p>
         <p><b>Fix:</b> Run <b>mcp-benchmark ./your-project</b> to confirm the line count. Obtain a Pro license key from foldwork.dev to lift the limit.</p>
 
         <h3>Secrets are being redacted unexpectedly</h3>

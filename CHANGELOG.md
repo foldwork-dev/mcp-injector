@@ -64,7 +64,7 @@ This update solidifies the daemon for AI coding agent workflows by eliminating r
 - Ed25519 offline license verification
 
 **Free tier:**
-- Workspaces under 100,000 lines: fully free, no license key
+- Workspaces under 50,000 lines: fully free, no license key
 - Pro ($12/month): unlimited workspace size + advanced features
 
 **Supported IDEs:**

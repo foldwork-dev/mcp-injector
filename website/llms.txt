@@ -38,7 +38,7 @@ Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64)
 
 ## Pricing
 
-Free: workspaces under 100,000 lines of code. No sign-up required.
+Free: workspaces under 50,000 lines of code. No sign-up required.
 Pro: $12/month or $99/year. Unlimited workspace size. License key activated via environment variable.
 
 ## Installation

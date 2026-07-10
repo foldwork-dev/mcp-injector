@@ -6,7 +6,7 @@
   
   <!-- SEO Meta Tags -->
   <title>Foldwork | mcp-injector - Compress your codebase for Claude</title>
-  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 41-89%. Free for codebases under 100K lines.">
+  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code. AST body folding reduces token usage by 41-89%. Free for codebases under 50K lines.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
@@ -19,7 +19,7 @@
   <!-- Open Graph -->
   <meta property="og:site_name" content="Foldwork">
   <meta property="og:title" content="Foldwork | mcp-injector - 41-89% token reduction for Claude">
-  <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 100K lines.">
+  <meta property="og:description" content="Local MCP daemon. AST body folding. Deterministic output for prompt cache hits. Free under 50K lines.">
   <meta property="og:url" content="https://foldwork.dev">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://foldwork.dev/og-image.png">
@@ -27,7 +27,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Foldwork | mcp-injector - 41-89% token reduction for Claude">
-  <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 100K lines.">
+  <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 50K lines.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
 
   <!-- Google Fonts -->
@@ -1191,7 +1191,7 @@
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD",
-          "description": "Free for codebases under 100,000 lines"
+          "description": "Free for codebases under 50,000 lines"
         },
         {
           "@type": "Offer",
@@ -1299,7 +1299,7 @@
         "url": "https://foldwork.dev",
         "description": "Local MCP daemon that compresses an entire software codebase using AST body folding and serves it to AI coding assistants at 41-89% fewer tokens.",
         "offers": [
-          { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free tier (under 100K lines)" },
+          { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free tier (under 50K lines)" },
           { "@type": "Offer", "price": "12", "priceCurrency": "USD", "name": "Pro (monthly)", "billingIncrement": "P1M" },
           { "@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro (yearly)", "billingIncrement": "P1Y" }
         ],
@@ -1368,12 +1368,12 @@
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
-    <p class="hero-sub">Claude Code, Cursor, VS Code, and Devin Desktop read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 41-89% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 100K lines.</p>
+    <p class="hero-sub">Claude Code, Cursor, VS Code, and Devin Desktop read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 41-89% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 50K lines.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
       <a href="https://github.com/foldwork-dev/mcp-benchmark" class="btn btn-secondary" target="_blank" rel="noopener">Run Benchmark</a>
     </div>
-    <p class="hero-caption">Free for codebases under 100,000 lines. No signup required.</p>
+    <p class="hero-caption">Free for codebases under 50,000 lines. No signup required.</p>
 
     <!-- Animated Terminal Demo -->
     <div class="terminal-container">
@@ -1730,7 +1730,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           <h3 class="price-title">Free</h3>
           <div class="price-amt">$0 <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">/ forever</span></div>
           <ul class="price-features">
-            <li class="price-feature"><span>✓</span> Codebases under 100,000 lines</li>
+            <li class="price-feature"><span>✓</span> Codebases under 50,000 lines</li>
             <li class="price-feature"><span>✓</span> All languages (Go, Python, Java, TS, JS, C++, C, C#, Rust)</li>
             <li class="price-feature"><span>✓</span> Instant codebase structure map</li>
             <li class="price-feature"><span>✓</span> Incremental file indexing</li>
@@ -1756,7 +1756,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
           <p style="text-align: center; font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.75rem;">
             🔑 Your license key will be emailed to you instantly after payment.
           </p>
-          <p class="price-subtext">At $12/month, mcp-injector pays for itself if you run a 100K+ line codebase through Claude just once.</p>
+          <p class="price-subtext">At $12/month, mcp-injector pays for itself if you run a 50K+ line codebase through Claude just once.</p>
         </div>
       </div>
     </div>
@@ -1856,7 +1856,7 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-answer">
-            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding - stripping function bodies while keeping signatures and imports - achieving 41-89% token reduction on real projects like Django, Tokio, and Gin. For a 100K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
+            <p>The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector does this automatically using AST body folding - stripping function bodies while keeping signatures and imports - achieving 41-89% token reduction on real projects like Django, Tokio, and Gin. For a 50K+ line codebase running 10 Claude sessions per day, savings typically exceed the $12/month Pro subscription cost within the first day.</p>
           </div>
         </div>
 

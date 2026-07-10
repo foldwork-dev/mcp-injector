@@ -3,7 +3,7 @@
     "model_name": "Claude Sonnet 5",
     "monthly": 12,
     "yearly": 99,
-    "free_limit_loc": 100000,
+    "free_limit_loc": 50000,
     "base_price_per_million": 2.0,
     "cache_hit_multiplier": 0.1
   },
