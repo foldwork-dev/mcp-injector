@@ -1,0 +1,18 @@
+startCommand:
+  type: stdio
+  commandFunction: |-
+    (config) => ({
+      command: "go",
+      args: ["run", "main.go"],
+      env: {
+        "MCP_WORKSPACE": config.workspacePath
+      }
+    })
+configSchema:
+  type: object
+  properties:
+    workspacePath:
+      type: string
+      description: "Absolute path to the local workspace/codebase that mcp-injector should index."
+  required:
+    - workspacePath
