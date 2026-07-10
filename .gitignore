@@ -33,3 +33,4 @@ releases/
 !website/go.sum
 !website/api/webhook.go
 
+.vscode/
