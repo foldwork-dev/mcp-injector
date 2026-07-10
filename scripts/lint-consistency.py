@@ -66,6 +66,11 @@ checks = {
         s_pct, s_saved,
         n_pct, n_saved
     ],
+    "mcp-benchmark/README.md": [
+        d_pct, d_saved,
+        s_pct, s_saved,
+        n_pct, n_saved
+    ],
     "website/vs/repomix.html": [
         f"{lang_count} Languages"
     ]

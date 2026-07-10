@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: foldwork-dev/mcp-benchmark
-          path: ../mcp-benchmark
+          path: mcp-benchmark
       - name: Run lint-consistency
         run: |
           # We need to make sure the script runs from the repository root since
