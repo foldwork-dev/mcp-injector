@@ -1,0 +1,28 @@
+{
+  "pricing": {
+    "monthly": 12,
+    "yearly": 99,
+    "free_limit_loc": 100000,
+    "base_price_per_million": 2.0,
+    "cache_hit_multiplier": 0.1
+  },
+  "languages": [
+    "Go",
+    "Python",
+    "Java",
+    "TypeScript",
+    "JavaScript",
+    "C++",
+    "C",
+    "C#",
+    "Rust"
+  ],
+  "ides": [
+    "Claude Desktop",
+    "Cursor",
+    "VS Code",
+    "Devin Desktop"
+  ],
+  "savings_range": "30-89%",
+  "version": "0.2.0"
+}

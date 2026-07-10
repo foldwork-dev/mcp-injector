@@ -1424,11 +1424,11 @@
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$9.92</span>
+            <span class="bench-savings-val">$10.99</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$2,975/mo</span>
+            <span class="bench-savings-val">$3,297/mo</span>
           </div>
         </div>
 
@@ -1453,15 +1453,15 @@
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">65.3%</span>
+            <span class="bench-highlight-val">65.5%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$29.40</span>
+            <span class="bench-savings-val">$29.03</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$8,820/mo</span>
+            <span class="bench-savings-val">$8,709/mo</span>
           </div>
         </div>
 
@@ -1485,15 +1485,15 @@
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">57.5%</span>
+            <span class="bench-highlight-val">57.4%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$41.40</span>
+            <span class="bench-savings-val">$45.88</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$12,420/mo</span>
+            <span class="bench-savings-val">$13,764/mo</span>
           </div>
         </div>
       </div>
@@ -2094,8 +2094,13 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
         const tComp = tRaw * 0.28;
 
         // TODO: Revisit pricing on Sept 1, 2026 when the Claude Sonnet 5 introductory rate ($2.00/1M) steps up to the standard rate ($3.00/1M).
-        const rawMonthly = sessions * 30 * (tRaw * 2.00 / 1000000); // Raw input: $2.00/1M
-        const compMonthly = sessions * 30 * (tComp * 0.20 / 1000000); // Cached input: 10% of base rate ($0.20/1M)
+        // Note: The compressed rate models steady-state cache-hit pricing (10% of base input) and excludes the first-request
+        // cache-write premium (1.25x base for 5-min TTL) that a real session's first call would incur. This is a reasonable
+        // simplification for a marketing calculator.
+        const baseRate = 2.00;
+        const cacheHitMultiplier = 0.10;
+        const rawMonthly = sessions * 30 * (tRaw * baseRate / 1000000); // Raw input
+        const compMonthly = sessions * 30 * (tComp * (baseRate * cacheHitMultiplier) / 1000000); // Cached input
         const savingsMonthly = Math.max(0, rawMonthly - compMonthly);
 
         resultRaw.textContent = '$' + rawMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

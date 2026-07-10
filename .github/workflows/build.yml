@@ -11,6 +11,24 @@ defaults:
     working-directory: website
 
 jobs:
+  lint:
+    name: Consistency Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Checkout mcp-benchmark
+        uses: actions/checkout@v7
+        with:
+          repository: foldwork-dev/mcp-benchmark
+          path: ../mcp-benchmark
+      - name: Run lint-consistency
+        run: |
+          # We need to make sure the script runs from the repository root since
+          # working-directory is set to 'website' by default
+          cd $GITHUB_WORKSPACE
+          python3 scripts/lint-consistency.py
+
   test:
     name: Go tests
     runs-on: ubuntu-latest

@@ -3,8 +3,6 @@ package handler
 import (
 	"bytes"
 	"crypto/ed25519"
-	"crypto/hmac"
-	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -58,26 +56,27 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// ─── 1. Verify Webhook Signature using Svix ───────────────────────────────
 	webhookSecret := os.Getenv("DODO_PAYMENTS_WEBHOOK_SECRET")
 
-	if webhookSecret != "" {
-		headers := http.Header{}
-		headers.Set("svix-id", r.Header.Get("webhook-id"))
-		headers.Set("svix-timestamp", r.Header.Get("webhook-timestamp"))
-		headers.Set("svix-signature", r.Header.Get("webhook-signature"))
+	if webhookSecret == "" {
+		fmt.Println("ERROR: DODO_PAYMENTS_WEBHOOK_SECRET is not set. Failing closed.")
+		http.Error(w, "Webhook secret not configured", http.StatusInternalServerError)
+		return
+	}
 
-		wh, err := svix.NewWebhook(webhookSecret)
-		if err != nil {
-			http.Error(w, "Invalid webhook secret configuration", http.StatusInternalServerError)
-			return
-		}
+	headers := http.Header{}
+	headers.Set("svix-id", r.Header.Get("webhook-id"))
+	headers.Set("svix-timestamp", r.Header.Get("webhook-timestamp"))
+	headers.Set("svix-signature", r.Header.Get("webhook-signature"))
 
-		err = wh.Verify(body, headers)
-		if err != nil {
-			http.Error(w, "Invalid webhook signature", http.StatusUnauthorized)
-			return
-		}
-	} else {
-		// Log a warning in development mode if the secret isn't configured yet
-		fmt.Println("WARNING: DODO_PAYMENTS_WEBHOOK_SECRET is not set. Skipping signature check.")
+	wh, err := svix.NewWebhook(webhookSecret)
+	if err != nil {
+		http.Error(w, "Invalid webhook secret configuration", http.StatusInternalServerError)
+		return
+	}
+
+	err = wh.Verify(body, headers)
+	if err != nil {
+		http.Error(w, "Invalid webhook signature", http.StatusUnauthorized)
+		return
 	}
 
 	// ─── 2. Parse Webhook Event JSON ──────────────────────────────────────────
@@ -92,12 +91,51 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Received event: %s, email: %s\n", eventName, userEmail)
 
-	// We only issue licenses for successful payments
-	shouldProcess := (eventName == "payment.succeeded" || eventName == "subscription.active")
+	// Validate email exists before routing
+	if userEmail == "" {
+		http.Error(w, "Missing customer email in webhook payload", http.StatusBadRequest)
+		return
+	}
 
-	if !shouldProcess {
+	switch eventName {
+	case "payment.failed":
+		sendSimpleEmail(
+			userEmail,
+			"Action Required: Payment Failed",
+			"Payment Failed",
+			"We were unable to process your recent payment for your mcp-injector Pro subscription.",
+			"Please update your payment method through the billing portal to ensure uninterrupted access.",
+		)
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "Event ignored: status is not active/paid")
+		fmt.Fprintf(w, "Processed payment.failed")
+		return
+	case "subscription.cancelled":
+		sendSimpleEmail(
+			userEmail,
+			"Subscription Cancelled",
+			"Subscription Cancelled",
+			"Your mcp-injector Pro subscription has been cancelled successfully.",
+			"We're sorry to see you go! Your license key will remain active and valid until the end of your current billing period.",
+		)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Processed subscription.cancelled")
+		return
+	case "subscription.on_hold":
+		sendSimpleEmail(
+			userEmail,
+			"Action Required: Subscription On Hold",
+			"Subscription On Hold",
+			"Your mcp-injector Pro subscription has been placed on hold because your renewal payment failed.",
+			"Your license will be revoked soon. Please update your payment method to keep your access active.",
+		)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Processed subscription.on_hold")
+		return
+	case "payment.succeeded", "subscription.active":
+		// Proceed to generate license
+	default:
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Event ignored: status is not handled")
 		return
 	}
 
@@ -244,16 +282,53 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "License successfully generated and email delivered to %s", userEmail)
 }
 
-// verifyHMACSignature checks that the Lemon Squeezy request payload matches the signature header.
-func verifyHMACSignature(body []byte, signature string, secret string) bool {
-	mac := hmac.New(sha256.New, []byte(secret))
-	mac.Write(body)
-	expectedMAC := mac.Sum(nil)
-
-	actualMAC, err := hex.DecodeString(signature)
-	if err != nil {
-		return false
+func sendSimpleEmail(to, subject, title, p1, p2 string) error {
+	resendAPIKey := os.Getenv("RESEND_API_KEY")
+	if resendAPIKey == "" {
+		fmt.Printf("WARNING: RESEND_API_KEY is not set. Skipping email to %s\n", to)
+		return nil
+	}
+	senderEmail := os.Getenv("RESEND_SENDER_EMAIL")
+	if senderEmail == "" {
+		senderEmail = "Foldwork <onboarding@resend.dev>"
 	}
 
-	return hmac.Equal(actualMAC, expectedMAC)
+	html := fmt.Sprintf(`<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .footer { font-size: 0.85rem; color: #6b7280; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+  </style>
+</head>
+<body>
+  <h2>%s</h2>
+  <p>%s</p>
+  <p>%s</p>
+  <div class="footer">
+    <p>Sent by <b>Foldwork.dev</b> — High performance context compression tools for developers.</p>
+  </div>
+</body>
+</html>`, title, p1, p2)
+
+	emailPayload := ResendEmailPayload{
+		From:    senderEmail,
+		To:      to,
+		Subject: subject,
+		HTML:    html,
+	}
+	payloadJSON, _ := json.Marshal(emailPayload)
+	req, err := http.NewRequest(http.MethodPost, "https://api.resend.com/emails", bytes.NewBuffer(payloadJSON))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", "Bearer "+resendAPIKey)
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return nil
 }
