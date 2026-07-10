@@ -54,13 +54,28 @@ TOTAL (4 files)                                   25,446         2,779     89.1%
 
 ## Tools
 
-| Tool | Description |
-|---|---|
-| `get_project_map` | Returns a compressed structural overview of the workspace. Function bodies are folded and replaced with placeholders to reduce token usage. |
-| `injector_retrieve` | Retrieves the full uncompressed source of a file from the local cache. Accepts optional `start_line` and `end_line` for range retrieval. |
-| `injector_search` | BM25-ranked full-text symbol search over the local SQLite catalog. |
-| `injector_stats` | Returns index status, current compression ratio, total files indexed, and cache hit rate. |
-| `injector_sync` | Waits for all pending file index updates to complete. Call this after writing to a file and before calling `get_project_map`. |
+### `get_project_map`
+Returns a compressed structural overview of the workspace. Function bodies are folded and replaced with placeholders to reduce token usage.
+- `tier` (integer, optional): Compression tier to apply (default: 2).
+- `unfolded_files` (array of strings, optional): Workspace-relative paths or glob patterns for files to serve at full resolution (uncompressed).
+
+### `injector_retrieve`
+Retrieves the full uncompressed source of a file from the local cache.
+- `path` (string, required): The workspace-relative path of the file to retrieve.
+- `retrievalKey` (string, optional): The SHA-256 retrieval key returned in a prior compressed payload.
+- `start_line` (integer, optional): 1-indexed start line for range retrieval.
+- `end_line` (integer, optional): 1-indexed end line for range retrieval.
+
+### `injector_search`
+BM25-ranked full-text symbol search over the local SQLite catalog.
+- `query` (string, required): FTS5 query string (bare terms, "phrase", prefix*).
+- `limit` (integer, optional): Maximum results (default: 20).
+
+### `injector_stats`
+Returns index status, current compression ratio, total files indexed, and cache hit rate.
+
+### `injector_sync`
+Waits for all pending file index updates to complete. Call this after writing to a file and before calling `get_project_map`.
 
 ---
 
