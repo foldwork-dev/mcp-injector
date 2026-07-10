@@ -89,23 +89,6 @@ curl -fsSL https://foldwork.dev/install | sh
 
 *Automatically configures **Claude Desktop**, **Cursor IDE**, and **VS Code**.*
 
-### Manual MCP Configuration
-
-Add to your MCP client config (Claude Desktop, Cursor, VS Code):
-
-```json
-{
-  "mcpServers": {
-    "mcp-injector": {
-      "command": "/home/$USER/.local/bin/mcp-injector",
-      "env": {
-        "MCP_WORKSPACE": "/path/to/your/project"
-      }
-    }
-  }
-}
-```
-
 ---
 
 ## Getting Started
