@@ -4,5 +4,6 @@
   "description": "Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, or VS Code using AST body folding. Reduces token usage by 41-89%.",
   "maintainers": [
     "foldwork-dev"
-  ]
+  ],
+  "homepage": "https://foldwork.dev"
 }
