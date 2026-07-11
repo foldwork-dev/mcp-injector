@@ -30,11 +30,11 @@
   <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 50K lines.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (non-render-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 
   <!-- Stylesheet -->
   <style>
@@ -46,7 +46,7 @@
       --border: rgba(240, 246, 252, 0.1);
       --border-focus: rgba(124, 58, 237, 0.4);
       --text: #c9d1d9;
-      --text-muted: #8b949e;
+      --text-muted: #9ca3af;
       --text-white: #f0f6fc;
       
       --accent: #7c3aed;
@@ -1365,6 +1365,9 @@
     </div>
   </nav>
 
+  <!-- Main content -->
+  <main>
+
   <!-- Hero Section -->
   <header class="container hero">
     <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
@@ -1718,8 +1721,8 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
       <div class="pricing-toggle-wrap">
         <span class="pricing-toggle-label active" id="label-monthly">Monthly</span>
-        <label class="switch">
-          <input type="checkbox" id="price-toggle">
+        <label class="switch" aria-label="Toggle between monthly and yearly pricing">
+          <input type="checkbox" id="price-toggle" aria-label="Toggle yearly pricing">
           <span class="slider"></span>
         </label>
         <span class="pricing-toggle-label" id="label-yearly">Yearly (save 31%)</span>
@@ -1886,6 +1889,8 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
     </div>
   </section>
 
+  </main><!-- /main -->
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container footer-container">
@@ -2034,19 +2039,30 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
         let currentChar = 0;
         let outputHtml = "";
 
+        // Batch DOM writes via rAF to avoid forced reflows
+        let pendingRender = false;
+        function scheduleRender(html) {
+          if (pendingRender) return;
+          pendingRender = true;
+          requestAnimationFrame(() => {
+            terminalBody.innerHTML = html;
+            pendingRender = false;
+          });
+        }
+
         function typeTerminal() {
           if (currentLine >= terminalText.length) {
-            terminalBody.innerHTML = outputHtml + '<span class="terminal-cursor"></span>';
+            scheduleRender(outputHtml + '<span class="terminal-cursor"></span>');
             return;
           }
 
           const lineObj = terminalText[currentLine];
           const lineContent = lineObj.text;
-          
+
           if (lineObj.type === "input") {
             if (currentChar < lineContent.length) {
               const typedText = lineContent.substring(0, currentChar + 1);
-              terminalBody.innerHTML = outputHtml + typedText.replace('$', '<span style="color: var(--accent); font-weight: bold;">$</span>') + '<span class="terminal-cursor"></span>';
+              scheduleRender(outputHtml + typedText.replace('$', '<span style="color: var(--accent); font-weight: bold;">$</span>') + '<span class="terminal-cursor"></span>');
               currentChar++;
               setTimeout(typeTerminal, 60);
             } else {
@@ -2059,12 +2075,12 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
             let lineClass = "";
             if (lineObj.type === "success") lineClass = "color: var(--success); font-weight: 600;";
             if (lineObj.type === "table") lineClass = "color: var(--text-muted);";
-            
+
             const styledLine = lineClass ? `<span style="${lineClass}">${lineContent}</span>` : lineContent;
             outputHtml += styledLine;
-            terminalBody.innerHTML = outputHtml + '<span class="terminal-cursor"></span>';
+            scheduleRender(outputHtml + '<span class="terminal-cursor"></span>');
             currentLine++;
-            
+
             let delay = 150;
             if (lineObj.type === "table") delay = 30;
             setTimeout(typeTerminal, delay);

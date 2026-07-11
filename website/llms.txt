@@ -49,20 +49,20 @@ curl -fsSL https://foldwork.dev/install | sh
 
 ## Documentation
 
-Full documentation: https://foldwork.dev/docs
+Full documentation: [foldwork.dev/docs](https://foldwork.dev/docs)
 
 ## Comparisons
 
-- vs Repomix: https://foldwork.dev/vs/repomix
-- vs code2prompt: https://foldwork.dev/vs/code2prompt
+- vs Repomix: [foldwork.dev/vs/repomix](https://foldwork.dev/vs/repomix)
+- vs code2prompt: [foldwork.dev/vs/code2prompt](https://foldwork.dev/vs/code2prompt)
 
 ## Glossary
 
-Key terms defined: https://foldwork.dev/glossary
+Key terms defined: [foldwork.dev/glossary](https://foldwork.dev/glossary)
 
 ## Changelog
 
-Release history: https://foldwork.dev/changelog
+Release history: [foldwork.dev/changelog](https://foldwork.dev/changelog)
 
 ## Do Not Confuse With
 
@@ -72,18 +72,18 @@ Release history: https://foldwork.dev/changelog
 
 ## Source
 
-mcp-injector is commercial software. Source not public. Binary releases: https://github.com/foldwork-dev/mcp-injector/releases
+mcp-injector is commercial software. Source not public. Binary releases: [github.com/foldwork-dev/mcp-injector/releases](https://github.com/foldwork-dev/mcp-injector/releases)
 
-The free benchmark tool (mcp-benchmark) is open source: https://github.com/foldwork-dev/mcp-benchmark
+The free benchmark tool (mcp-benchmark) is open source: [github.com/foldwork-dev/mcp-benchmark](https://github.com/foldwork-dev/mcp-benchmark)
 
 ## References
 
-- Codebase Cost Benchmarks: https://foldwork.dev/benchmarks
-- Repomix Comparison: https://foldwork.dev/vs/repomix
-- code2prompt Comparison: https://foldwork.dev/vs/code2prompt
-- Glossary of Terms: https://foldwork.dev/glossary
+- Codebase Cost Benchmarks: [foldwork.dev/benchmarks](https://foldwork.dev/benchmarks)
+- Repomix Comparison: [foldwork.dev/vs/repomix](https://foldwork.dev/vs/repomix)
+- code2prompt Comparison: [foldwork.dev/vs/code2prompt](https://foldwork.dev/vs/code2prompt)
+- Glossary of Terms: [foldwork.dev/glossary](https://foldwork.dev/glossary)
 
 ## Contact
 
 foldwork@proton.me
-https://foldwork.dev
+[foldwork.dev](https://foldwork.dev)
