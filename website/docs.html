@@ -783,6 +783,24 @@
           <p><strong>IMPORTANT:</strong> Devin Desktop does not dynamically evaluate the <code>${workspaceFolder}</code> variable in global config files. You MUST use a hardcoded absolute path.</p>
         </div>
 
+        <h3>Antigravity</h3>
+        <p>Config file path: <b>~/.gemini/antigravity/mcp_config.json</b></p>
+        <p>Antigravity uses the same <code>command</code>-based MCP schema as Claude Desktop. Add this entry to the <b>mcpServers</b> object. Note that Antigravity requires an explicit <code>HOME</code> env var alongside <code>MCP_WORKSPACE</code>:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('antigravity-config', this)">Copy</button>
+          <pre id="antigravity-config" class="code-block"><code>"mcp-injector": {
+  "command": "/usr/local/bin/mcp-injector",
+  "args": [],
+  "env": {
+    "MCP_WORKSPACE": "/absolute/path/to/your/project",
+    "HOME": "/home/your-username"
+  }
+}</code></pre>
+        </div>
+        <div class="github-alert-important">
+          <p><strong>IMPORTANT:</strong> Antigravity does not dynamically evaluate the <code>${workspaceFolder}</code> variable. You MUST use a hardcoded absolute path for both <code>MCP_WORKSPACE</code> and <code>HOME</code>.</p>
+        </div>
+
         <h3>Running multiple projects</h3>
         <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
         <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -fsSL https://foldwork.dev/install | sh</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude Desktop, Cursor, and Devin Desktop to point to the new project.</p>

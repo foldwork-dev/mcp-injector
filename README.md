@@ -87,7 +87,7 @@ Install the daemon locally and configure your IDEs:
 curl -fsSL https://foldwork.dev/install | sh
 ```
 
-*Automatically configures **Claude Desktop**, **Cursor IDE**, and **VS Code**.*
+*Automatically configures **Claude Desktop**, **Cursor IDE**, **VS Code**, **Devin Desktop**, and **Antigravity**.*
 
 ---
 
@@ -109,7 +109,7 @@ If your project is under 50,000 lines, mcp-injector is completely free. The benc
 curl -fsSL https://foldwork.dev/install | sh
 ```
 
-The installer auto-detects Claude Desktop, Cursor, VS Code, and Devin Desktop and writes the MCP config automatically. You should see output like:
+The installer auto-detects Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity and writes the MCP config automatically. You should see output like:
 
 ```text
 * mcp-injector v0.2.0 installed to /usr/local/bin/mcp-injector
@@ -210,7 +210,8 @@ Config file locations:
 - Claude Desktop (Linux): `~/.config/Claude/claude_desktop_config.json`
 - Cursor: `~/.cursor/mcp.json`
 - VS Code: `.vscode/mcp.json`
-- Devin Desktop: `~/.devin/mcp.json`
+- Devin Desktop: `~/.codeium/windsurf/mcp_config.json`
+- Antigravity: `~/.gemini/antigravity/mcp_config.json`
 
 ---
 
@@ -296,7 +297,8 @@ rm -rf ~/.mcp-injector/
 # Claude Desktop (macOS): ~/Library/Application Support/Claude/claude_desktop_config.json
 # Cursor: ~/.cursor/mcp.json
 # VS Code: .vscode/mcp.json
-# Devin Desktop: ~/.devin/mcp.json
+# Devin Desktop: ~/.codeium/windsurf/mcp_config.json
+# Antigravity: ~/.gemini/antigravity/mcp_config.json
 # (Remove the "mcp-injector" entry from mcpServers)
 ```
 

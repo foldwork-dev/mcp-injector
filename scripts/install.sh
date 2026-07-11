@@ -2,7 +2,7 @@
 # ─── mcp-injector Zero-Config Installer ───────────────────────────────────────
 #
 # Detects OS and architecture, downloads/installs the binaries, and configures
-# Claude Desktop, Cursor, VS Code, and Devin Desktop.
+# Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity.
 # ─────────────────────────────────────────────────────────────────────────────
 set -eu
 
@@ -130,20 +130,24 @@ CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
 DEVIN_CONFIG=""
+ANTIGRAVITY_CONFIG=""
 
 if [ "$OS" = "darwin" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="$HOME/.gemini/antigravity/mcp_config.json"
 elif [ "$OS" = "windows" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
   DEVIN_CONFIG="${USERPROFILE:-}/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="${USERPROFILE:-}/.gemini/antigravity/mcp_config.json"
 else
   # Linux
   CLAUDE_CONFIG="$HOME/.config/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="$HOME/.gemini/antigravity/mcp_config.json"
 fi
 
 if [ -d "$PWD/.git" ]; then
@@ -187,13 +191,19 @@ try:
         data[key] = {}
     
     workspace_val = '\${workspaceFolder}'
-    if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath:
+    if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath or 'antigravity' in filepath:
         workspace_val = os.environ.get('FALLBACK_WORKSPACE', '/absolute/path/to/your/project')
 
-    data[key]['mcp-injector'] = {
+    entry = {
         'command': binpath,
+        'args': [],
         'env': { 'MCP_WORKSPACE': workspace_val }
     }
+    # Antigravity also needs HOME in env (verified from working config)
+    if 'antigravity' in filepath:
+        entry['env']['HOME'] = os.environ.get('HOME', '')
+
+    data[key]['mcp-injector'] = entry
     
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=2)
@@ -208,6 +218,7 @@ CLAUDE_STATUS="✗ Claude Desktop not detected"
 CURSOR_STATUS="✗ Cursor not detected"
 VSCODE_STATUS="✗ VS Code native MCP requires workspace"
 DEVIN_STATUS="✗ Devin Desktop not detected"
+ANTIGRAVITY_STATUS="✗ Antigravity not detected"
 
 # Check Claude Desktop parent dir or config existence
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
@@ -266,6 +277,21 @@ if [ -d "$DEVIN_DIR" ] || [ -f "$DEVIN_CONFIG" ]; then
   fi
 fi
 
+# Check Antigravity (config path: ~/.gemini/antigravity/mcp_config.json on all platforms)
+ANTIGRAVITY_DIR=$(dirname "$ANTIGRAVITY_CONFIG")
+if [ -d "$ANTIGRAVITY_DIR" ] || [ -f "$ANTIGRAVITY_CONFIG" ]; then
+  res=$(merge_config "$ANTIGRAVITY_CONFIG" "$BIN_DEST")
+  if [ "$res" = "SUCCESS" ]; then
+    if [ "$FALLBACK_WORKSPACE" = "$PWD" ]; then
+      ANTIGRAVITY_STATUS="✓ Antigravity configured for $PWD"
+    else
+      ANTIGRAVITY_STATUS="⚠ Antigravity: configured with placeholder path. Re-run installer inside a repository to auto-configure paths."
+    fi
+  else
+    ANTIGRAVITY_STATUS="⚠ Antigravity: manual config required: $res"
+  fi
+fi
+
 # 6. Print Installation Summary
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
@@ -297,6 +323,12 @@ else
   printf "%b\n" "  $DEVIN_STATUS"
 fi
 
+if echo "$ANTIGRAVITY_STATUS" | grep -q "^✓"; then
+  printf "%b\n" "  ${GREEN}$ANTIGRAVITY_STATUS${NC}"
+else
+  printf "%b\n" "  $ANTIGRAVITY_STATUS"
+fi
+
 # Warn if installed to user home bin and not in PATH
 if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
   if ! echo ":$PATH:" | grep -q ":$HOME/.local/bin:"; then
@@ -308,7 +340,7 @@ if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
 fi
 
 # Notify if no IDE configured
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS$ANTIGRAVITY_STATUS" | grep -q "✓"; then
   echo ""
   printf "%b\n" "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
   printf "%b\n" "  To manually integrate mcp-injector with your AI tools, please refer to"
@@ -319,7 +351,7 @@ echo ""
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS$ANTIGRAVITY_STATUS" | grep -q "✓"; then
   echo "  Installation complete! Please configure your IDE/client manually."
 else
   echo "  You're all set. Restart your IDE and mcp-injector will be active."
