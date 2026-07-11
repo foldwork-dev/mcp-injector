@@ -3,105 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mcp-injector for VS Code — Compress Codebase Context | Foldwork</title>
-  <meta name="description" content="Integrate mcp-injector with VS Code natively. Reduce context token usage by 41-89% using AST-based codebase compression. Fully local, no data leaves your machine.">
-  <meta name="keywords" content="mcp-injector VS Code, VS Code MCP, VS Code codebase compression, VS Code MCP server">
+  <title>Reduce Claude Token Costs for cURL by 77.8% | Foldwork</title>
+  <meta name="description" content="Detailed benchmark showing how mcp-injector uses AST-folding to compress the cURL codebase, reducing Claude API token usage.">
   <meta name="author" content="Foldwork">
-  <link rel="canonical" href="https://foldwork.dev/for/vscode">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="../og-image.png">
-  <link rel="manifest" href="../site.webmanifest">
-  <meta name="theme-color" content="#7c3aed">
-
-  <!-- Open Graph -->
-  <meta property="og:site_name" content="Foldwork">
-  <meta property="og:title" content="mcp-injector for VS Code">
-  <meta property="og:description" content="Connect mcp-injector to VS Code. Optimize local developer context. Offline license validation & secure local redaction.">
-  <meta property="og:url" content="https://foldwork.dev/for/vscode">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://foldwork.dev/og-image.png">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="mcp-injector for VS Code">
-  <meta name="twitter:description" content="Connect mcp-injector to VS Code. Save 41-89% on context tokens.">
-  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
-
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foldwork.dev" },
-          { "@type": "ListItem", "position": 2, "name": "For VS Code" }
-        ]
-      },
-      {
-        "@type": "HowTo",
-        "name": "How to connect mcp-injector to VS Code",
-        "description": "Configure mcp-injector as an MCP server in VS Code to compress codebase context and reduce LLM token costs.",
-        "step": [
-          { "@type": "HowToStep", "position": 1, "name": "Install the daemon", "text": "Run: curl -fsSL https://foldwork.dev/install | sh" },
-          { "@type": "HowToStep", "position": 2, "name": "Configure VS Code", "text": "Edit .vscode/mcp.json and add mcp-injector under the servers block." },
-          { "@type": "HowToStep", "position": 3, "name": "Verify in VS Code", "text": "Open VS Code chat, and verify the get_project_map tool is available." }
-        ]
-      }
-    ]
-  }
-  </script>
-
-  <!-- Google Fonts -->
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="../shared.css">
+  
+  <link rel="stylesheet" href="/shared.css">
   <style>
-    .docs-section {
-      margin-bottom: 3rem;
-    }
-    .docs-section h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-    }
-    .docs-section p {
-      margin-bottom: 1rem;
-      color: var(--text);
-    }
+    .header-section { padding: 5rem 0 3rem; text-align: left; }
+    .page-title { font-size: 2.25rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 1rem; }
+    .page-subtitle { font-size: 1.125rem; color: var(--text-muted); max-width: 650px; }
 
-    .code-block {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: var(--text-white);
-      overflow-x: auto;
-      margin: 1.5rem 0;
-    }
+    .docs-section { margin-bottom: 3rem; }
+    .docs-section h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .docs-section p { margin-bottom: 1rem; color: var(--text); }
 
-    ol, ul {
-      padding-left: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
+    .code-block { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.875rem; color: var(--text-white); overflow-x: auto; margin: 1.5rem 0; }
+
+    /* Cards */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; margin-bottom: 2rem; }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stat-card { background: linear-gradient(135deg, rgba(22,27,34,1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+    .stat-card h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 600; }
+    .before-after { display: flex; flex-direction: column; gap: 0.5rem; }
+    .bad { color: var(--text-muted); text-decoration: line-through; }
+    .good { color: var(--success); font-weight: 600; font-size: 1.125rem; }
+    .massive-savings { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 1rem; }
+    
+    .cta-box { background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0 5rem; }
+    .cta-box h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
-  <!-- BEGIN NAV -->
+<!-- BEGIN NAV -->
   <nav class="navbar">
     <div class="container nav-container">
       <a href="/" class="brand">
@@ -132,48 +72,53 @@
 
   <div class="container">
     <header class="header-section">
-      <h1 class="page-title">mcp-injector for VS Code</h1>
-      <p class="page-subtitle">Configure VS Code natively to query mcp-injector and compress local context.</p>
+      <h1 class="page-title">We benchmarked <code>cURL</code>.</h1>
+      <p class="page-subtitle">Here is exactly how much money and context space you waste if you feed it to Claude natively.</p>
     </header>
 
     <div class="docs-section">
-      <h2>Why use mcp-injector with VS Code?</h2>
-      <p>VS Code now natively supports the Model Context Protocol (MCP). Running mcp-injector alongside VS Code ensures your large codebase references are automatically compressed using AST folding, avoiding context bloat and maximizing response accuracy for your AI extensions.</p>
-    </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Token Usage</h3>
+          <div class="before-after">
+            <div class="bad">Raw Text: 2,738,735 tokens</div>
+            <div class="good">AST Folded: 608,206 tokens</div>
+          </div>
+          <div class="massive-savings">-77.8%</div>
+        </div>
 
-    <div class="docs-section">
-      <h2>1. Install the daemon</h2>
-      <p>Download and run the setup script inside your project workspace:</p>
-      <div class="code-block">
-        curl -fsSL https://foldwork.dev/install | sh
+        <div class="stat-card">
+          <h3>Cost per Run (Claude Sonnet)</h3>
+          <div class="before-after">
+            <div class="bad">Without mcp-injector: $5.48</div>
+            <div class="good">With mcp-injector: $0.12</div>
+          </div>
+          <div class="massive-savings">Save $5.36</div>
+        </div>
       </div>
-      <p>If you run the installer from within a git repository, it will automatically configure <code>.vscode/mcp.json</code> for you.</p>
     </div>
 
     <div class="docs-section">
-      <h2>2. Manual Configuration (Optional)</h2>
-      <p>If you didn't run the installer in your project directory, you can configure VS Code manually by creating a <b>.vscode/mcp.json</b> file in your workspace:</p>
-      <pre class="code-block">
-{
-  "servers": {
-    "mcp-injector": {
-      "command": "mcp-injector",
-      "env": {
-        "MCP_WORKSPACE": "${workspaceFolder}"
-      }
-    }
-  }
-}</pre>
+      <h2>Why context limits matter for cURL</h2>
+      <p>cURL handles vast protocol complexity through deep C implementations. Files handling core transport and encryption protocols, such as <code>lib/vtls/openssl.c</code> and <code>lib/http.c</code>, dominate the raw token count. Compressing these verbose function bodies allows the LLM to understand cURL's massive internal API surface using 77.8% fewer tokens.</p>
     </div>
 
     <div class="docs-section">
-      <h2>3. Verification</h2>
-      <p>Open your workspace folder in VS Code. Start a chat with your AI assistant and ensure the <code>get_project_map</code> and <code>injector_retrieve</code> tools are available and working.</p>
+      <h2>Reproduce this benchmark</h2>
+      <p>You can verify these numbers yourself using the open-source <code>mcp-benchmark</code> tool:</p>
+      <div class="code-block">git clone --depth 1 https://github.com/curl/curl.git
+mcp-benchmark ./curl</div>
     </div>
+
+    <div class="cta-box">
+      <h2>Stop paying for raw whitespace.</h2>
+      <p>Install mcp-injector to cut your API bills today.</p>
+      <a href="../index.html#pricing" class="nav-btn">Get Pro →</a>
+    </div>
+
   </div>
 
-  <!-- Footer -->
-  <!-- BEGIN FOOTER -->
+<!-- BEGIN FOOTER -->
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>

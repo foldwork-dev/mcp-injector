@@ -9,8 +9,8 @@
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/benchmarks">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="/og-image.png">
-  <link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="og-image.png">
+  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#7c3aed">
 
   <!-- Open Graph -->
@@ -175,6 +175,16 @@
     }
     .benchmark-table tbody tr:hover {
       background-color: rgba(255, 255, 255, 0.01);
+    }
+    .benchmark-table a {
+      color: var(--text-white);
+      text-decoration: underline;
+      text-decoration-color: rgba(255, 255, 255, 0.2);
+      text-underline-offset: 3px;
+    }
+    .benchmark-table a:hover {
+      color: var(--text-white);
+      text-decoration-color: var(--text-white);
     }
     
     .font-mono {
@@ -451,7 +461,7 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="container nav-container">
-      <a href="/" class="brand">
+      <a href="index.html" class="brand">
         <svg class="brand-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/>
           <path d="M2 17l10 5 10-5"/>
@@ -469,9 +479,9 @@
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
-        <a href="/benchmarks" class="nav-link active">Benchmarks</a>
-        <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="benchmarks.html" class="nav-link active">Benchmarks</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="index.html#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
@@ -550,7 +560,33 @@
             <td><span class="savings-badge">41.1%</span></td>
             <td class="font-mono">$1.16</td>
           </tr>
-
+          <tr>
+            <td><a href="benchmarks/redis.html"><strong>Redis</strong></a> <span class="verified-mark">✓ Verified</span></td>
+            <td>C</td>
+            <td class="font-mono">838</td>
+            <td class="font-mono">3,847,616</td>
+            <td class="font-mono">982,158</td>
+            <td><span class="savings-badge">74.5%</span></td>
+            <td class="font-mono">$7.50</td>
+          </tr>
+          <tr>
+            <td><a href="benchmarks/leveldb.html"><strong>LevelDB</strong></a> <span class="verified-mark">✓ Verified</span></td>
+            <td>C++</td>
+            <td class="font-mono">133</td>
+            <td class="font-mono">257,451</td>
+            <td class="font-mono">114,485</td>
+            <td><span class="savings-badge">55.5%</span></td>
+            <td class="font-mono">$0.49</td>
+          </tr>
+          <tr>
+            <td><a href="benchmarks/curl.html"><strong>cURL</strong></a> <span class="verified-mark">✓ Verified</span></td>
+            <td>C</td>
+            <td class="font-mono">1,052</td>
+            <td class="font-mono">2,738,735</td>
+            <td class="font-mono">608,206</td>
+            <td><span class="savings-badge">77.8%</span></td>
+            <td class="font-mono">$5.36</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -580,10 +616,10 @@
       <div class="footer-links">
         <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
-        <a href="/benchmarks" class="footer-link">Benchmarks</a>
-        <a href="/docs" class="footer-link">Docs</a>
-        <a href="/privacy" class="footer-link">Privacy</a>
-        <a href="/terms" class="footer-link">Terms</a>
+        <a href="benchmarks.html" class="footer-link">Benchmarks</a>
+        <a href="docs.html" class="footer-link">Docs</a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+        <a href="terms.html" class="footer-link">Terms</a>
       </div>
     </div>
   </footer>

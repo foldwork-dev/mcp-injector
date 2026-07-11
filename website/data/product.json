@@ -5,7 +5,8 @@
     "yearly": 99,
     "free_limit_loc": 50000,
     "base_price_per_million": 2.0,
-    "cache_hit_multiplier": 0.1
+    "cache_hit_multiplier": 0.1,
+    "tokens_per_loc": 10.47
   },
   "languages": [
     "Go",

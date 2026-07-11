@@ -9,8 +9,8 @@
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/glossary">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="/og-image.png">
-  <link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="og-image.png">
+  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#7c3aed">
   <meta property="og:site_name" content="Foldwork">
   <meta property="og:title" content="Glossary — mcp-injector Key Terms">
@@ -151,7 +151,7 @@
 <body>
   <nav class="navbar">
     <div class="container nav-container">
-      <a href="/" class="brand">
+      <a href="index.html" class="brand">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-label="Foldwork">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
         </svg>
@@ -163,9 +163,9 @@
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
-        <a href="/benchmarks" class="nav-link">Benchmarks</a>
-        <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="benchmarks.html" class="nav-link">Benchmarks</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="index.html#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
@@ -196,7 +196,7 @@ func ProcessPayment(amount float64, userID string) error {
 
 // After AST body folding (body → stub)
 func ProcessPayment(amount float64, userID string) error { ... }</pre>
-          <dd class="term-links">See also: <a href="#compression-tier">Compression Tier</a>, <a href="/benchmarks">Benchmarks</a></dd>
+          <dd class="term-links">See also: <a href="#compression-tier">Compression Tier</a>, <a href="benchmarks.html">Benchmarks</a></dd>
         </div>
 
         <div id="mcp" class="term-entry">
@@ -273,7 +273,7 @@ func ProcessPayment(amount float64, userID string) error { ... }</pre>
           <dd class="term-def">
             A mathematical measure of information density in a string, measured in bits per character. A string where each character is equally probable has maximum entropy (~6 bits/char for alphanumeric). Normal English text has ~4 bits/char. High-entropy strings above 4.5 bits/char are statistically unlikely to be human-readable and are often randomly generated secrets such as API keys, bearer tokens, or passwords. mcp-injector uses Shannon entropy analysis alongside 11 regex patterns to detect and redact credentials before they reach Claude's context window.
           </dd>
-          <dd class="term-links">See also: <a href="/docs">Security documentation</a></dd>
+          <dd class="term-links">See also: <a href="docs.html">Security documentation</a></dd>
         </div>
 
       </dl>
@@ -286,10 +286,10 @@ func ProcessPayment(amount float64, userID string) error { ... }</pre>
       <div class="footer-links">
         <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
-        <a href="/benchmarks" class="footer-link">Benchmarks</a>
-        <a href="/docs" class="footer-link">Docs</a>
-        <a href="/privacy" class="footer-link">Privacy</a>
-        <a href="/terms" class="footer-link">Terms</a>
+        <a href="benchmarks.html" class="footer-link">Benchmarks</a>
+        <a href="docs.html" class="footer-link">Docs</a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+        <a href="terms.html" class="footer-link">Terms</a>
       </div>
     </div>
   </footer>

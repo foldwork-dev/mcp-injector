@@ -73,6 +73,13 @@ for repo_key, repo in benchmarks["repositories"].items():
     # All repos must appear in benchmarks.html
     checks["website/benchmarks.html"].extend([r_raw, r_comp, r_pct, r_saved])
     
+    # All dedicated benchmark pages must contain their exact numbers
+    benchmark_page = f"website/benchmarks/{repo_key}.html"
+    if os.path.exists(benchmark_page):
+        if benchmark_page not in checks:
+            checks[benchmark_page] = []
+        checks[benchmark_page].extend([r_raw, r_comp, r_pct, r_saved])
+    
     # Only the top 3 highlight repos appear in the index and READMEs
     if repo_key in ["django", "tokio", "gin"]:
         checks["website/index.html"].extend([r_raw, r_comp, r_pct, r_saved])
@@ -83,7 +90,8 @@ for repo_key, repo in benchmarks["repositories"].items():
 regex_checks = {
     "website/index.html": [
         rf"baseRate\s*=\s*{base_price:.2f}",
-        rf"cacheHitMultiplier\s*=\s*{cache_mult:.2f}"
+        rf"cacheHitMultiplier\s*=\s*{cache_mult:.2f}",
+        rf"const tRaw = loc \* {product['pricing']['tokens_per_loc']};"
     ]
 }
 

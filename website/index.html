@@ -10,8 +10,8 @@
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="/og-image.png">
-  <link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="og-image.png">
+  <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#7c3aed">
   <meta name="author" content="Foldwork">
   <meta name="google-site-verification" content="L9XOJk5X-K-JXYqO5NAkaYcVuPjR0WQ0TWSmBUnpjic" />
@@ -1358,8 +1358,8 @@
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
-        <a href="/benchmarks" class="nav-link">Benchmarks</a>
-        <a href="/docs" class="nav-link">Docs</a>
+        <a href="benchmarks.html" class="nav-link">Benchmarks</a>
+        <a href="docs.html" class="nav-link">Docs</a>
         <a href="#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
@@ -1892,10 +1892,10 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
       <div class="footer-links">
         <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
-        <a href="/benchmarks" class="footer-link">Benchmarks</a>
-        <a href="/docs" class="footer-link">Docs</a>
-        <a href="/privacy" class="footer-link">Privacy</a>
-        <a href="/terms" class="footer-link">Terms</a>
+        <a href="benchmarks.html" class="footer-link">Benchmarks</a>
+        <a href="docs.html" class="footer-link">Docs</a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+        <a href="terms.html" class="footer-link">Terms</a>
       </div>
     </div>
   </footer>
@@ -2089,7 +2089,9 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
         valLoc.textContent = loc.toLocaleString() + ' LOC';
         valSessions.textContent = sessions + ' session' + (sessions > 1 ? 's' : '');
 
-        const tRaw = loc * 6;
+        // Empirically derived from 9 benchmarked repos (Django, Spring, Next.js, etc.)
+        // True AST scanned LOC: 5,141,129. True Raw Tokens: 53,806,086. Ratio: 10.47 tokens per line
+        const tRaw = loc * 10.47;
         const tComp = tRaw * 0.28;
 
         // TODO: Revisit pricing on Sept 1, 2026 when the Claude Sonnet 5 introductory rate ($2.00/1M) steps up to the standard rate ($3.00/1M).
