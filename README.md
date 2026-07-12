@@ -1,8 +1,8 @@
 # mcp-injector
 
-Claude Code reads raw files on demand, quickly exhausting your context window and budget. On a large codebase, this leads to slow responses and high API costs.
+AI coding assistants often fail because they retrieve the wrong context. On a large codebase, blindly dumping raw files into the prompt leads to hallucinations, slow responses, and high API costs.
 
-mcp-injector fixes this. It runs as a background daemon, pre-indexes your entire repository into a local SQLite catalog, and serves a compressed snapshot of your whole codebase to Claude on every query at roughly 41-89% the normal token cost.
+Foldwork fixes this. It is a deterministic repository understanding engine that pre-indexes your entire codebase into a local SQLite catalog. It acts as the Context Layer for your IDE, serving exactly the functions the AI needs—no more, no less—maximizing the first-try success rate and reducing token usage by 41-89%.
 
 I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$80/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
 

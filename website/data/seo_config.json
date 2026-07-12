@@ -1,19 +1,19 @@
 {
   "global_keywords": [
-    "Claude token reduction",
-    "reduce Claude Code tokens",
+    "Context Layer for Software Engineering",
+    "Deterministic AI Context",
+    "Context Precision",
     "MCP server",
     "mcp-injector",
-    "codebase context compression",
-    "IDE AI agent",
-    "Claude API costs"
+    "Repository Understanding",
+    "IDE AI agent"
   ],
   "page_overrides": {
     "website/docs.html": {
       "target_keywords": ["MCP server", "mcp-injector", "documentation", "setup"]
     },
     "website/benchmarks.html": {
-      "target_keywords": ["Claude API costs", "token savings", "benchmarks"]
+      "target_keywords": ["Context Precision", "First-Try Success Rate", "benchmarks"]
     },
     "website/vs/repomix.html": {
       "target_keywords": ["mcp-injector", "repomix", "context window"]
