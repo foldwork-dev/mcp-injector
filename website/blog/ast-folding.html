@@ -3,8 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Google Fonts (non-render-blocking) -->
+  <title>AST body folding: cut your Claude context bill | Foldwork</title>
+  <meta name="description" content="AST body folding cuts Next.js context by 57.4%, saving $45.88 per load. 93.4% of AI coding costs are input tokens. Real benchmark data.">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/blog/ast-folding">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="Why the codebase is your biggest context bill">
+  <meta property="og:description" content="93.4% of AI coding costs are input tokens. AST body-folding cuts Next.js context by 57.4%. Real numbers, verified benchmark data.">
+  <meta property="og:url" content="https://foldwork.dev/blog/ast-folding">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+  <meta property="article:published_time" content="2026-07-12">
+  <meta property="article:author" content="Foldwork">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why the codebase is your biggest context bill">
+  <meta name="twitter:description" content="93.4% of AI coding costs are input tokens, not output. Next.js: 57.4% reduction, $45.88 saved per load.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Schema.org BlogPosting -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://foldwork.dev" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://foldwork.dev/blog/ast-folding" }
+        ]
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Why the codebase is your biggest context bill, and why output compression doesn't fix it",
+        "datePublished": "2026-07-12",
+        "author": { "@type": "Organization", "name": "Foldwork", "url": "https://foldwork.dev" },
+        "publisher": { "@type": "Organization", "name": "Foldwork", "url": "https://foldwork.dev" },
+        "url": "https://foldwork.dev/blog/ast-folding",
+        "description": "93.4% of AI coding token usage is input, not output. AST body-folding addresses the codebase — the largest input source — cutting Next.js context by 57.4%."
+      }
+    ]
+  }
+  </script>
+
+<!-- Google Fonts (non-render-blocking) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
@@ -18,540 +63,127 @@
 
 <!-- Global Stylesheet -->
 <link rel="stylesheet" href="/assets/global.css">
-  <title>What is AST body folding? — mcp-injector</title>
-  <meta name="description" content="Learn how AST body folding compresses your codebase context, reducing tokens for AI assistants like Claude.">
-  <meta name="author" content="Foldwork">
-  <link rel="canonical" href="https://foldwork.dev/blog/ast-folding">
-
-  <meta property="og:site_name" content="Foldwork">
-  <meta property="og:title" content="Why the codebase is your biggest context bill">
-  <meta property="og:description" content="93.4% of AI coding costs are input tokens. AST body-folding cuts Next.js context by 57.4%. Real numbers, verified benchmark data.">
-  <meta property="og:url" content="https://foldwork.dev/blog/ast-folding">
-  <meta property="og:type" content="article">
-  <meta property="og:image" content="https://foldwork.dev/og-image.png">
-  <meta property="article:published_time" content="2026-07-12">
-  <meta property="article:author" content="Foldwork">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Why the codebase is your biggest context bill">
-  <meta name="twitter:description" content="93.4% of AI coding costs are input tokens, not output. Real benchmark: Next.js, 57.4% reduction, $45.88 saved per load.">
-  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "Why the codebase is your biggest context bill, and why output compression doesn't fix it",
-    "datePublished": "2026-07-12",
-    "author": { "@type": "Organization", "name": "Foldwork", "url": "https://foldwork.dev" },
-    "publisher": { "@type": "Organization", "name": "Foldwork", "url": "https://foldwork.dev" },
-    "url": "https://foldwork.dev/blog/ast-folding",
-    "description": "93.4% of AI coding token usage is input, not output. AST body-folding addresses the codebase — the largest input source — cutting Next.js context by 57.4%."
-  }
-  </script>
 
   <style>
-    /* Reset & CSS variables */
-    :root {
-      --bg: #0d1117;
-      --bg-card: #161b22;
-      --bg-nav: rgba(13, 17, 23, 0.75);
-      --border: rgba(240, 246, 252, 0.1);
-      --border-focus: rgba(124, 58, 237, 0.4);
-      --text: #c9d1d9;
-      --text-muted: #8b949e;
-      --text-white: #f0f6fc;
-      
-      --accent: #7c3aed;
-      --accent-hover: #9061f9;
-      --success: #10b981;
-      
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      --font-mono: 'JetBrains Mono', SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 5px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-    ::-webkit-scrollbar-corner {
-      background: transparent;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    /* Container Utility */
-    .container {
-      width: 100%;
-      max-width: 1200px;
+    /* Blog-specific layout — not in global.css */
+    .article-header {
+      padding: 5rem 0 2.5rem;
+      max-width: 740px;
       margin: 0 auto;
-      padding: 0 1.5rem;
     }
-
-    /* Sticky Navigation */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-
-    .brand span {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .nav-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .nav-link:hover {
-      color: var(--text-white);
-    }
-
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    /* Documentation Layout */
-    .docs-layout {
-      padding: 4rem 1.5rem 6rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    @media (min-width: 992px) {
-      .docs-layout {
-        grid-template-columns: 240px 1fr;
-      }
-    }
-
-    /* Sidebar Navigation */
-    .docs-sidebar {
-      display: none;
-    }
-
-    @media (min-width: 992px) {
-      .docs-sidebar {
-        display: block;
-        position: sticky;
-        top: 6rem;
-        height: calc(100vh - 8rem);
-        overflow-y: auto;
-        padding-right: 1rem;
-      }
-    }
-
-    .sidebar-title {
+    .article-tag {
+      display: inline-block;
       font-size: 0.75rem;
-      font-weight: 700;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-white);
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
-
-    .sidebar-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .sidebar-link {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .sidebar-link:hover, .sidebar-link.active {
-      color: var(--text-white);
-    }
-
-    /* Documentation Content */
-    .docs-content {
-      max-width: 800px;
-      min-width: 0;
-    }
-
-    .docs-header {
-      margin-bottom: 3rem;
-    }
-
-    .docs-main-title {
-      font-size: 2.5rem;
+    .article-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
       font-weight: 800;
       color: var(--text-white);
       letter-spacing: -0.04em;
-      margin-bottom: 0.5rem;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
     }
-
-    .docs-subtitle {
-      font-size: 1.125rem;
+    .article-meta {
+      font-size: 0.875rem;
       color: var(--text-muted);
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
     }
-
-    /* Quick Navigation (Anchor Links) */
-    .quick-nav-section {
-      margin-bottom: 3rem;
-      padding: 1.5rem;
-      background-color: var(--bg-card);
+    .article-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 740px;
+      margin: 0 auto 0;
+    }
+    .article-body {
+      max-width: 740px;
+      margin: 0 auto;
+      padding-bottom: 6rem;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .article-body p { margin-bottom: 1.5rem; }
+    .article-body h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--text-white);
+      letter-spacing: -0.02em;
+      margin: 3rem 0 1rem;
+    }
+    .article-body ul, .article-body ol {
+      margin: 0 0 1.5rem 1.5rem;
+    }
+    .article-body li { margin-bottom: 0.5rem; }
+    .article-body blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: rgba(124, 58, 237, 0.06);
+      border-radius: 0 8px 8px 0;
+      color: var(--text-white);
+      font-style: italic;
+    }
+    .article-body strong { color: var(--text-white); font-weight: 600; }
+    .article-body em { color: var(--text-muted); }
+    .article-body a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(124, 58, 237, 0.4);
+    }
+    .article-body a:hover { text-decoration-color: var(--accent); }
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    .article-body .table-wrap {
+      overflow-x: auto;
+      margin: 2rem 0;
       border: 1px solid var(--border);
       border-radius: 8px;
     }
-
-    .quick-nav-title {
-      font-size: 0.875rem;
-      font-weight: 700;
+    .article-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .article-body th {
+      background: rgba(255, 255, 255, 0.03);
       color: var(--text-white);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-    }
-
-    .quick-nav-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.75rem;
-      list-style-type: none;
-    }
-
-    .quick-nav-item a {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      text-decoration: underline;
-    }
-
-    .quick-nav-item a:hover {
-      color: var(--text-white);
-    }
-
-    /* Document Sections */
-    .docs-section {
-      margin-bottom: 2.5rem;
-      scroll-margin-top: 6rem;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .docs-section h2 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -0.03em;
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
+      font-weight: 600;
+      padding: 0.875rem 1.25rem;
       border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
     }
-
-    .docs-section h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .docs-section h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-white);
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .docs-section p {
-      margin-bottom: 1.25rem;
-      color: var(--text);
-      font-size: 0.9375rem;
-      line-height: 1.6;
-    }
-
-    .docs-section ul, .docs-section ol {
-      margin-bottom: 1.5rem;
-      padding-left: 1.5rem;
-      font-size: 0.9375rem;
-    }
-
-    .docs-section li {
-      margin-bottom: 0.5rem;
-    }
-
-    /* Lists styling */
-    .docs-section ul {
-      list-style-type: disc;
-    }
-
-    .docs-section ol {
-      list-style-type: decimal;
-    }
-
-    /* Code Blocks */
-    .code-wrapper {
-      position: relative;
-      background-color: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.25rem 3.5rem 1.25rem 1.25rem;
-      margin: 1.5rem 0;
-      overflow-x: auto;
-    }
-
-    .code-block {
+    .article-body td {
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--border);
       font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: var(--text-white);
-      white-space: pre;
-      overflow-x: auto;
+      font-size: 0.85rem;
     }
-
-    .copy-btn {
-      position: absolute;
-      top: 0.875rem;
-      right: 0.875rem;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.375rem 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .copy-btn:hover {
-      color: var(--text-white);
-      border-color: var(--text-muted);
-      background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    code {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      color: var(--text-white);
-      word-break: break-all;
-      overflow-wrap: break-word;
-    }
-
-    pre code {
-      background-color: transparent;
-      padding: 0;
-      border-radius: 0;
-      word-break: normal;
-      overflow-wrap: normal;
-    }
-
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 4rem 0;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      text-align: center;
-    }
-
-    .footer-brand {
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
+    .article-body td:first-child { font-family: var(--font-sans); }
+    .article-body tbody tr:last-child td { border-bottom: none; }
+    .article-body tbody tr:hover { background: rgba(255, 255, 255, 0.01); }
+    .highlight-val { color: var(--success); font-weight: 700; }
+    .article-footnote {
       font-size: 0.875rem;
       color: var(--text-muted);
     }
-
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    .footer-copy {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    /* Media Queries */
     @media (max-width: 767px) {
-      .docs-section {
-        padding: 1.5rem;
-      }
+      .article-header, .article-body { padding-left: 0; padding-right: 0; }
     }
-
-    @media (min-width: 768px) {
-      .nav-link {
-        display: inline-block;
-      }
-
-      .footer-container {
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
-      }
-    }
-  
-    /* Mobile Menu Toggle button */
-    .mobile-menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text-white);
-      cursor: pointer;
-      padding: 0.5rem;
-      position: relative;
-      z-index: 101;
-    }
-    .mobile-menu-toggle svg {
-      display: block;
-    }
-
-    @media (max-width: 767px) {
-      .mobile-menu-toggle {
-        display: block;
-      }
-      .nav-links {
-        display: flex !important;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: rgba(13, 17, 23, 0.98);
-        border-bottom: 1px solid var(--border);
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 1rem 1.5rem 1.5rem;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        pointer-events: none;
-        z-index: 100;
-      }
-      .nav-links.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
-      .nav-link {
-        display: block !important;
-        padding: 0.875rem 0;
-        font-size: 1rem;
-        border-bottom: 1px solid rgba(240, 246, 252, 0.05);
-      }
-      .nav-btn {
-        margin-top: 1.25rem;
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-      }
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- BEGIN NAV -->
+<!-- BEGIN NAV -->
   <nav class="navbar">
     <div class="container nav-container">
       <a href="/" class="brand">
@@ -583,7 +215,7 @@
   <div class="container">
     <header class="article-header">
       <div class="article-tag">Blog &middot; July 2026</div>
-      <h1 class="docs-main-title">What is AST body folding and how does it work?</h1>
+      <h1 class="article-title">AST body folding: why the codebase is your biggest context bill, and why output compression doesn't fix it</h1>
       <div class="article-meta">
         <span>Foldwork</span>
         <span>July 12, 2026</span>
@@ -591,7 +223,7 @@
       </div>
     </header>
 
-    <hr class="article-divider" style="max-width:740px;margin:0 auto 0;">
+    <hr class="article-divider">
 
     <article class="article-body">
 
@@ -699,7 +331,7 @@
 
       <p>In a real agentic session where the agent orients itself multiple times across a long task, those savings compound quickly.</p>
 
-      <p>The benchmark data across other repositories (Django, Spring, Tokio, Gin, Redis, cURL, and more) is available at <a href="https://foldwork.dev/benchmarks">foldwork.dev/benchmarks</a>.</p>
+      <p>The benchmark data across other repositories (Django, Spring, Tokio, Gin, Redis, cURL, and more) is available at <a href="/benchmarks">foldwork.dev/benchmarks</a>.</p>
 
       <hr>
 
@@ -727,12 +359,12 @@
 
       <hr>
 
-      <p style="font-size:0.875rem;color:var(--text-muted);">mcp-injector is available at <a href="https://foldwork.dev">foldwork.dev</a>. It works with Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity. The Pro tier is $12/month or $99/year. Benchmark methodology: vercel/next.js shallow clone, mcp-injector default compression tier, measured July 2026.</p>
+      <p class="article-footnote">mcp-injector is available at <a href="/">foldwork.dev</a>. It works with Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity. The Pro tier is $12/month or $99/year. Benchmark methodology: vercel/next.js shallow clone, mcp-injector default compression tier, measured July 2026.</p>
 
     </article>
   </div>
 
-  <!-- BEGIN FOOTER -->
+<!-- BEGIN FOOTER -->
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
@@ -805,33 +437,6 @@
     });
   </script>
 <!-- END FOOTER -->
-
-  <script>
-    const toggleBtn = document.querySelector('.mobile-menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    if (toggleBtn && navLinks) {
-      const hamburger = `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
-      const close = `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-      toggleBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        const open = navLinks.classList.toggle('active');
-        toggleBtn.setAttribute('aria-expanded', open);
-        toggleBtn.innerHTML = open ? close : hamburger;
-      });
-      navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.innerHTML = hamburger;
-      }));
-      document.addEventListener('click', e => {
-        if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
-          navLinks.classList.remove('active');
-          toggleBtn.setAttribute('aria-expanded', 'false');
-          toggleBtn.innerHTML = hamburger;
-        }
-      });
-    }
-  </script>
 
 </body>
 </html>
