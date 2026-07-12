@@ -1,0 +1,87 @@
+# Antigravity AI Rules
+
+1. **Context & Token Optimization**:
+   - Use the `mcp-injector` MCP server tools (like `get_project_map` and `injector_search`) to explore the codebase rather than reading entire large files. This dramatically saves tokens.
+   - When viewing code, retrieve only the necessary ranges of files.
+   - Keep responses concise and focused on the code.
+
+2. **Marketing and Product Claims**:
+   - NEVER hardcode data changes (like new supported languages, IDEs, or pricing) into HTML files directly.
+   - All product data flows from `website/data/product.json` to the frontend via claims tracking.
+   - If you change a claim in `product.json`, you MUST cross-reference `website/data/claims_manifest.json` to see which `.html` and `.md` files must also be updated.
+   - The consistency linter (`scripts/lint-consistency.py`) strictly enforces this. Always run the linter after making a product or marketing change.
+
+3. **Frontend Standards & New HTML Pages**:
+   - When creating or modifying a new HTML page, you MUST use the existing partials for the Navigation Bar and Footer.
+   - Do not create a new navbar or footer from scratch.
+   - Instead, place the `<!-- BEGIN NAV --><!-- END NAV -->` and `<!-- BEGIN FOOTER --><!-- END FOOTER -->` markers in the document.
+   - After creating the HTML file, you MUST run `python3 scripts/assemble-partials.py` to compile the standard partials into your new page.
+
+4. **SEO & Content Strategy**:
+   - **Keywords**: Identify a primary keyword (e.g., "Claude token reduction", "MCP server") and 1-2 secondary keywords from `website/data/seo_config.json`.
+   - **Targeting**: Use the primary keyword in the `<title>`, `<h1>`, the first paragraph, and at least one internal link anchor text.
+   - **Titles and Metas**: ALWAYS generate a `<title>` (25-65 chars) and a `<meta name="description" content="...">` (60-160 chars).
+   - **Semantics**: Ensure exactly one `<h1>` tag (that is slightly different from the title). Plan an `<h2>`/`<h3>` outline before drafting text. Do not skip heading levels.
+   - **Internal Linking**: Ensure at least one internal link to another page on the site.
+   - **Images**: Provide descriptive `alt` tags (>3 words) for all images, or use `role="presentation"` for decorative images.
+   - **Helpful Content**: Ban "SEO fluff" (long sections repeating keywords without adding new info). Every new page MUST include at least one concrete example, workflow, or code snippet. Ensure each page clearly answers a real user question and solves a practical problem. Avoid scaled content spam.
+
+5. **Repository Consistency & Impact Areas**:
+   - If you modify `website/data/product.json` or `website/data/benchmarks.json`, YOU MUST run `python3 scripts/lint-consistency.py` to ensure all HTML and markdown files that depend on these values are also updated.
+   - The repository uses a pre-commit hook to enforce consistency. Verify your changes pass `lint-consistency.py` before finalizing your work.
+   - Avoid creating or tracking binaries (like `gh`), `.patch`, or `.diff` files.
+
+6. **General Development Guidelines**:
+   - Do not edit `.go` files without checking if they are tracked. Most Go source files are deliberately ignored in this repository's `.gitignore` as it focuses on releasing the binaries and website. (Only `website/api/webhook.go` is tracked).
+   - Use the established checklist in `.github/pull_request_template.md` as a guide for ensuring complete tasks.
+
+7. **Testing & Quality Assurance**:
+   - **Product-Level Changes**: Always ensure existing functionality remains intact. Write and execute both **unit testing and integration testing** before concluding work.
+   - **Tool-Level Changes**: You must personally use the changes and verify they are working smoothly without any hiccups or user experience degradation.
+   - **Scale Testing**: For performance and stability verification, you MUST clone a large external repository (e.g., Redis, Django) into a temporary directory, run the MCP server on that repository, and verify that it does not break at scale.
+   - **Customer Focus**: Before writing any code, explicitly think through all angles the end-customer might use the feature. All edges cases and user flows must be addressed in the implementation plan.
+
+8. **Performance & Helpfulness Strategy**:
+
+## Content Purpose & Helpfulness
+ALWAYS:
+- Identify a concrete user problem for each page before writing (e.g., "burning too many tokens in Claude Code", "struggling to set up an MCP server in VS Code").
+- State that problem and the intended outcome clearly in the first 2–3 sentences of the page.
+- Provide at least ONE of the following per page:
+  - A step-by-step workflow or procedure.
+  - A concrete example (e.g., sample project, command sequence, or IDE setup).
+  - A code snippet with an explanation of how it solves the problem.
+- Avoid generating content "for search engines only":
+  - Do NOT add sections that repeat keywords without new insight, steps, or examples.
+  - Do NOT create multiple near-duplicate pages targeting only small keyword variations.
+
+IF the agent cannot articulate a user problem and a practical outcome, it MUST NOT generate the page.
+
+## Depth & Structure
+FOR CONTENT PAGES (docs, guides, tutorials):
+- Aim for at least ~500 words of genuinely useful content.
+- Ensure each major section (H2) contains:
+  - An explanation of the concept in plain language.
+  - Either a workflow, example, or code snippet relevant to mcp-injector or MCP usage.
+- Prefer fewer, deeper pages over many shallow ones:
+  - If a new page is very similar to an existing one, propose merging or expanding the existing page instead.
+
+## Performance & Page Experience
+ALWAYS for HTML pages:
+- Keep initial content light:
+  - Avoid inlining huge images or large code blocks at the very top of the page.
+  - Place heavy examples further down so the main content loads quickly.
+- Optimize images conceptually:
+  - Use appropriately sized images and avoid unnecessary high-resolution assets.
+  - Ensure every non-decorative image has a descriptive alt (> 3 words, not generic like "screenshot").
+- Avoid unnecessary scripts:
+  - Do NOT add third-party scripts or heavy client-side frameworks unless absolutely required for the page’s function.
+  - Prefer static HTML and minimal JS for docs and guides.
+
+## Anti-Spam & Quality Guardrails
+ALWAYS:
+- Ensure every page is original and specific to mcp-injector, Claude token reduction, MCP servers, or IDE AI workflows.
+- Do NOT mass-generate similar pages that only differ by keyword phrasing.
+- Do NOT use expired domains or embed unrelated third-party content just to improve rankings.
+
+The agent MUST prioritize clarity, usefulness, and fast page load over keyword density. If enforcing all rules would harm user clarity or performance, the agent SHOULD favor user value and performance.

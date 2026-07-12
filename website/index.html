@@ -4,15 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <!-- Google Fonts (non-render-blocking) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+<!-- Icons & Theme -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- Global Stylesheet -->
+<link rel="stylesheet" href="/assets/global.css">
+  
   <!-- SEO Meta Tags -->
   <title>Foldwork | mcp-injector - Compress your codebase for Claude</title>
-  <meta name="description" content="Local MCP daemon that compresses your codebase before sending it to Claude Code, Cursor, VS Code, or Antigravity. AST body folding reduces token usage by 41-89%. Free for codebases under 50K lines.">
+  <meta name="description" content="mcp-injector is a local MCP server that compresses your codebase for Claude Code, Cursor, and VS Code. AST body folding reduces token usage by 41-89%.">
   <meta name="keywords" content="reduce Claude API costs, Claude context window optimization, MCP server codebase compression, Claude Code token reduction, LLM context compression tool, mcp-injector, codebase indexing">
   <link rel="canonical" href="https://foldwork.dev">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="og-image.png">
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#7c3aed">
+
   <meta name="author" content="Foldwork">
   <meta name="google-site-verification" content="L9XOJk5X-K-JXYqO5NAkaYcVuPjR0WQ0TWSmBUnpjic" />
 
@@ -30,1149 +42,7 @@
   <meta name="twitter:description" content="Compress your codebase before Claude sees it. Free for projects under 50K lines.">
   <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
 
-  <!-- Google Fonts (non-render-blocking) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
-
   <!-- Stylesheet -->
-  <style>
-    /* Reset & CSS variables */
-    :root {
-      --bg: #0d1117;
-      --bg-card: #161b22;
-      --bg-nav: rgba(13, 17, 23, 0.75);
-      --border: rgba(240, 246, 252, 0.1);
-      --border-focus: rgba(124, 58, 237, 0.4);
-      --text: #c9d1d9;
-      --text-muted: #9ca3af;
-      --text-white: #f0f6fc;
-      
-      --accent: #7c3aed;
-      --accent-hover: #9061f9;
-      --success: #10b981;
-      
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      --font-mono: 'JetBrains Mono', SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 5px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-    ::-webkit-scrollbar-corner {
-      background: transparent;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    /* Container Utility */
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* Sticky Navigation */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-
-    .brand span {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .nav-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .nav-link:hover {
-      color: var(--text-white);
-    }
-
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 6rem 0 4rem;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--text-white);
-      line-height: 1.2;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-sub {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      max-width: 800px;
-      margin: 0 auto 2.5rem;
-    }
-
-    .hero-ctas {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      width: 100%;
-      max-width: 280px;
-      font-size: 1rem;
-    }
-
-    .btn-primary {
-      background-color: var(--accent);
-      color: var(--text-white);
-    }
-
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
-    }
-
-    .btn-secondary {
-      border: 1px solid var(--border);
-      color: var(--text-white);
-      background-color: transparent;
-    }
-
-    .btn-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-color: var(--text-muted);
-    }
-
-    .hero-caption {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    /* Section Typography */
-    .section {
-      padding: 5rem 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 3.5rem;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -0.03em;
-      margin-bottom: 0.75rem;
-    }
-
-    .section-sub {
-      color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* Benchmarks Section */
-    .benchmarks-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .bench-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      position: relative;
-    }
-
-    .bench-card.popular {
-      border-color: var(--accent);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
-    }
-
-    .popular-badge {
-      position: absolute;
-      top: -12px;
-      right: 2rem;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .bench-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      display: inline-block;
-    }
-
-    .bench-name {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 1.25rem;
-    }
-
-    .bench-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .bench-stat-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.875rem;
-    }
-
-    .bench-stat-label {
-      color: var(--text-muted);
-    }
-
-    .bench-stat-val {
-      color: var(--text-white);
-      font-family: var(--font-mono);
-    }
-
-    .bench-highlight {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-
-    .bench-highlight-label {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: var(--text-white);
-    }
-
-    .bench-highlight-val {
-      color: var(--success);
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-
-    .bench-savings-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .bench-savings-val {
-      color: var(--text-white);
-      font-weight: 600;
-    }
-
-    .bench-footnote {
-      text-align: center;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
-
-    /* How it works */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    .step-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      height: 100%;
-      box-sizing: border-box;
-    }
-
-    .step-num-icon {
-      font-size: 2rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .step-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 0.75rem;
-    }
-
-    .step-desc {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    /* Install Section */
-    .install-box {
-      max-width: 768px;
-      margin: 0 auto;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .install-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .install-tab {
-      flex: 1;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .install-tab.active {
-      color: var(--text-white);
-      border-bottom-color: var(--accent);
-      background-color: var(--bg-card);
-    }
-
-    .install-content {
-      padding: 1.5rem;
-    }
-
-    .code-wrapper {
-      position: relative;
-      background-color: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.25rem 3.5rem 1.25rem 1.25rem;
-      margin-bottom: 1.25rem;
-      overflow-x: auto;
-    }
-
-    .code-block {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: var(--text-white);
-      white-space: pre;
-    
-      overflow-x: auto;}
-
-    .copy-btn {
-      position: absolute;
-      top: 0.875rem;
-      right: 0.875rem;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.375rem 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .copy-btn:hover {
-      color: var(--text-white);
-      border-color: var(--text-muted);
-      background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .install-meta {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-    }
-
-    .ide-badges {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-      margin-top: 0.75rem;
-    }
-
-    .ide-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background-color: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.375rem 0.75rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-white);
-    }
-
-    /* Manual Setup Accordion */
-    .collapsible-container {
-      border-top: 1px solid var(--border);
-      padding-top: 1.5rem;
-    }
-
-    .collapsible-trigger {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.875rem;
-      cursor: pointer;
-      padding: 0.5rem 0;
-    }
-
-    .collapsible-trigger:hover {
-      color: var(--text-white);
-    }
-
-    .collapsible-trigger::after {
-      content: '↓';
-      font-size: 1rem;
-      transition: transform 0.2s ease;
-    }
-
-    .collapsible-trigger.active::after {
-      transform: rotate(180deg);
-    }
-
-    .collapsible-content {
-      display: none;
-      padding-top: 1rem;
-    }
-
-    .collapsible-content.open {
-      display: block;
-    }
-
-    /* Pricing Section */
-    .pricing-toggle-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-      font-size: 0.9375rem;
-      font-weight: 600;
-    }
-
-    .pricing-toggle-label {
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .pricing-toggle-label.active {
-      color: var(--text-white);
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 26px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      transition: .3s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: var(--text-muted);
-      transition: .3s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--accent);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
-      background-color: var(--text-white);
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .price-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .price-card.popular {
-      border-color: var(--accent);
-      box-shadow: 0 0 24px rgba(124, 58, 237, 0.12);
-    }
-
-    .price-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 0.5rem;
-    }
-
-    .price-amt {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.04em;
-    }
-
-    .price-features {
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.875rem;
-      margin-bottom: 2.5rem;
-      flex-grow: 1;
-    }
-
-    .price-feature {
-      font-size: 0.9375rem;
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .price-feature span {
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    .price-btn {
-      width: 100%;
-      text-align: center;
-    }
-
-    .price-subtext {
-      text-align: center;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      margin-top: 1.25rem;
-      line-height: 1.5;
-    }
-
-    /* FAQ Accordion CSS */
-    .faq-accordion {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .faq-question {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 0;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text-white);
-      cursor: pointer;
-      user-select: none;
-      width: 100%;
-      background: none;
-      border: none;
-      text-align: left;
-      font-family: inherit;
-    }
-
-    .faq-icon {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-
-    .faq-answer {
-      display: none;
-    }
-
-    .faq-item.open .faq-answer {
-      display: block;
-    }
-
-    .faq-answer p {
-      padding-bottom: 1.5rem;
-      color: var(--text-muted);
-      font-size: 0.9375rem;
-      line-height: 1.6;
-    }
-
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 4rem 0;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      text-align: center;
-    }
-
-    .footer-brand {
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    .footer-copy {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    /* Media Queries for Desktop Overrides */
-    @media (min-width: 768px) {
-      .nav-link {
-        display: inline-block;
-      }
-
-      .hero-title {
-        font-size: 3rem;
-      }
-      
-      .hero-sub {
-        font-size: 1.15rem;
-      }
-
-      .hero-ctas {
-        flex-direction: row;
-        justify-content: center;
-      }
-
-      .benchmarks-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      }
-
-      .steps-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .pricing-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .footer-container {
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .hero-title {
-        font-size: 3.75rem;
-        letter-spacing: -0.05em;
-      }
-
-      .section-title {
-        font-size: 2.25rem;
-      }
-
-      .benchmarks-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .steps-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-
-      .use-cases-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    /* Scroll reveal animations */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform, opacity;
-    }
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.2s; }
-    .delay-3 { transition-delay: 0.3s; }
-
-    /* Terminal window styling */
-    .terminal-container {
-      max-width: 720px;
-      width: 100%;
-      margin: 3rem auto 0;
-    }
-    .terminal-window {
-      background-color: #080c10;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      overflow: hidden;
-      text-align: left;
-    }
-    .terminal-header {
-      background-color: #12181f;
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-    .terminal-dots {
-      display: flex;
-      gap: 6px;
-    }
-    .terminal-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .terminal-dot.red { background-color: #ff5f56; }
-    .terminal-dot.yellow { background-color: #ffbd2e; }
-    .terminal-dot.green { background-color: #27c93f; }
-    .terminal-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .terminal-body {
-      padding: 1.25rem;
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: var(--text-white);
-      line-height: 1.5;
-      min-height: 280px;
-      white-space: pre;
-      overflow-x: auto;
-    }
-    .terminal-body::-webkit-scrollbar {
-      height: 4px;
-    }
-    .terminal-body::-webkit-scrollbar-track {
-      background: #080c10;
-    }
-    .terminal-body::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
-    .terminal-cursor {
-      display: inline-block;
-      width: 8px;
-      height: 15px;
-      background-color: var(--accent);
-      animation: blink 1s step-end infinite;
-      vertical-align: middle;
-      margin-left: 2px;
-    }
-    @keyframes blink {
-      from, to { background-color: transparent }
-      50% { background-color: var(--accent) }
-    }
-
-    /* Calculator section styling */
-    .calc-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 800px;
-      margin: 2rem auto 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-    @media (min-width: 768px) {
-      .calc-card {
-        grid-template-columns: 1.2fr 1fr;
-      }
-    }
-    .calc-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-    }
-    .calc-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .calc-label-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-white);
-    }
-    .calc-value {
-      color: var(--accent);
-      font-family: var(--font-mono);
-      font-size: 1rem;
-    }
-    .calc-slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      outline: none;
-      margin: 0.5rem 0;
-    }
-    .calc-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: pointer;
-      transition: background 0.15s ease-in-out;
-      border: 2px solid var(--bg-card);
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
-    }
-    .calc-slider::-webkit-slider-thumb:hover {
-      background: var(--accent-hover);
-    }
-    .calc-slider::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: pointer;
-      transition: background 0.15s ease-in-out;
-      border: 2px solid var(--bg-card);
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
-    }
-    .calc-slider::-moz-range-thumb:hover {
-      background: var(--accent-hover);
-    }
-    .calc-outputs {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .calc-result-title {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-    .calc-savings-badge {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 1rem;
-      font-family: var(--font-mono);
-      text-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-    }
-    .calc-breakdown {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--border);
-      padding-top: 1rem;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      gap: 1rem;
-    }
-    .calc-breakdown-item {
-      flex: 1;
-    }
-    .calc-breakdown-val {
-      font-family: var(--font-mono);
-      color: var(--text-white);
-      font-size: 0.9375rem;
-      margin-top: 0.25rem;
-    }
-    .calc-breakdown-val.raw {
-      color: #f87171;
-    }
-    .calc-breakdown-val.comp {
-      color: var(--success);
-    }
-
-    @media (max-width: 600px) {
-      .terminal-body {
-        font-size: 0.7rem;
-        padding: 0.75rem;
-        min-height: 230px;
-      }
-      .calc-card {
-        padding: 1.25rem;
-        gap: 1.5rem;
-      }
-      .calc-savings-badge {
-        font-size: 2rem;
-      }
-      .calc-breakdown {
-        font-size: 0.75rem;
-      }
-      .calc-breakdown-val {
-        font-size: 0.875rem;
-      }
-    }
-  
-    /* Mobile Menu Toggle button */
-    .mobile-menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text-white);
-      cursor: pointer;
-      padding: 0.5rem;
-      position: relative;
-      z-index: 101;
-    }
-    .mobile-menu-toggle svg {
-      display: block;
-    }
-
-    @media (max-width: 767px) {
-      .mobile-menu-toggle {
-        display: block;
-      }
-      .nav-links {
-        display: flex !important;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: rgba(13, 17, 23, 0.98);
-        border-bottom: 1px solid var(--border);
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 1rem 1.5rem 1.5rem;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        pointer-events: none;
-        z-index: 100;
-      }
-      .nav-links.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
-      .nav-link {
-        display: block !important;
-        padding: 0.875rem 0;
-        font-size: 1rem;
-        border-bottom: 1px solid rgba(240, 246, 252, 0.05);
-      }
-      .nav-btn {
-        margin-top: 1.25rem;
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-      }
-    }
-
-  
-    code {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      color: var(--text-white);
-      word-break: break-all;
-      overflow-wrap: break-word;
-    }
-    pre code {
-      background-color: transparent;
-      padding: 0;
-      border-radius: 0;
-      word-break: normal;
-      overflow-wrap: normal;
-    }
-    
-  </style>
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -1338,10 +208,11 @@
 <body>
 
   <!-- Navigation Bar -->
+  <!-- BEGIN NAV -->
   <nav class="navbar">
     <div class="container nav-container">
-      <a href="#" class="brand">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" style="flex-shrink: 0;">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/>
           <path d="M2 17l10 5 10-5"/>
           <path d="M2 12l10 5 10-5"/>
@@ -1358,19 +229,20 @@
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
-        <a href="benchmarks.html" class="nav-link">Benchmarks</a>
-        <a href="docs.html" class="nav-link">Docs</a>
-        <a href="#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
+<!-- END NAV -->
 
   <!-- Main content -->
   <main>
 
   <!-- Hero Section -->
   <header class="container hero">
-    <h1 class="hero-title">Your entire codebase in Claude's context. At 1/5th the cost.</h1>
+    <h1 class="docs-main-title">Claude token reduction for your IDE with mcp-injector</h1>
     <p class="hero-sub">Claude Code, Cursor, VS Code, Devin Desktop, and Antigravity read raw files on demand, quickly exhausting your context window and budget. mcp-injector serves pre-compressed codebase structures via AST body folding. Get 41-89% token reduction, sub-millisecond local indexing, and deterministic KV cache hits. Free under 50K lines.</p>
     <div class="hero-ctas">
       <a href="#install" class="btn btn-primary">Install Free →</a>
@@ -1435,67 +307,67 @@
           </div>
         </div>
 
-        <!-- Tokio -->
+        <!-- Redis -->
         <div class="bench-card popular">
-          <span class="bench-icon" alt="Tokio Rust codebase benchmark"></span>
-          <h3 class="bench-name">Tokio</h3>
+          <span class="bench-icon" alt="Redis C codebase benchmark"></span>
+          <h3 class="bench-name">Redis</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
               <span class="bench-stat-label">Total files scanned</span>
-              <span class="bench-stat-val">789</span>
+              <span class="bench-stat-val">838</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Raw context tokens</span>
-              <span class="bench-stat-val">1,597,813</span>
+              <span class="bench-stat-val">3,847,616</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Compressed context</span>
-              <span class="bench-stat-val">444,164</span>
+              <span class="bench-stat-val">982,158</span>
             </div>
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">72.2%</span>
+            <span class="bench-highlight-val">74.5%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$3.11</span>
+            <span class="bench-savings-val">$7.50</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$932/mo</span>
+            <span class="bench-savings-val">$2,249/mo</span>
           </div>
         </div>
 
-        <!-- Gin -->
+        <!-- Spring -->
         <div class="bench-card">
-          <span class="bench-icon" alt="Gin Go codebase benchmark"></span>
-          <h3 class="bench-name">Gin</h3>
+          <span class="bench-icon" alt="Spring Framework Java codebase benchmark"></span>
+          <h3 class="bench-name">Spring</h3>
           <div class="bench-stats">
             <div class="bench-stat-row">
               <span class="bench-stat-label">Total files scanned</span>
-              <span class="bench-stat-val">99</span>
+              <span class="bench-stat-val">9,193</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Raw context tokens</span>
-              <span class="bench-stat-val">197,300</span>
+              <span class="bench-stat-val">15,032,871</span>
             </div>
             <div class="bench-stat-row">
               <span class="bench-stat-label">Compressed context</span>
-              <span class="bench-stat-val">47,718</span>
+              <span class="bench-stat-val">5,185,299</span>
             </div>
           </div>
           <div class="bench-highlight">
             <span class="bench-highlight-label">Reduction</span>
-            <span class="bench-highlight-val">75.8%</span>
+            <span class="bench-highlight-val">65.5%</span>
           </div>
           <div class="bench-savings-row">
             <span>Saved per run</span>
-            <span class="bench-savings-val">$0.39</span>
+            <span class="bench-savings-val">$29.03</span>
           </div>
           <div class="bench-savings-row">
             <span>At 10 runs/day</span>
-            <span class="bench-savings-val">$116/mo</span>
+            <span class="bench-savings-val">$8,709/mo</span>
           </div>
         </div>
       </div>
@@ -1892,19 +764,79 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
   </main><!-- /main -->
 
   <!-- Footer -->
+  <!-- BEGIN FOOTER -->
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
       <div class="footer-links">
         <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
-        <a href="benchmarks.html" class="footer-link">Benchmarks</a>
-        <a href="docs.html" class="footer-link">Docs</a>
-        <a href="privacy.html" class="footer-link">Privacy</a>
-        <a href="terms.html" class="footer-link">Terms</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navLinks.classList.toggle('active');
+          const isOpen = navLinks.classList.contains('active');
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+          toggleBtn.innerHTML = isOpen ? `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ` : `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+<!-- END FOOTER -->
 
   <!-- Script for interactivity -->
   <script>
@@ -1950,7 +882,6 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
 
       const monthlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1&redirect_url=https://foldwork.dev/docs.html";
       const yearlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTwQvleXFAze0ndedX?quantity=1&redirect_url=https://foldwork.dev/docs.html"; 
-
 
       function updatePricing() {
         const proCheckoutBtn = document.getElementById('pro-checkout-btn');

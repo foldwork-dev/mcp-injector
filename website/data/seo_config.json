@@ -1,0 +1,49 @@
+{
+  "global_keywords": [
+    "Claude token reduction",
+    "reduce Claude Code tokens",
+    "MCP server",
+    "mcp-injector",
+    "codebase context compression",
+    "IDE AI agent",
+    "Claude API costs"
+  ],
+  "page_overrides": {
+    "website/docs.html": {
+      "target_keywords": ["MCP server", "mcp-injector", "documentation", "setup"]
+    },
+    "website/benchmarks.html": {
+      "target_keywords": ["Claude API costs", "token savings", "benchmarks"]
+    },
+    "website/vs/repomix.html": {
+      "target_keywords": ["mcp-injector", "repomix", "context window"]
+    },
+    "website/vs/code2prompt.html": {
+      "target_keywords": ["mcp-injector", "code2prompt", "context window"]
+    },
+    "website/for/cursor.html": {
+      "target_keywords": ["Cursor IDE", "MCP server for Cursor"]
+    },
+    "website/for/vscode.html": {
+      "target_keywords": ["VS Code", "MCP server for VS Code"]
+    },
+    "website/for/claude-code.html": {
+      "target_keywords": ["Claude Code", "reduce Claude Code tokens"]
+    },
+    "website/privacy.html": {
+      "target_keywords": ["privacy"]
+    },
+    "website/terms.html": {
+      "target_keywords": ["terms"]
+    },
+    "website/changelog.html": {
+      "target_keywords": ["changelog"]
+    },
+    "website/glossary.html": {
+      "target_keywords": ["glossary"]
+    },
+    "website/blog/ast-folding.html": {
+      "target_keywords": ["AST body folding"]
+    }
+  }
+}

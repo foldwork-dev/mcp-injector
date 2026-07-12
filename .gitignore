@@ -19,7 +19,15 @@ public-benchmark
 mcp-public-benchmark
 mcp-injector
 mcp-benchmark
-
+gh
+*.diff
+*.patch
+release_notes.md
+.DS_Store
+.idea/
+*.log
+.env
+benchmark-target/
 # Test directory — never publish
 test/
 

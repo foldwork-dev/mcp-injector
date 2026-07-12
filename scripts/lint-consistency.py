@@ -14,6 +14,8 @@ with open('website/data/product.json') as f:
     product = json.load(f)
 with open('website/data/benchmarks.json') as f:
     benchmarks = json.load(f)
+with open('website/data/claims_manifest.json') as f:
+    manifest = json.load(f)
 
 # The values we expect to find
 monthly = f"${product['pricing']['monthly']}"
@@ -63,6 +65,16 @@ checks = {
     ]
 }
 
+# Dynamically populate list checks (like IDEs and languages) from claims_manifest.json
+for list_key, files in manifest.get("lists", {}).items():
+    items = product.get(list_key, [])
+    for fpath in files:
+        if fpath not in checks:
+            checks[fpath] = []
+        
+        # We append each item (e.g. "Go", "Python", "VS Code") to the expected strings
+        checks[fpath].extend(items)
+
 # Dynamically populate checks from JSON
 for repo_key, repo in benchmarks["repositories"].items():
     r_raw = repo["raw_formatted"]
@@ -80,12 +92,13 @@ for repo_key, repo in benchmarks["repositories"].items():
             checks[benchmark_page] = []
         checks[benchmark_page].extend([r_raw, r_comp, r_pct, r_saved])
     
-    # Only the top 3 highlight repos appear in the index and READMEs
+    # Only the top 3 highlight repos appear in the READMEs
     if repo_key in ["django", "tokio", "gin"]:
-        checks["website/index.html"].extend([r_raw, r_comp, r_pct, r_saved])
         checks["README.md"].extend([r_pct, r_saved])
         checks["../mcp-benchmark/README.md"].extend([r_pct, r_saved])
         checks["mcp-benchmark/README.md"].extend([r_pct, r_saved])
+        if repo_key == "django":
+            checks["website/index.html"].extend([r_raw, r_comp, r_pct, r_saved])
 
 regex_checks = {
     "website/index.html": [
@@ -114,6 +127,22 @@ for path, expected_patterns in regex_checks.items():
         if not re.search(pattern, content):
             print(f"LINT ERROR: {path} failed regex match for '{pattern}'")
             failed = True
+
+# Enforce HTML Partials
+for root_dir, _, files in os.walk('website'):
+    if 'partials' in root_dir:
+        continue
+    for file in files:
+        if file.endswith('.html') and file != '404.html':
+            filepath = os.path.join(root_dir, file)
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            if '<!-- BEGIN NAV -->' not in content or '<!-- END NAV -->' not in content:
+                print(f"LINT ERROR: {filepath} is missing NAV partial markers. Use <!-- BEGIN NAV --><!-- END NAV -->.")
+                failed = True
+            if '<!-- BEGIN FOOTER -->' not in content or '<!-- END FOOTER -->' not in content:
+                print(f"LINT ERROR: {filepath} is missing FOOTER partial markers. Use <!-- BEGIN FOOTER --><!-- END FOOTER -->.")
+                failed = True
 
 if failed:
     sys.exit(1)

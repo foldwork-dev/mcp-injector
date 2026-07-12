@@ -3,15 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts (non-render-blocking) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+<!-- Icons & Theme -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- Global Stylesheet -->
+<link rel="stylesheet" href="/assets/global.css">
   <title>Glossary — mcp-injector Key Terms | Foldwork</title>
-  <meta name="description" content="Definitions of key terms used in mcp-injector: AST body folding, Model Context Protocol (MCP), canonical determinism, KV prompt cache, compression tier, CCR pattern, and Shannon entropy.">
+  <meta name="description" content="Glossary of terms for mcp-injector, including AST body folding, Shannon entropy redaction, and Model Context Protocol (MCP).">
   <meta name="keywords" content="AST body folding definition, MCP server definition, canonical determinism, KV prompt cache Claude, compression tier, Shannon entropy secrets">
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/glossary">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="og-image.png">
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#7c3aed">
+
   <meta property="og:site_name" content="Foldwork">
   <meta property="og:title" content="Glossary — mcp-injector Key Terms">
   <meta property="og:description" content="Definitions of AST body folding, MCP, canonical determinism, KV prompt cache, and other core terms used in mcp-injector.">
@@ -96,79 +108,37 @@
     ]
   }
   </script>
-  <style>
-    :root {
-      --bg:#0d1117;--bg-card:#161b22;--bg-nav:rgba(13,17,23,0.75);
-      --border:rgba(240,246,252,0.1);--text:#c9d1d9;--text-muted:#8b949e;
-      --text-white:#f0f6fc;--accent:#7c3aed;--accent-hover:#9061f9;
-      --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      --font-mono:'JetBrains Mono',Consolas,"Liberation Mono",Menlo,monospace;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{background-color:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-    a{color:var(--accent);text-decoration:none;transition:color 0.2s;}
-    a:hover{color:var(--accent-hover);}
-    .container{max-width:800px;margin:0 auto;padding:0 1.5rem;}
-    .navbar{position:sticky;top:0;z-index:100;background-color:var(--bg-nav);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-    .nav-container{display:flex;align-items:center;justify-content:space-between;height:4rem;}
-    .brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:1.125rem;color:var(--text-white);letter-spacing:-0.025em;}
-    .brand span{color:var(--accent);}
-    .nav-links{display:flex;align-items:center;gap:1.5rem;}
-    .nav-link{color:var(--text-muted);font-size:0.875rem;font-weight:500;transition:color 0.2s;}
-    .nav-link:hover{color:var(--text-white);}
-    .nav-btn{display:inline-flex;align-items:center;background-color:var(--accent);color:var(--text-white);font-size:0.875rem;font-weight:600;padding:0.5rem 1rem;border-radius:6px;transition:background-color 0.2s;}
-    .nav-btn:hover{background-color:var(--accent-hover);}
-    .mobile-menu-toggle{display:none;background:none;border:none;color:var(--text-white);cursor:pointer;padding:0.5rem;z-index:101;}
-    @media(max-width:767px){
-      .mobile-menu-toggle{display:block;}
-      .nav-links{display:flex !important;position:absolute;top:100%;left:0;right:0;background-color:rgba(13,17,23,0.98);border-bottom:1px solid var(--border);flex-direction:column;align-items:stretch;gap:0;padding:1rem 1.5rem 1.5rem;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .25s,transform .25s,visibility .25s;box-shadow:0 10px 30px rgba(0,0,0,0.5);pointer-events:none;z-index:100;}
-      .nav-links.active{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
-      .nav-link{display:block !important;padding:0.875rem 0;font-size:1rem;border-bottom:1px solid rgba(240,246,252,0.05);}
-      .nav-btn{margin-top:1.25rem;width:100%;padding:0.75rem;font-size:1rem;}
-    }
-    .page-header{padding:5rem 0 3rem;}
-    .page-title{font-size:2.25rem;font-weight:800;color:var(--text-white);letter-spacing:-0.04em;margin-bottom:0.75rem;}
-    .page-subtitle{font-size:1.05rem;color:var(--text-muted);}
-    .term-list{margin:2.5rem 0 5rem;display:flex;flex-direction:column;gap:0;}
-    .term-entry{padding:2rem 0;border-bottom:1px solid var(--border);scroll-margin-top:6rem;}
-    .term-entry:first-child{border-top:1px solid var(--border);}
-    .term-name{font-size:1.25rem;font-weight:700;color:var(--text-white);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;}
-    .term-anchor{font-size:0.875rem;font-weight:400;color:var(--text-muted);font-family:var(--font-mono);}
-    .term-anchor:hover{color:var(--accent);}
-    .term-def{font-size:0.9375rem;color:var(--text);margin-bottom:1rem;}
-    .term-example{background-color:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-white);overflow-x:auto;white-space:pre;}
-    .term-links{margin-top:0.75rem;font-size:0.875rem;}
-    .footer{border-top:1px solid var(--border);padding:3rem 0;font-size:0.8125rem;color:var(--text-muted);}
-    .footer-container{display:flex;flex-direction:column;align-items:center;gap:1.5rem;text-align:center;}
-    .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;}
-    .footer-link{color:var(--text-muted);transition:color .2s;}
-    .footer-link:hover{color:var(--text-white);}
-    @media(min-width:768px){.footer-container{flex-direction:row;justify-content:space-between;text-align:left;}}
-    code{font-family:var(--font-mono);font-size:0.875rem;background-color:rgba(255,255,255,0.06);padding:0.15rem 0.4rem;border-radius:4px;color:var(--text-white);}
-  </style>
+  
 </head>
 <body>
+  <!-- BEGIN NAV -->
   <nav class="navbar">
     <div class="container nav-container">
-      <a href="index.html" class="brand">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-label="Foldwork">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
         </svg>
         Foldwork<span>.dev</span>
       </a>
       <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
       </button>
       <div class="nav-links">
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
-        <a href="benchmarks.html" class="nav-link">Benchmarks</a>
-        <a href="docs.html" class="nav-link">Docs</a>
-        <a href="index.html#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/#pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
+<!-- END NAV -->
 
   <div class="container">
     <header class="page-header">
@@ -280,19 +250,79 @@ func ProcessPayment(amount float64, userID string) error { ... }</pre>
     </main>
   </div>
 
+  <!-- BEGIN FOOTER -->
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
       <div class="footer-links">
         <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
         <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
-        <a href="benchmarks.html" class="footer-link">Benchmarks</a>
-        <a href="docs.html" class="footer-link">Docs</a>
-        <a href="privacy.html" class="footer-link">Privacy</a>
-        <a href="terms.html" class="footer-link">Terms</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navLinks.classList.toggle('active');
+          const isOpen = navLinks.classList.contains('active');
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+          toggleBtn.innerHTML = isOpen ? `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ` : `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+<!-- END FOOTER -->
 
   <script>
     const btn = document.querySelector('.mobile-menu-toggle');

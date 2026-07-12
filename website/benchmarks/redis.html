@@ -3,41 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reduce Claude Token Costs for Redis by 74.5% | Foldwork</title>
+  
+  <!-- Google Fonts (non-render-blocking) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+<!-- Icons & Theme -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- Global Stylesheet -->
+<link rel="stylesheet" href="/assets/global.css">
+  <title>Redis Benchmark - mcp-injector Claude token reduction</title>
   <meta name="description" content="Detailed benchmark showing how mcp-injector uses AST-folding to compress the Redis codebase, reducing Claude API token usage.">
   <meta name="author" content="Foldwork">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="/shared.css">
-  <style>
-    .header-section { padding: 5rem 0 3rem; text-align: left; }
-    .page-title { font-size: 2.25rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 1rem; }
-    .page-subtitle { font-size: 1.125rem; color: var(--text-muted); max-width: 650px; }
-
-    .docs-section { margin-bottom: 3rem; }
-    .docs-section h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-    .docs-section p { margin-bottom: 1rem; color: var(--text); }
-
-    .code-block { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.875rem; color: var(--text-white); overflow-x: auto; margin: 1.5rem 0; }
-
-    /* Cards */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; margin-bottom: 2rem; }
-    @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
-    .stat-card { background: linear-gradient(135deg, rgba(22,27,34,1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
-    .stat-card h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 600; }
-    .before-after { display: flex; flex-direction: column; gap: 0.5rem; }
-    .bad { color: var(--text-muted); text-decoration: line-through; }
-    .good { color: var(--success); font-weight: 600; font-size: 1.125rem; }
-    .massive-savings { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 1rem; }
-    
-    .cta-box { background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0 5rem; }
-    .cta-box h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem; }
-    .cta-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
-  </style>
+  
+  <link rel="canonical" href="https://foldwork.dev/benchmarks/redis">
 </head>
 <body>
 
@@ -69,17 +60,18 @@
     </div>
   </nav>
 <!-- END NAV -->
+<!-- END NAV -->
 
   <div class="container">
     <header class="header-section">
-      <h1 class="page-title">We benchmarked <code>Redis</code>.</h1>
+      <h1 class="docs-main-title">Redis Benchmark: Claude token reduction with mcp-injector</h1>
       <p class="page-subtitle">Here is exactly how much money and context space you waste if you feed it to Claude natively.</p>
     </header>
 
     <div class="docs-section">
       <div class="stats-grid">
         <div class="stat-card">
-          <h3>Token Usage</h3>
+          <h3>Token Usage</h2>
           <div class="before-after">
             <div class="bad">Raw Text: 3,847,616 tokens</div>
             <div class="good">AST Folded: 982,158 tokens</div>
@@ -88,7 +80,7 @@
         </div>
 
         <div class="stat-card">
-          <h3>Cost per Run (Claude Sonnet)</h3>
+          <h3>Cost per Run (Claude Sonnet)</h2>
           <div class="before-after">
             <div class="bad">Without mcp-injector: $7.70</div>
             <div class="good">With mcp-injector: $0.20</div>
@@ -132,6 +124,65 @@ mcp-benchmark ./redis</div>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navLinks.classList.toggle('active');
+          const isOpen = navLinks.classList.contains('active');
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+          toggleBtn.innerHTML = isOpen ? `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ` : `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+<!-- END FOOTER -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

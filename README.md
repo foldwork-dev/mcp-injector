@@ -224,7 +224,7 @@ Config file locations:
 * **Compress-Cache-Retrieve (CCR):** Employs lossless AST compression. The LLM gets the high-level outline and calls `injector_retrieve` to fetch raw file bodies on-demand.
 * **100% Local & Offline:** Running entirely on your local machine, keeping your intellectual property private and secure.
 
-**Supports:** Go, Python, TypeScript, JavaScript, Java, C++, Rust.
+**Supports:** Go, Python, TypeScript, JavaScript, Java, C++, C, C#, Rust.
 
 ---
 

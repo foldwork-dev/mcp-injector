@@ -10,13 +10,17 @@ def main():
     with open('website/partials/footer.html', 'r', encoding='utf-8') as f:
         footer_content = f.read().strip()
 
+    with open('website/partials/head.html', 'r', encoding='utf-8') as f:
+        head_content = f.read().strip()
+
     # Regex patterns to match the blocks (including the comments themselves)
     nav_pattern = re.compile(r'<!-- BEGIN NAV -->.*?<!-- END NAV -->', re.DOTALL)
     footer_pattern = re.compile(r'<!-- BEGIN FOOTER -->.*?<!-- END FOOTER -->', re.DOTALL)
+    head_pattern = re.compile(r'<!-- BEGIN GLOBAL HEAD -->.*?<!-- END GLOBAL HEAD -->', re.DOTALL)
 
     # Walk through all HTML files
     for root_dir, _, files in os.walk('website'):
-        if 'partials' in root_dir:
+        if 'partials' in root_dir or 'assets' in root_dir:
             continue
             
         for file in files:
@@ -28,12 +32,15 @@ def main():
                 
                 original_content = content
                 
-                # Replace nav and footer
+                # Replace nav and footer and head
                 if nav_pattern.search(content):
                     content = nav_pattern.sub(nav_content, content)
                 
                 if footer_pattern.search(content):
                     content = footer_pattern.sub(footer_content, content)
+                
+                if head_pattern.search(content):
+                    content = head_pattern.sub(head_content, content)
                 
                 # Only write if changes were made
                 if content != original_content:

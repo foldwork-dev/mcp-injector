@@ -1,0 +1,15 @@
+{
+  "lists": {
+    "languages": [
+      "README.md",
+      "website/index.html",
+      "website/vs/repomix.html"
+    ],
+    "ides": [
+      "README.md",
+      "website/index.html",
+      "website/docs.html",
+      "website/llms.txt"
+    ]
+  }
+}

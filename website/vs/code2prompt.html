@@ -3,15 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts (non-render-blocking) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+<!-- Icons & Theme -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- Global Stylesheet -->
+<link rel="stylesheet" href="/assets/global.css">
   <title>code2prompt vs mcp-injector — Detailed Comparison | Foldwork</title>
-  <meta name="description" content="Compare code2prompt and mcp-injector side by side. code2prompt is a one-shot Rust CLI with Handlebars templating; mcp-injector is a persistent MCP daemon with AST compression, branch awareness, and prompt cache optimization.">
+  <meta name="description" content="Compare mcp-injector vs code2prompt. Understand the difference between real-time MCP server context injection and static template-based prompt generation.">
   <meta name="keywords" content="code2prompt vs mcp-injector, code2prompt alternative, mcp-injector comparison, codebase context tool">
   <meta name="author" content="Foldwork">
   <link rel="canonical" href="https://foldwork.dev/vs/code2prompt">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="../og-image.png">
-  <link rel="manifest" href="../site.webmanifest">
-  <meta name="theme-color" content="#7c3aed">
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="Foldwork">
@@ -34,29 +45,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../shared.css">
-  <style>
-    .header-section { padding: 5rem 0 3rem; text-align: center; }
-    
-    .summary-text { font-size: 1rem; color: var(--text); margin-bottom: 3rem; line-height: 1.7; }
-
-    .table-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; margin-bottom: 4rem; box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
-    .compare-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-    .compare-table th { background-color: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); color: var(--text-white); font-weight: 600; padding: 1rem 1.25rem; }
-    .compare-table td { padding: 1.25rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-    .compare-table tbody tr:last-child td { border-bottom: none; }
-    .compare-table tbody tr:hover { background-color: rgba(255,255,255,0.01); }
-
-    .status-yes { color: var(--success); font-weight: 600; }
-    .status-no { color: var(--text-muted); }
-    .status-partial { color: var(--warning); font-weight: 600; }
-
-    .section-title { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 1rem; margin-top: 3rem; letter-spacing: -0.02em; }
-    .narrative-p { margin-bottom: 1.25rem; font-size: 0.95rem; color: var(--text); }
-
-    .cta-box { background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0 5rem; }
-    .cta-box h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem; }
-    .cta-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
-  </style>
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -132,6 +120,7 @@
       </div>
     </div>
   </nav>
+<!-- END NAV -->
 <!-- END NAV -->
 
   <div class="container">
@@ -249,6 +238,65 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navLinks.classList.toggle('active');
+          const isOpen = navLinks.classList.contains('active');
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+          toggleBtn.innerHTML = isOpen ? `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ` : `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+<!-- END FOOTER -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
