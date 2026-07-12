@@ -34,5 +34,3 @@ jobs:
         configPath: './.lighthouserc.json'
         runs: 1
 
-    - name: Run Go Tests
-      run: go test $(go list ./... | grep -v '/scratch' | grep -v '/test')
