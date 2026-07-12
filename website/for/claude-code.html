@@ -272,63 +272,6 @@
   </script>
 <!-- END FOOTER -->
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Mobile menu toggle
-      const toggleBtn = document.querySelector('.mobile-menu-toggle');
-      const navLinks = document.querySelector('.nav-links');
-      if (toggleBtn && navLinks) {
-        toggleBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          navLinks.classList.toggle('active');
-          const isOpen = navLinks.classList.contains('active');
-          toggleBtn.setAttribute('aria-expanded', isOpen);
-          toggleBtn.innerHTML = isOpen ? `
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          ` : `
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          `;
-        });
-
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            toggleBtn.innerHTML = `
-              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            `;
-          });
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
-            navLinks.classList.remove('active');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            toggleBtn.innerHTML = `
-              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            `;
-          }
-        });
-      }
-    });
-  </script>
 <!-- END FOOTER -->
 
 </body>
