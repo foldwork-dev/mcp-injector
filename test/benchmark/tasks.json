@@ -1,0 +1,38 @@
+{
+  "tasks": [
+    {
+      "task_id": "auth-jwt-expiration-fix",
+      "repository": {
+        "url": "https://github.com/foldwork-dev/mcp-benchmark",
+        "commit": "a1b2c3d4e5f67890",
+        "language": "go"
+      },
+      "evaluation": {
+        "user_prompt": "Users are reporting that their sessions never expire. Update the JWT middleware to enforce a 24-hour expiration on the token.",
+        "ground_truth_context": {
+          "required_files": [
+            "src/auth/jwt.go",
+            "src/middleware/auth.go"
+          ],
+          "required_symbols": [
+            "GenerateToken",
+            "ValidateSession"
+          ]
+        },
+        "ground_truth_patch": "patches/auth-jwt-expiration-fix.patch",
+        "verification": {
+          "setup_command": "go mod tidy",
+          "test_command": "go test ./src/middleware/ -run TestValidateSessionExpiration"
+        }
+      },
+      "metadata": {
+        "difficulty": "medium",
+        "category": "bugfix",
+        "tags": [
+          "security",
+          "auth"
+        ]
+      }
+    }
+  ]
+}
