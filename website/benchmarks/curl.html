@@ -29,6 +29,31 @@
   <link rel="stylesheet" href="/shared.css">
   
   <link rel="canonical" href="https://foldwork.dev/benchmarks/curl">
+  <style>
+    .header-section { padding: 5rem 0 3rem; text-align: left; }
+    .page-title { font-size: 2.25rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 1rem; }
+    .page-subtitle { font-size: 1.125rem; color: var(--text-muted); max-width: 650px; }
+
+    .docs-section { margin-bottom: 3rem; }
+    .docs-section h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .docs-section p { margin-bottom: 1rem; color: var(--text); }
+
+    .code-block { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.875rem; color: var(--text-white); overflow-x: auto; margin: 1.5rem 0; }
+
+    /* Cards */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; margin-bottom: 2rem; }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stat-card { background: linear-gradient(135deg, rgba(22,27,34,1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+    .stat-card h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 600; }
+    .before-after { display: flex; flex-direction: column; gap: 0.5rem; }
+    .bad { color: var(--text-muted); text-decoration: line-through; }
+    .good { color: var(--success); font-weight: 600; font-size: 1.125rem; }
+    .massive-savings { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 1rem; }
+    
+    .cta-box { background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(22,27,34,0.5) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0 5rem; }
+    .cta-box h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
+  </style>
 </head>
 <body>
 

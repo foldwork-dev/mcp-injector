@@ -27,6 +27,65 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; 
+      overflow-wrap: break-word;
+      word-wrap: break-word;}
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .navbar { position: sticky; top: 0; z-index: 100; background-color: var(--bg-nav); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 4rem; }
+    .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.125rem; color: var(--text-white); text-decoration: none; letter-spacing: -0.025em; }
+    .brand span { color: var(--accent); }
+    .nav-btn { display: inline-flex; align-items: center; background-color: var(--accent); color: var(--text-white); font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; }
+    .nav-btn:hover { background-color: var(--accent-hover); }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+    h1 { font-size: 2rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 3rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-white); margin: 2.5rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    p { margin-bottom: 1.25rem; font-size: 0.9375rem; }
+    ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; font-size: 0.9375rem; }
+
+    .footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); }
+    .footer a { color: var(--text-muted); margin: 0 0.5rem; }
+    .footer a:hover { color: var(--text-white); }
+  
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--text-white);
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+      word-break: normal;
+      overflow-wrap: normal;
+    }
+    
+  </style>
 </head>
 <body>
   <!-- BEGIN NAV -->

@@ -89,6 +89,81 @@
     ]
   }
   </script>
+  <style>
+    /* Page Header */
+    .header-section {
+      padding: 5rem 0 3rem;
+      text-align: center;
+    }
+    
+    .summary-text {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* Table CSS */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 4rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .compare-table th {
+      background-color: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-white);
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+    }
+    .compare-table td {
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .compare-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .compare-table tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+    
+    .status-yes {
+      color: var(--success);
+      font-weight: 600;
+    }
+    .status-no {
+      color: var(--text-muted);
+    }
+    .status-partial {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .narrative-p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+  </style>
 </head>
 <body>
 
