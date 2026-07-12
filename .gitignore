@@ -28,6 +28,7 @@ release_notes.md
 *.log
 .env
 benchmark-target/
+.antigravityrules
 # Test directory — never publish
 test/
 
