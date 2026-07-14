@@ -18,12 +18,15 @@ It does not send any data to external servers. All indexing and compression happ
 
 ## MCP tools exposed
 
-- `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3) and `unfolded_files` (paths or globs to bypass compression for). Response includes `git_context` (branch, changed files, recent commits) and `secrets_redacted` count.
-- `injector_retrieve` — Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters.
-- `injector_search` — BM25 full-text search over indexed symbols. Returns exact `FilePath` locations.
+- `get_project_map` — Returns a compressed snapshot of the codebase. Accepts `tier` (1–3, default 3), `unfolded_files` (paths or globs to bypass compression for), and `path_prefixes` (to scope to specific microservices). Response includes `git_context` (branch, changed files, recent commits) and `secrets_redacted` count.
+- `injector_retrieve` — Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line`, `end_line`, and `expand_graph` parameters.
+- `injector_search` — BM25 full-text search over indexed symbols. Returns exact `FilePath` locations. Accepts `search_paths`.
 - `injector_stats` — Returns compression ratio, cache hit rate, workspace line count, and license status.
-- `injector_sync` — Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project.
-
+- `injector_diagram` — Generates Mermaid sequence diagrams for architectural workflows.
+- `injector_regex_search` — Raw regex and literal search bypassing FTS5 tokenization.
+- `injector_write_file` — API-Level Compression Guardrail. Mandatory tool for writing file edits; intercepts and hard-rejects folded code markers to prevent data loss.
+- `injector_clear_cache` — Wipes the local SQLite index and forces a cold start.
+- `injector_sync` — (Deprecated) Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project. (Read tools now wait implicitly).
 ## Supported languages
 
 Go, Python, Java, TypeScript, JavaScript, C++, C, C#, Rust

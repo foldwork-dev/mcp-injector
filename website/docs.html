@@ -819,7 +819,7 @@
         <h3>Running multiple projects</h3>
         <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
         <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -fsSL https://foldwork.dev/install | sh</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude Desktop, Cursor, and Devin Desktop to point to the new project.</p>
-        <p>Option B: Run a separate daemon instance for each project on a different configuration. Each daemon maintains its own index at <b>~/.mcp-injector/cache/&lt;workspace-hash&gt;.db</b> to avoid conflicts.</p>
+        <p>Option B: Run a separate daemon instance for each project on a different configuration. Each daemon maintains its own index at <b>~/.mcp-injector/cache/&lt;workspace-hash&gt;_v2.db</b> to avoid conflicts.</p>
       </section>
 
       <!-- Section: Using the MCP tools -->
@@ -827,7 +827,7 @@
         <h2>Using the MCP tools</h2>
         <p>mcp-injector exposes five tools. Claude calls these tools automatically when relevant. You can also prompt Claude to call them explicitly.</p>
         <div class="github-alert-important">
-          <p><strong>IMPORTANT:</strong> Code returned by <code>get_project_map</code> has compressed function bodies replaced with fold markers. This code is for reading structure only. You MUST call <code>injector_retrieve</code> to get full uncompressed source before editing any file. Editing folded code will destroy the real function implementations.</p>
+          <p><strong>IMPORTANT:</strong> Code returned by <code>get_project_map</code> has compressed function bodies replaced with fold markers. This code is for reading structure only. You MUST use <code>injector_write_file</code> to edit files. The daemon will actively hard-reject any attempt to write codebase files containing compressed fold markers.</p>
         </div>
 
         <h3>get_project_map</h3>
@@ -837,27 +837,53 @@
         <ul>
           <li><b>tier</b> (1, 2, or 3): compression level. Default is 3. Tier 1 does not compress. Tier 2 folds function bodies but keeps signatures. Tier 3 folds bodies and strips comments.</li>
           <li><b>unfolded_files</b>: array of file paths or glob patterns to serve at full resolution.</li>
+          <li><b>path_prefixes</b>: array of path prefixes to strictly scope the project map to specific microservices or packages, drastically reducing payload bloat.</li>
         </ul>
         <p>The response includes a <code>dependency_graph</code> showing inter-module dependencies and a <code>layer_summary</code> for an instant architectural overview of the system.</p>
         <p>Example prompt: <b>"Get the project map but show me src/auth/handler.go at full resolution"</b></p>
 
         <h3>injector_search</h3>
-        <p>This tool performs a fast BM25 full-text search over indexed symbols in the local SQLite catalog. Results are ranked with definitions first, and include the <code>line_start</code>, <code>line_end</code>, and a <code>context_snippet</code> so you can immediately verify the symbol without a secondary lookup.</p>
-        <p>Prompt: <b>"Search the codebase for AuthenticationService"</b></p>
+        <p>This tool performs a fast BM25 full-text search over indexed symbols in the local SQLite catalog. Results are ranked with definitions first, and include the <code>line_start</code>, <code>line_end</code>, and a <code>context_snippet</code> so you can immediately verify the symbol without a secondary lookup. Supports raw FTS5 boolean logic (e.g., <code>user AND (auth OR login)</code>). The tool will return a clear error payload if the search syntax is malformed.</p>
+        <p>Prompt: <b>"Search the codebase for user AND auth"</b></p>
+        <p>Parameters:</p>
+        <ul>
+          <li><b>query</b>: FTS5 query string.</li>
+          <li><b>limit</b>: Maximum results (default: 20).</li>
+          <li><b>search_paths</b>: Optional list of path prefixes to restrict the search to specific isolated directories.</li>
+        </ul>
 
         <h3>injector_retrieve</h3>
         <p>This tool fetches the complete uncompressed source of a file. Optional: pass <code>start_line</code> and <code>end_line</code> to retrieve only a specific range of lines. Useful when you know the exact location of a symbol from injector_search results and want to avoid loading a large file.</p>
+        <p>You can also pass <code>expand_graph=true</code> to resolve cross-file dependencies and append them to the retrieved source code (limited to 50 1st-degree dependencies to protect context window).</p>
         <p>Prompt: <b>"Show me the full implementation of UserService.java"</b></p>
         <p>Claude calls this tool automatically when it needs to inspect a folded function body.</p>
+        
+        <h3>injector_diagram</h3>
+        <p>Generates a Mermaid sequence diagram for a given symbol by traversing its outbound dependencies. Useful for visualizing architectural workflows. Automatically halts after traversing 500 unique nodes to protect the LLM context window.</p>
+        <p>Prompt: <b>"Generate an architecture diagram for the handleProjectMap function"</b></p>
+        <p>Parameters:</p>
+        <ul>
+          <li><b>symbol</b>: The exact symbol name.</li>
+          <li><b>max_depth</b>: Maximum traversal depth (default: 3).</li>
+          <li><b>include_primitives</b>: If true, includes basic types (String, boolean) and framework boundaries. Defaults to false for crisp business logic visualization.</li>
+        </ul>
+
+        <h3>injector_regex_search</h3>
+        <p>Fallback for exact literal or regex searches against file contents. Bypasses FTS5 tokenization to find punctuation-heavy strings or regex patterns.</p>
+
+        <h3>injector_write_file</h3>
+        <p>Write a full file to disk. CRITICAL: Agents MUST use this tool to edit files. It prevents data loss by rejecting payloads containing compressed fold markers.</p>
+        
+        <h3>injector_clear_cache</h3>
+        <p>Wipes the SQLite index cache and triggers a clean cold-start full re-index. Use this when the index is fundamentally out of sync or to clear massive bloat.</p>
 
         <h3>injector_stats</h3>
         <p>This tool shows daemon status and cumulative savings.</p>
         <p>Prompt: <b>"Call injector_stats and show me my token savings"</b></p>
         <p>The response includes indexed files, workspace line count, compression ratio, cache hit rate, and Pro license status.</p>
 
-        <h3>injector_sync</h3>
-        <p>Waits for all pending file index updates to complete. Call this after writing to a file and before calling <code>get_project_map</code> to ensure the index reflects your latest changes. Returns a list of the exact files reindexed (<code>files_reindexed</code>) so you can verify your edits were processed.</p>
-        <p>Prompt: <b>"Sync the index before getting the project map"</b></p>
+        <h3>injector_sync (Deprecated)</h3>
+        <p>Previously used to wait for pending file index updates. Read tools now automatically wait for pending indexing via implicit state synchronization. You never need to manually call this tool.</p>
       </section>
 
       <!-- Section: Advanced configuration -->
@@ -932,9 +958,13 @@ fixtures/</code></pre>
         <p><b>Cause:</b> The <b>MCP_WORKSPACE</b> environment variable is not set, or points to a path that does not exist. You will see: <b>[mcp-injector] Error: MCP_WORKSPACE is not set.</b></p>
         <p><b>Fix:</b> Add <b>MCP_WORKSPACE</b> to the env section of your IDE MCP configuration.</p>
 
+        <h3>Index Desync "Busy" Warnings</h3>
+        <p><b>Cause:</b> If the indexer is lagging behind by >100 files (e.g., during massive git checkouts), read tools dynamically inject a clear "Results may be stale" warning directly into the JSON-RPC payload.</p>
+        <p><b>Fix:</b> Wait a few seconds for the background indexing to complete.</p>
+
         <h3>Free tier workspace limit message</h3>
-        <p><b>Cause:</b> Your project codebase size exceeds the 50,000 line free tier limit.</p>
-        <p><b>Fix:</b> Run <b>mcp-benchmark ./your-project</b> to confirm the line count. Obtain a Pro license key from foldwork.dev to lift the limit.</p>
+        <p><b>Cause:</b> Your project codebase size exceeds the 50,000 line free tier limit. The daemon will enter a degraded <code>fatalErr</code> state.</p>
+        <p><b>Fix:</b> Lightweight tools will remain active and return JSON-RPC explanations. Run <b>mcp-benchmark ./your-project</b> to confirm the line count. Obtain a Pro license key from foldwork.dev to lift the limit.</p>
 
         <h3>Secrets are being redacted unexpectedly</h3>
         <p><b>Cause:</b> The Shannon entropy analyzer flagged a high-entropy string (such as a hash or UUID) in your source code.</p>
@@ -961,12 +991,7 @@ fixtures/</code></pre>
         <ul>
           <li><b>Files over 5MB are skipped.</b> Large generated outputs or data assets are excluded from indexing.</li>
           <li><b>Minified files are skipped.</b> Files with fewer than 10 lines but exceeding 50KB are detected as minified and ignored.</li>
-          <li><b>inotify limits on Linux.</b> Large repositories (100,000+ files) may exceed default inotify watch limits. Increase the limit with this command:
-            <div class="code-wrapper">
-              <button class="copy-btn" onclick="copyCode('sysctl-watch', this)">Copy</button>
-              <pre id="sysctl-watch" class="code-block"><code>echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p</code></pre>
-            </div>
-          </li>
+          <li><b>inotify limits on Linux.</b> Large repositories (100,000+ files) may exceed default inotify watch limits (ENOSPC). The daemon auto-remediates this by intercepting the crash, safely pausing indexing, opening a direct <code>/dev/tty</code> interactive bridge to prompt the user for an automatic <code>sudo sysctl fs.inotify.max_user_watches</code> increase, and dynamically resuming without requiring a restart.</li>
           <li><b>NFS and network drives.</b> File watching does not work on network-mounted filesystems. The index is built on startup but will not update incrementally.</li>
           <li><b>Windows file watching.</b> File watching on Windows uses polling. Changes are detected within 2 to 3 seconds.</li>
           <li><b>Polyglot files.</b> Files with mixed content (.vue, .svelte, .astro) only compress the script section. Template sections are preserved but not compressed.</li>
