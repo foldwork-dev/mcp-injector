@@ -82,34 +82,36 @@ echo "Detecting release binaries for $OS-$ARCH..."
 DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-injector-$OS-$ARCH${EXE_EXT}"
 BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH${EXE_EXT}"
 
-if curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
+if [ -f "./mcp-injector${EXE_EXT}" ]; then
+  cp "./mcp-injector${EXE_EXT}" "$TMP_BIN"
+  printf "%b\n" "${GREEN}✓${NC} Found local mcp-injector binary."
+elif command -v go > /dev/null 2>&1 && [ -f "go.mod" ]; then
+  if ! go build -o "$TMP_BIN" ./cmd/mcp-injector; then
+    printf "%b\n" "${RED}Error: Local mcp-injector compilation failed. Aborting to prevent falling back to a stale remote binary.${NC}" >&2
+    exit 1
+  fi
+  printf "%b\n" "${GREEN}✓${NC} Compiled local mcp-injector binary."
+elif curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
   printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
 else
-  printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
-  if [ -f "./mcp-injector${EXE_EXT}" ]; then
-    cp "./mcp-injector${EXE_EXT}" "$TMP_BIN"
-  elif command -v go > /dev/null 2>&1; then
-    go build -o "$TMP_BIN" .
-  else
-    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
-    exit 1
-  fi
+  printf "%b\n" "${RED}Error: Download failed and no local binary/compiler found.${NC}" >&2
+  exit 1
 fi
 
-if curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
-  printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
-else
-  printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local benchmark binary..."
-  if [ -f "./mcp-benchmark${EXE_EXT}" ]; then
-    cp "./mcp-benchmark${EXE_EXT}" "$TMP_BENCHMARK"
-  elif [ -f "./benchmark${EXE_EXT}" ]; then
-    cp "./benchmark${EXE_EXT}" "$TMP_BENCHMARK"
-  elif command -v go > /dev/null 2>&1; then
-    go build -o "$TMP_BENCHMARK" ./cmd/benchmark
-  else
-    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
+if [ -f "./mcp-benchmark${EXE_EXT}" ]; then
+  cp "./mcp-benchmark${EXE_EXT}" "$TMP_BENCHMARK"
+  printf "%b\n" "${GREEN}✓${NC} Found local mcp-benchmark binary."
+elif command -v go > /dev/null 2>&1 && [ -f "go.mod" ]; then
+  if ! go build -o "$TMP_BENCHMARK" ./cmd/public-benchmark; then
+    printf "%b\n" "${RED}Error: Local mcp-benchmark compilation failed. Aborting to prevent falling back to a stale remote binary.${NC}" >&2
     exit 1
   fi
+  printf "%b\n" "${GREEN}✓${NC} Compiled local mcp-benchmark binary."
+elif curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
+  printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
+else
+  printf "%b\n" "${RED}Error: Download failed and no local binary/compiler found.${NC}" >&2
+  exit 1
 fi
 
 chmod +x "$TMP_BIN" "$TMP_BENCHMARK"
@@ -130,20 +132,24 @@ CLAUDE_CONFIG=""
 CURSOR_CONFIG=""
 VSCODE_CONFIG=""
 DEVIN_CONFIG=""
+ANTIGRAVITY_CONFIG=""
 
 if [ "$OS" = "darwin" ]; then
   CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="$HOME/.gemini/antigravity/mcp_config.json"
 elif [ "$OS" = "windows" ]; then
   CLAUDE_CONFIG="${APPDATA:-}/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="${USERPROFILE:-}/.cursor/mcp.json"
   DEVIN_CONFIG="${USERPROFILE:-}/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="${USERPROFILE:-}/.gemini/antigravity/mcp_config.json"
 else
   # Linux
   CLAUDE_CONFIG="$HOME/.config/Claude/claude_desktop_config.json"
   CURSOR_CONFIG="$HOME/.cursor/mcp.json"
   DEVIN_CONFIG="$HOME/.codeium/windsurf/mcp_config.json"
+  ANTIGRAVITY_CONFIG="$HOME/.gemini/antigravity/mcp_config.json"
 fi
 
 if [ -d "$PWD/.git" ]; then
@@ -187,7 +193,7 @@ try:
         data[key] = {}
     
     workspace_val = '\${workspaceFolder}'
-    if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath:
+    if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath or 'antigravity' in filepath:
         workspace_val = os.environ.get('FALLBACK_WORKSPACE', '/absolute/path/to/your/project')
 
     data[key]['mcp-injector'] = {
@@ -266,6 +272,22 @@ if [ -d "$DEVIN_DIR" ] || [ -f "$DEVIN_CONFIG" ]; then
   fi
 fi
 
+# Check Antigravity
+ANTIGRAVITY_STATUS="✗ Antigravity not detected"
+ANTIGRAVITY_DIR=$(dirname "$ANTIGRAVITY_CONFIG")
+if [ -d "$ANTIGRAVITY_DIR" ] || [ -f "$ANTIGRAVITY_CONFIG" ]; then
+  res=$(merge_config "$ANTIGRAVITY_CONFIG" "$BIN_DEST")
+  if [ "$res" = "SUCCESS" ]; then
+    if [ "$FALLBACK_WORKSPACE" = "$PWD" ]; then
+      ANTIGRAVITY_STATUS="✓ Antigravity configured for $PWD"
+    else
+      ANTIGRAVITY_STATUS="⚠ Antigravity: configured with placeholder path. Re-run installer inside a repository to auto-configure paths."
+    fi
+  else
+    ANTIGRAVITY_STATUS="⚠ Antigravity: manual config required: $res"
+  fi
+fi
+
 # 6. Print Installation Summary
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
@@ -297,6 +319,12 @@ else
   printf "%b\n" "  $DEVIN_STATUS"
 fi
 
+if echo "$ANTIGRAVITY_STATUS" | grep -q "^✓"; then
+  printf "%b\n" "  ${GREEN}$ANTIGRAVITY_STATUS${NC}"
+else
+  printf "%b\n" "  $ANTIGRAVITY_STATUS"
+fi
+
 # Warn if installed to user home bin and not in PATH
 if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
   if ! echo ":$PATH:" | grep -q ":$HOME/.local/bin:"; then
@@ -308,7 +336,7 @@ if echo "$BIN_DEST" | grep -q "$HOME/.local/bin"; then
 fi
 
 # Notify if no IDE configured
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS$ANTIGRAVITY_STATUS" | grep -q "✓"; then
   echo ""
   printf "%b\n" "${YELLOW}⚠ No supported IDE directories were detected for automatic configuration.${NC}"
   printf "%b\n" "  To manually integrate mcp-injector with your AI tools, please refer to"
@@ -323,7 +351,7 @@ echo ""
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
-if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS" | grep -q "✓"; then
+if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS$ANTIGRAVITY_STATUS" | grep -q "✓"; then
   echo "  Installation complete! Please configure your IDE/client manually."
 else
   echo "  You're all set. Restart your IDE and mcp-injector will be active."
