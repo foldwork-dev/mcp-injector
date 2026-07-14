@@ -4,13 +4,13 @@ AI coding assistants often fail because they retrieve the wrong context. On a la
 
 Foldwork fixes this. It is a deterministic repository understanding engine that pre-indexes your entire codebase into a local SQLite catalog. It acts as the Context Layer for your IDE, serving exactly the functions the AI needs—no more, no less—maximizing the first-try success rate and reducing token usage by 41-89%.
 
-I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$80/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
+I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$11/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
 
 No cloud. No telemetry. Runs entirely on your machine.--
 
 ##  Real-World Codebase Context Benchmarks
 
-Estimate the impact of AST code compression on large open-source repositories (calculated at $3.00 / million input tokens for Claude 3.5 Sonnet):
+Estimate the impact of AST code compression on large open-source repositories (calculated at $2.00 / million input tokens for Claude Sonnet 5):
 
 |  Repository |  Total Files |  Raw Context Tokens |  Compressed Context Tokens |  Token Reduction |  Cost Saved / Run |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -31,23 +31,23 @@ Run `mcp-benchmark` on your own project to see your exact savings before install
 mcp-benchmark ./your-project
 
 ════════════════════════════════════════════════════════════════════════════════
-  mcp-benchmark - context
-  Tier 3 compression  |  $3.00/1M tokens  |  2026-07-06T12:00:00Z
+  mcp-injector Benchmark — context
+  Tier 3 compression  |  $2.00/1M tokens  |  2026-07-15T12:00:00Z
 ════════════════════════════════════════════════════════════════════════════════
 
 FILE                                          RAW TOKENS    COMPRESSED     SAVED   COST SAVED*
 ──────────────────────────────────────────────────────────────────────────────────────────
-cmd/license-gen/main.go                            3,633           214     94.1%       $0.0103
-main.go                                           17,555         1,917     89.1%       $0.0469
-website/api/webhook.go                             2,682           295     89.0%       $0.0072
-main_test.go                                       1,576           353     77.6%       $0.0037
+cmd/license-gen/main.go                            3,633           214       94%       $0.0072
+main.go                                           17,555         1,917       89%       $0.0347
+website/api/webhook.go                             2,682           295       89%       $0.0053
+main_test.go                                       1,576           353       78%       $0.0031
 ──────────────────────────────────────────────────────────────────────────────────────────
-TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0680
+TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0503
 
-  * Based on $3.00 / 1M input tokens
+  * Based on $2.00 / 1M input tokens
 
-  Running this codebase through Claude 10x/day costs $0.76/day raw.
-  With mcp-injector:  $0.08/day.  You save $0.68/day ($20/month).
+  💡 Running this codebase through Claude 10×/day costs $0.51/day raw.
+     With mcp-injector:  $0.01/day.  You save $0.50/day ($15/month).
 ```
 
 ---
@@ -219,12 +219,14 @@ If the auto-installer does not detect your IDE, add this to your MCP config manu
     "mcp-injector": {
       "command": "/usr/local/bin/mcp-injector",
       "env": {
-        "MCP_WORKSPACE": "${workspaceFolder}"
+        "MCP_WORKSPACE": "/absolute/path/to/your/project"
       }
     }
   }
 }
 ```
+
+> **Note:** VS Code supports `"${workspaceFolder}"`, but Claude Desktop, Cursor, and Devin Desktop require a hardcoded absolute path to your project.
 
 Config file locations:
 - Claude Desktop (Mac): `~/Library/Application Support/Claude/claude_desktop_config.json`

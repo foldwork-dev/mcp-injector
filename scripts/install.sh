@@ -358,3 +358,9 @@ else
 fi
 echo "  Docs: https://foldwork.dev"
 printf "%b\n" "${GREEN}===================================================================${NC}"
+
+# 7. Run post-install benchmark
+echo "Running benchmark on current directory..."
+echo ""
+"$BENCHMARK_DEST" . || true
+

@@ -243,7 +243,7 @@
       <p>When the daemon intercepts an inotify queue limit crash, it safely pauses indexing, opens a direct <code>/dev/tty</code> interactive bridge to securely prompt the user for an automatic <code>sudo sysctl</code> limit increase, and dynamically resumes indexing without ever requiring a daemon restart.</p>
 
       <h2>Bulletproof Data Loss Prevention</h2>
-      <p>As AI agents gain autonomy, protecting the integrity of your source code is paramount. We've introduced the <strong>API-Level Compression Guardrail</strong>. To prevent the notorious "Compression Trap"—where an AI accidentally overwrites your actual code with compressed <code># FOLD START</code> placeholders—we've mandated a new write bridge.</p>
+      <p>As AI agents gain autonomy, protecting the integrity of your source code is paramount. We've introduced the <strong>API-Level Compression Guardrail</strong>. To prevent the notorious "Compression Trap"—where an AI accidentally overwrites your actual code with compressed <code>FOLDWORK: CODE COMPRESSED</code> placeholders—we've mandated a new write bridge.</p>
       
       <div class="alert">
         <strong>CRITICAL:</strong> All agent-driven codebase edits must now go through the <code>injector_write_file</code> tool. The daemon actively intercepts write operations and statically analyzes the payload, hard-rejecting any attempts to write codebase files containing compressed fold markers before they touch the disk.

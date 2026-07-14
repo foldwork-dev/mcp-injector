@@ -10,7 +10,7 @@ All notable changes to mcp-injector are documented here.
 - **Schema Auto-Migration**: Implemented `_v2.db` workspace hashing to guarantee clean, native background re-indexing upon major schema upgrades.
 
 ### Data Loss Prevention & IDE Protection
-- **API-Level Compression Guardrail (`injector_write_file`)**: Completely eliminated the "Compression Trap." The daemon now aggressively intercepts write operations via a dedicated tool and statically analyzes the payload. Attempts to write codebase files containing compressed fold markers are hard-rejected before touching the disk.
+- **API-Level Compression Guardrail (`injector_write_file`)**: Completely eliminated the "Compression Trap." The daemon now aggressively intercepts write operations via a dedicated tool and statically analyzes the payload. Attempts to write codebase files containing compressed `FOLDWORK: CODE COMPRESSED` markers are hard-rejected before touching the disk.
 - **Anti-EOF Handshake State**: Removed hard `os.Exit(1)` background crashes. Free-tier limit violations now enter a degraded `fatalErr` state, keeping lightweight tools active and returning graceful JSON-RPC explanations to the agent instead of crashing the IDE pipe.
 
 ### Enterprise Resilience
@@ -43,7 +43,7 @@ All notable changes to mcp-injector are documented here.
 
 ### Agent UX (AX) Overhaul
 
-This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.
+This patch focuses entirely on feedback from AI Agents (Claude Sonnet 5 & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.
 
 **Zero-Friction Search:**
 - `injector_search` now returns `line_start`, `line_end`, `symbol_type`, and a `context_snippet` so agents can instantly verify symbols without wasting tokens on full file retrievals.
@@ -54,7 +54,7 @@ This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-
 
 **Agent Proactivity & Parsing:**
 - We updated the MCP tool description for `get_project_map` to inject a system prompt override that commands conservative AI agents to proactively use the tool when exploring unfamiliar architectures.
-- Replaced ambiguous `... (folded)` stubs with explicit `# FOLD START` and `# FOLD END` markers to prevent LLM confusion when reading heavily compressed files.
+- Replaced ambiguous `... (folded)` stubs with explicit `FOLDWORK: CODE COMPRESSED` markers to prevent LLM confusion when reading heavily compressed files.
 
 ## [0.2.0] - 2026-07-07
 

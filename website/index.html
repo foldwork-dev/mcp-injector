@@ -45,117 +45,6 @@
   <!-- Stylesheet -->
 
   <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "mcp-injector",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Linux, macOS, Windows",
-      "url": "https://foldwork.dev",
-      "description": "Foldwork is a deterministic repository understanding engine that gives AI coding assistants exactly the context they need—no more, no less.",
-      "offers": [
-        {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
-          "description": "Free for codebases under 50,000 lines"
-        },
-        {
-          "@type": "Offer",
-          "price": "12",
-          "priceCurrency": "USD",
-          "priceSpecification": {
-            "@type": "UnitPriceSpecification",
-            "billingDuration": "P1M"
-          },
-          "description": "Pro plan - unlimited codebase size"
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Is my code sent anywhere?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. mcp-injector runs entirely on your machine. Your code never leaves your computer. The daemon reads files locally, compresses them locally, and serves them to your IDE via stdio transport. No cloud, no telemetry, no external API calls."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How is this different from Headroom?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Headroom compresses context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism so Anthropic's KV prompt cache fires on every session. You save tokens AND maximise cache hits simultaneously."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How is this different from Repomix?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Repomix is a one-shot CLI tool - it packs your repo into a file each time you run it, starting from scratch on every session. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. The second query on a 5M line codebase is sub-millisecond; Repomix would take 30+ seconds to re-pack the same repo from scratch. More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism - so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time. Short version: Repomix packs your code once. mcp-injector keeps it ready forever and makes every Claude session cheaper."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I reduce Claude API costs on large codebases?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The most effective way to reduce Claude API costs on large codebases is to compress the codebase context before sending it to Claude. mcp-injector achieves 41-89% token reduction on real projects like Django, Tokio, and Gin."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does mcp-injector work with Claude Code?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. mcp-injector is designed specifically for Claude Code, Cursor, VS Code, Devin Desktop, and Antigravity. The installer auto-detects which IDE you have installed and configures the MCP server automatically."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What happens when I switch branches?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "mcp-injector installs a post-checkout git hook on startup. When you switch branches, the daemon automatically re-indexes your workspace. The get_project_map tool always reflects your current branch."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What IDEs are supported?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity. The installer auto-detects which are installed and configures them automatically."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What languages are supported?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. Other file types pass through unmodified."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I use this on a team?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Pro includes 3 seats. Each developer runs their own local daemon - there is no shared server to manage."
-          }
-        }
-      ]
-    }
-  ]
-}
-</script>
-
   <!-- Schema.org Rich Structured Data -->
   <script type="application/ld+json">
   {
@@ -200,6 +89,67 @@
           "target": { "@type": "EntryPoint", "urlTemplate": "https://foldwork.dev/?q={search_term_string}" },
           "query-input": "required name=search_term_string"
         }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is my code sent anywhere?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. mcp-injector runs entirely on your machine. Your code never leaves your computer. The daemon reads files locally, compresses them locally, and serves them to your IDE via stdio transport. No cloud, no telemetry, no external API calls."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is this different from Headroom?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Headroom uses Compress-Cache-Retrieve (CCR) to compress context on demand. mcp-injector pre-indexes your codebase into a SQLite catalog so the first query is sub-millisecond on any size repo. More importantly, mcp-injector guarantees byte-identical prompt output on every run through canonical determinism - alphabetical file sorting and metadata stripping - so Anthropic's KV prompt cache fires on every session. Headroom's on-demand architecture makes this impossible. You save tokens AND maximise cache hits simultaneously."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is this different from Repomix?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Repomix is a one-shot CLI tool. mcp-injector is a persistent local daemon that pre-indexes your codebase into a SQLite catalog. More importantly, mcp-injector guarantees byte-identical output on every run through canonical determinism - so Anthropic's KV prompt cache fires on every Claude session after the first. Repomix produces different output on every run, burning the full input token cost each time."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What IDEs are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity. The installer auto-detects which are installed and configures them automatically."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What languages are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. Other file types pass through unmodified."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens when Claude needs the full source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "mcp-injector exposes an injector_retrieve tool. When Claude needs the complete implementation of a compressed function, it calls this tool to fetch the full original source. Compression is always reversible."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use this on a team?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Pro includes 3 seats. Each developer runs their own local daemon - there is no shared server to manage."
+            }
+          }
+        ]
       }
     ]
   }
@@ -1510,7 +1460,7 @@
         </div>
       </div>
 
-      <p class="bench-footnote">* Based on Claude Sonnet 5 standard pricing: $3.00/1M input tokens. Current introductory rate is $2.00/1M input tokens (through Aug 31, 2026). Compression tier 3 (fold + strip). Reproducible: clone any repo above and run mcp-benchmark yourself.</p>
+      <p class="bench-footnote">* Based on Claude Sonnet 5 pricing: $2.00/1M input tokens. Compression tier 3 (fold + strip). Reproducible: clone any repo above and run mcp-benchmark yourself.</p>
     </div>
   </section>
 
@@ -1575,7 +1525,7 @@
       <div class="steps-grid use-cases-grid">
         <div class="step-card">
           <h3 class="step-title">Large codebase, expensive Claude bills</h3>
-          <p class="step-desc">A 500K line Spring Boot monorepo costs ~$45 per full-context Claude session. With mcp-injector: ~$15. At 10 sessions/day that's $9,000/month -> $3,000/month. The $12/month Pro subscription pays for itself in the first hour.</p>
+          <p class="step-desc">A 500K line Spring Boot monorepo costs ~$11 per full-context Claude session. With mcp-injector: ~$0.10. At 10 sessions/day that's $3,300/month -> $30/month. The $12/month Pro subscription pays for itself in the first hour.</p>
         </div>
         
         <div class="step-card">
@@ -2180,7 +2130,6 @@ https://github.com/foldwork-dev/mcp-injector/releases/latest</code>
         const tRaw = loc * 10.47;
         const tComp = tRaw * 0.28;
 
-        // TODO: Revisit pricing on Sept 1, 2026 when the Claude Sonnet 5 introductory rate ($2.00/1M) steps up to the standard rate ($3.00/1M).
         // Note: The compressed rate models steady-state cache-hit pricing (10% of base input) and excludes the first-request
         // cache-write premium (1.25x base for 5-min TTL) that a real session's first call would incur. This is a reasonable
         // simplification for a marketing calculator.
