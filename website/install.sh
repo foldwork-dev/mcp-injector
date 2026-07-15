@@ -2,7 +2,7 @@
 # ─── mcp-injector Zero-Config Installer ───────────────────────────────────────
 #
 # Detects OS and architecture, downloads/installs the binaries, and configures
-# Claude Desktop, Cursor, VS Code, and Devin Desktop.
+# Claude Desktop, Cursor, VS Code, Devin Desktop, and Antigravity.
 # ─────────────────────────────────────────────────────────────────────────────
 set -eu
 
@@ -82,36 +82,34 @@ echo "Detecting release binaries for $OS-$ARCH..."
 DOWNLOAD_URL="https://github.com/foldwork-dev/mcp-injector/releases/latest/download/mcp-injector-$OS-$ARCH${EXE_EXT}"
 BENCHMARK_URL="https://github.com/foldwork-dev/mcp-benchmark/releases/latest/download/mcp-benchmark-$OS-$ARCH${EXE_EXT}"
 
-if [ -f "./mcp-injector${EXE_EXT}" ]; then
-  cp "./mcp-injector${EXE_EXT}" "$TMP_BIN"
-  printf "%b\n" "${GREEN}✓${NC} Found local mcp-injector binary."
-elif command -v go > /dev/null 2>&1 && [ -f "go.mod" ]; then
-  if ! go build -o "$TMP_BIN" ./cmd/mcp-injector; then
-    printf "%b\n" "${RED}Error: Local mcp-injector compilation failed. Aborting to prevent falling back to a stale remote binary.${NC}" >&2
-    exit 1
-  fi
-  printf "%b\n" "${GREEN}✓${NC} Compiled local mcp-injector binary."
-elif curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
+if curl -sLf "$DOWNLOAD_URL" -o "$TMP_BIN"; then
   printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-injector from GitHub Releases."
 else
-  printf "%b\n" "${RED}Error: Download failed and no local binary/compiler found.${NC}" >&2
-  exit 1
-fi
-
-if [ -f "./mcp-benchmark${EXE_EXT}" ]; then
-  cp "./mcp-benchmark${EXE_EXT}" "$TMP_BENCHMARK"
-  printf "%b\n" "${GREEN}✓${NC} Found local mcp-benchmark binary."
-elif command -v go > /dev/null 2>&1 && [ -f "go.mod" ]; then
-  if ! go build -o "$TMP_BENCHMARK" ./cmd/public-benchmark; then
-    printf "%b\n" "${RED}Error: Local mcp-benchmark compilation failed. Aborting to prevent falling back to a stale remote binary.${NC}" >&2
+  printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local binary..."
+  if [ -f "./mcp-injector${EXE_EXT}" ]; then
+    cp "./mcp-injector${EXE_EXT}" "$TMP_BIN"
+  elif command -v go > /dev/null 2>&1; then
+    go build -o "$TMP_BIN" .
+  else
+    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
     exit 1
   fi
-  printf "%b\n" "${GREEN}✓${NC} Compiled local mcp-benchmark binary."
-elif curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
+fi
+
+if curl -sLf "$BENCHMARK_URL" -o "$TMP_BENCHMARK"; then
   printf "%b\n" "${GREEN}✓${NC} Downloaded mcp-benchmark from GitHub Releases."
 else
-  printf "%b\n" "${RED}Error: Download failed and no local binary/compiler found.${NC}" >&2
-  exit 1
+  printf "%b\n" "${YELLOW}⚠${NC} Release download failed. Compiling/copying local benchmark binary..."
+  if [ -f "./mcp-benchmark${EXE_EXT}" ]; then
+    cp "./mcp-benchmark${EXE_EXT}" "$TMP_BENCHMARK"
+  elif [ -f "./benchmark${EXE_EXT}" ]; then
+    cp "./benchmark${EXE_EXT}" "$TMP_BENCHMARK"
+  elif command -v go > /dev/null 2>&1; then
+    go build -o "$TMP_BENCHMARK" ./cmd/benchmark
+  else
+    printf "%b\n" "${RED}Error: Download failed and 'go' compiler is not installed.${NC}" >&2
+    exit 1
+  fi
 fi
 
 chmod +x "$TMP_BIN" "$TMP_BENCHMARK"
@@ -196,10 +194,16 @@ try:
     if 'claude_desktop_config' in filepath or 'windsurf' in filepath or '.cursor' in filepath or 'antigravity' in filepath:
         workspace_val = os.environ.get('FALLBACK_WORKSPACE', '/absolute/path/to/your/project')
 
-    data[key]['mcp-injector'] = {
+    entry = {
         'command': binpath,
+        'args': [],
         'env': { 'MCP_WORKSPACE': workspace_val }
     }
+    # Antigravity also needs HOME in env (verified from working config)
+    if 'antigravity' in filepath:
+        entry['env']['HOME'] = os.environ.get('HOME', '')
+
+    data[key]['mcp-injector'] = entry
     
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=2)
@@ -214,6 +218,7 @@ CLAUDE_STATUS="✗ Claude Desktop not detected"
 CURSOR_STATUS="✗ Cursor not detected"
 VSCODE_STATUS="✗ VS Code native MCP requires workspace"
 DEVIN_STATUS="✗ Devin Desktop not detected"
+ANTIGRAVITY_STATUS="✗ Antigravity not detected"
 
 # Check Claude Desktop parent dir or config existence
 CLAUDE_DIR=$(dirname "$CLAUDE_CONFIG")
@@ -272,8 +277,7 @@ if [ -d "$DEVIN_DIR" ] || [ -f "$DEVIN_CONFIG" ]; then
   fi
 fi
 
-# Check Antigravity
-ANTIGRAVITY_STATUS="✗ Antigravity not detected"
+# Check Antigravity (config path: ~/.gemini/antigravity/mcp_config.json on all platforms)
 ANTIGRAVITY_DIR=$(dirname "$ANTIGRAVITY_CONFIG")
 if [ -d "$ANTIGRAVITY_DIR" ] || [ -f "$ANTIGRAVITY_CONFIG" ]; then
   res=$(merge_config "$ANTIGRAVITY_CONFIG" "$BIN_DEST")
@@ -344,10 +348,6 @@ if ! echo "$CLAUDE_STATUS$CURSOR_STATUS$VSCODE_STATUS$DEVIN_STATUS$ANTIGRAVITY_S
 fi
 echo ""
 
-# 7. Run post-install benchmark
-echo "Running benchmark on current directory..."
-echo ""
-"$BENCHMARK_DEST" . || true
 
 echo ""
 printf "%b\n" "${GREEN}===================================================================${NC}"
@@ -358,3 +358,9 @@ else
 fi
 echo "  Docs: https://foldwork.dev"
 printf "%b\n" "${GREEN}===================================================================${NC}"
+
+# 7. Run post-install benchmark
+echo "Running benchmark on current directory..."
+echo ""
+"$BENCHMARK_DEST" . || true
+

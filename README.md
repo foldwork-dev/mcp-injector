@@ -4,13 +4,13 @@ AI coding assistants often fail because they retrieve the wrong context. On a la
 
 Foldwork fixes this. It is a deterministic repository understanding engine that pre-indexes your entire codebase into a local SQLite catalog. It acts as the Context Layer for your IDE, serving exactly the functions the AI needs—no more, no less—maximizing the first-try success rate and reducing token usage by 41-89%.
 
-I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$80/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
+I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$11/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
 
 No cloud. No telemetry. Runs entirely on your machine.--
 
 ##  Real-World Codebase Context Benchmarks
 
-Estimate the impact of AST code compression on large open-source repositories (calculated at $3.00 / million input tokens for Claude 3.5 Sonnet):
+Estimate the impact of AST code compression on large open-source repositories (calculated at $2.00 / million input tokens for Claude Sonnet 5):
 
 |  Repository |  Total Files |  Raw Context Tokens |  Compressed Context Tokens |  Token Reduction |  Cost Saved / Run |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -31,23 +31,23 @@ Run `mcp-benchmark` on your own project to see your exact savings before install
 mcp-benchmark ./your-project
 
 ════════════════════════════════════════════════════════════════════════════════
-  mcp-benchmark - context
-  Tier 3 compression  |  $3.00/1M tokens  |  2026-07-06T12:00:00Z
+  mcp-injector Benchmark — context
+  Tier 3 compression  |  $2.00/1M tokens  |  2026-07-15T12:00:00Z
 ════════════════════════════════════════════════════════════════════════════════
 
 FILE                                          RAW TOKENS    COMPRESSED     SAVED   COST SAVED*
 ──────────────────────────────────────────────────────────────────────────────────────────
-cmd/license-gen/main.go                            3,633           214     94.1%       $0.0103
-main.go                                           17,555         1,917     89.1%       $0.0469
-website/api/webhook.go                             2,682           295     89.0%       $0.0072
-main_test.go                                       1,576           353     77.6%       $0.0037
+cmd/license-gen/main.go                            3,633           214       94%       $0.0072
+main.go                                           17,555         1,917       89%       $0.0347
+website/api/webhook.go                             2,682           295       89%       $0.0053
+main_test.go                                       1,576           353       78%       $0.0031
 ──────────────────────────────────────────────────────────────────────────────────────────
-TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0680
+TOTAL (4 files)                                   25,446         2,779     89.1%       $0.0503
 
-  * Based on $3.00 / 1M input tokens
+  * Based on $2.00 / 1M input tokens
 
-  Running this codebase through Claude 10x/day costs $0.76/day raw.
-  With mcp-injector:  $0.08/day.  You save $0.68/day ($20/month).
+  💡 Running this codebase through Claude 10×/day costs $0.51/day raw.
+     With mcp-injector:  $0.01/day.  You save $0.50/day ($15/month).
 ```
 
 ---
@@ -58,6 +58,7 @@ TOTAL (4 files)                                   25,446         2,779     89.1%
 Returns a compressed structural overview of the workspace. Function bodies are folded and replaced with placeholders to reduce token usage.
 - `tier` (integer, optional): Compression tier to apply (default: 2).
 - `unfolded_files` (array of strings, optional): Workspace-relative paths or glob patterns for files to serve at full resolution (uncompressed).
+- `path_prefixes` (array of strings, optional): Scope the project map to specific microservices or packages, drastically reducing payload bloat.
 
 ### `injector_retrieve`
 Retrieves the full uncompressed source of a file from the local cache.
@@ -65,17 +66,36 @@ Retrieves the full uncompressed source of a file from the local cache.
 - `retrievalKey` (string, optional): The SHA-256 retrieval key returned in a prior compressed payload.
 - `start_line` (integer, optional): 1-indexed start line for range retrieval.
 - `end_line` (integer, optional): 1-indexed end line for range retrieval.
+- `expand_graph` (boolean, optional): Resolves and appends cross-file dependencies (limited to 50 1st-degree dependencies).
 
 ### `injector_search`
-BM25-ranked full-text symbol search over the local SQLite catalog.
+BM25-ranked full-text symbol search over the local SQLite catalog. Supports FTS5 boolean logic (e.g., `user AND (auth OR login)`).
 - `query` (string, required): FTS5 query string (bare terms, "phrase", prefix*).
 - `limit` (integer, optional): Maximum results (default: 20).
+- `search_paths` (array of strings, optional): Scope search to specific isolated directories.
+
+### `injector_diagram`
+Generates a Mermaid sequence diagram for a given symbol by traversing its outbound dependencies (halts after 500 nodes).
+- `symbol` (string, required): The exact symbol name.
+- `max_depth` (integer, optional): Maximum traversal depth (default: 3).
+- `include_primitives` (boolean, optional): Include basic types (String, boolean) and framework boundaries.
+
+### `injector_regex_search`
+Fallback for exact literal or regex searches against file contents. Bypasses FTS5 tokenization.
+- `query` (string, required): The string or regex pattern to search for.
+- `is_regex` (boolean, optional): Treats query as extended regex (-E).
+
+### `injector_write_file`
+Write a full file to disk. CRITICAL: Prevents data loss by intercepting and rejecting payloads containing compressed fold markers.
+
+### `injector_clear_cache`
+Wipes the SQLite index cache and triggers a clean cold-start full re-index.
 
 ### `injector_stats`
 Returns index status, current compression ratio, total files indexed, and cache hit rate.
 
-### `injector_sync`
-Waits for all pending file index updates to complete. Call this after writing to a file and before calling `get_project_map`.
+### `injector_sync` (Deprecated)
+Read tools automatically wait for pending indexing implicitly. You never need to manually call this tool.
 
 ---
 
@@ -136,7 +156,9 @@ When Claude needs to see the complete implementation of a compressed function, i
 
 > "Show me the full implementation of UserService.java"
 
-Claude will fetch the uncompressed source from the local cache.
+Claude will fetch the uncompressed source from the local cache. 
+
+**Editing Code:** You MUST use the `injector_write_file` tool to edit code. If Claude tries to write back folded placeholders into your source code, the daemon will hard-reject the payload to protect you from data loss.
 
 ### Step 6: Check your savings
 
@@ -197,12 +219,14 @@ If the auto-installer does not detect your IDE, add this to your MCP config manu
     "mcp-injector": {
       "command": "/usr/local/bin/mcp-injector",
       "env": {
-        "MCP_WORKSPACE": "${workspaceFolder}"
+        "MCP_WORKSPACE": "/absolute/path/to/your/project"
       }
     }
   }
 }
 ```
+
+> **Note:** VS Code supports `"${workspaceFolder}"`, but Claude Desktop, Cursor, and Devin Desktop require a hardcoded absolute path to your project.
 
 Config file locations:
 - Claude Desktop (Mac): `~/Library/Application Support/Claude/claude_desktop_config.json`
@@ -240,6 +264,7 @@ Config file locations:
 
 * **`get_project_map`** - Generates a hierarchical outline of module exports, structures, and internal dependencies.
   * `unfolded_files` parameter: pass specific file paths or glob patterns to receive those files uncompressed while everything else stays folded.
+  * `path_prefixes` parameter: scope the project map to specific microservices or packages.
   * `git_context`: always includes current branch, changed files, and recent commits in the response.
   * `secrets_redacted`: count of credentials automatically redacted before sending to Claude.
 
@@ -249,15 +274,19 @@ Config file locations:
     "tool": "get_project_map",
     "arguments": {
       "tier": 3,
-      "unfolded_files": ["src/auth/handler.go", "**/*_test.go"]
+      "unfolded_files": ["src/auth/handler.go", "**/*_test.go"],
+      "path_prefixes": ["src/auth/"]
     }
   }
   ```
 
-* **`injector_retrieve`** - Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters for surgical snippet extraction.
-* **`injector_search`** - BM25 full-text search over indexed symbols. Returns line ranges, symbol types, and context snippets so you can skip redundant file retrievals.
+* **`injector_retrieve`** - Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters for surgical snippet extraction, and `expand_graph` to inline 1st-degree dependencies.
+* **`injector_search`** - BM25 full-text search over indexed symbols. Returns line ranges, symbol types, and context snippets. Supports `search_paths` and FTS5 boolean logic (e.g., `user AND (auth OR login)`).
+* **`injector_diagram`** - Generates a Mermaid sequence diagram for a given symbol by traversing its outbound dependencies.
+* **`injector_regex_search`** - Bypasses FTS5 tokenization for exact punctuation or extended regex matching.
+* **`injector_write_file`** - The strict, FOLD-aware file-writing bridge mandated for all agent-driven codebase edits to prevent data loss.
+* **`injector_clear_cache`** - Wipes the SQLite index cache and triggers a clean cold-start full re-index.
 * **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
-* **`injector_sync`** - Synchronously waits for the daemon to finish indexing pending filesystem edits. Returns a list of exactly which files were reindexed to confirm changes.
 
 ### Check your ROI (Savings Dashboard)
 

@@ -83,7 +83,7 @@
     /* Reset & CSS variables */
     :root {
       --bg: #0d1117;
-      --bg-card: #161b22;
+      --bg-card: rgba(22, 27, 34, 0.4);
       --bg-nav: rgba(13, 17, 23, 0.75);
       --border: rgba(240, 246, 252, 0.1);
       --border-focus: rgba(124, 58, 237, 0.4);
@@ -113,7 +113,7 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
-      line-height: 1.6;
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
       overflow-wrap: break-word;
@@ -153,87 +153,23 @@
       padding: 0 1.5rem;
     }
 
-    /* Sticky Navigation */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-
-    .brand span {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .nav-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .nav-link:hover {
-      color: var(--text-white);
-    }
-
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
-
     /* Documentation Layout */
     .docs-layout {
       padding: 4rem 1.5rem 6rem;
       display: grid;
       grid-template-columns: 1fr;
       gap: 3rem;
+      position: relative;
     }
 
     @media (min-width: 992px) {
       .docs-layout {
         grid-template-columns: 240px 1fr;
+        gap: 4rem;
       }
     }
 
-    /* Sidebar Navigation */
+    /* Sidebar Navigation (Glassmorphic) */
     .docs-sidebar {
       display: none;
     }
@@ -245,7 +181,9 @@
         top: 6rem;
         height: calc(100vh - 8rem);
         overflow-y: auto;
-        padding-right: 1rem;
+        padding-right: 1.5rem;
+        border-right: 1px solid var(--border);
+        /* Premium aesthetic: backdrop blur if needed, though it's sticky on bg */
       }
     }
 
@@ -253,26 +191,35 @@
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       color: var(--text-white);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
     }
 
     .sidebar-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
     .sidebar-link {
       font-size: 0.875rem;
       color: var(--text-muted);
       font-weight: 500;
+      transition: all 0.2s ease;
+      display: block;
+      padding-left: 10px;
+      border-left: 2px solid transparent;
+      margin-left: -12px;
     }
 
     .sidebar-link:hover, .sidebar-link.active {
       color: var(--text-white);
+      border-left-color: var(--accent);
+      transform: translateX(4px);
+      text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
     }
 
     /* Documentation Content */
@@ -282,76 +229,83 @@
     }
 
     .docs-header {
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
     }
 
     .docs-main-title {
-      font-size: 2.5rem;
+      font-size: 3rem;
       font-weight: 800;
-      color: var(--text-white);
       letter-spacing: -0.04em;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(to right, #f0f6fc, #8b949e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .docs-subtitle {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: -0.01em;
     }
 
-    /* Quick Navigation (Anchor Links) */
+    /* Quick Navigation (Anchor Links) - Bento Style */
     .quick-nav-section {
-      margin-bottom: 3rem;
-      padding: 1.5rem;
+      margin-bottom: 4rem;
+      padding: 1.5rem 2rem;
       background-color: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.2);
     }
 
     .quick-nav-title {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-white);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.25rem;
+      opacity: 0.8;
     }
 
     .quick-nav-links {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.75rem;
+      gap: 1rem;
       list-style-type: none;
     }
 
     .quick-nav-item a {
       font-size: 0.875rem;
-      color: var(--text-muted);
-      text-decoration: underline;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
     }
 
     .quick-nav-item a:hover {
-      color: var(--text-white);
+      color: var(--accent-hover);
+      text-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
     }
 
     /* Document Sections */
     .docs-section {
-      margin-bottom: 2.5rem;
+      margin-bottom: 4rem;
       scroll-margin-top: 6rem;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     .docs-section h2 {
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 800;
       color: var(--text-white);
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       margin-top: 0;
       margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--border);
     }
 
@@ -359,29 +313,22 @@
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-white);
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       margin-bottom: 1rem;
-    }
-
-    .docs-section h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-white);
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
     }
 
     .docs-section p {
       margin-bottom: 1.25rem;
       color: var(--text);
-      font-size: 0.9375rem;
-      line-height: 1.6;
+      font-size: 1rem;
     }
 
     .docs-section ul, .docs-section ol {
       margin-bottom: 1.5rem;
       padding-left: 1.5rem;
-      font-size: 0.9375rem;
+      font-size: 1rem;
+      color: var(--text);
     }
 
     .docs-section li {
@@ -397,51 +344,63 @@
       list-style-type: decimal;
     }
 
-    /* Code Blocks */
+    /* Premium IDE-Style Code Blocks */
     .code-wrapper {
       position: relative;
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: #050505; /* Darker terminal bg */
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.25rem 3.5rem 1.25rem 1.25rem;
-      margin: 1.5rem 0;
+      border-radius: 8px;
+      padding: 1.25rem 4rem 1.25rem 1.25rem;
+      margin: 1.5rem 0 2rem 0;
       overflow-x: auto;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.2);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .code-wrapper:hover {
+      border-color: var(--border-focus);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 15px rgba(124, 58, 237, 0.1);
     }
 
     .code-block {
       font-family: var(--font-mono);
       font-size: 0.875rem;
-      color: var(--text-white);
+      color: #e2e8f0;
       white-space: pre;
       overflow-x: auto;
+      line-height: 1.6;
     }
 
+    /* Pill-Style Copy Button */
     .copy-btn {
       position: absolute;
-      top: 0.875rem;
-      right: 0.875rem;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
+      top: 1rem;
+      right: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-white);
       font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.375rem 0.75rem;
-      border-radius: 4px;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px; /* Pill shape */
       cursor: pointer;
+      backdrop-filter: blur(4px);
       transition: all 0.2s ease;
     }
 
     .copy-btn:hover {
-      color: var(--text-white);
-      border-color: var(--text-muted);
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
     }
 
     code {
       font-family: var(--font-mono);
-      font-size: 0.875rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 0.2rem 0.4rem;
+      font-size: 0.875em;
+      background-color: rgba(255, 255, 255, 0.08);
+      padding: 0.2em 0.4em;
       border-radius: 4px;
       color: var(--text-white);
       word-break: break-all;
@@ -456,63 +415,61 @@
       overflow-wrap: normal;
     }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 4rem 0;
-      background-color: rgba(0, 0, 0, 0.2);
+    /* Glassmorphic Alerts (Bento Style) */
+    .github-alert-important,
+    .github-alert-warning,
+    .github-alert-note {
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 12px;
+      border: 1px solid;
+      background-color: rgba(13, 17, 23, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
     }
 
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      text-align: center;
+    .github-alert-important::before,
+    .github-alert-warning::before,
+    .github-alert-note::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
     }
 
-    .footer-brand {
-      font-weight: 700;
-      color: var(--text-white);
+    .github-alert-important {
+      border-color: rgba(248, 81, 73, 0.3);
+      box-shadow: 0 4px 20px rgba(248, 81, 73, 0.05);
+    }
+    .github-alert-important::before { background-color: #f85149; }
+
+    .github-alert-warning {
+      border-color: rgba(210, 153, 34, 0.3);
+      box-shadow: 0 4px 20px rgba(210, 153, 34, 0.05);
+    }
+    .github-alert-warning::before { background-color: #d29922; }
+
+    .github-alert-note {
+      border-color: rgba(88, 166, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(88, 166, 255, 0.05);
+    }
+    .github-alert-note::before { background-color: #58a6ff; }
+
+    .github-alert-important p,
+    .github-alert-warning p,
+    .github-alert-note p {
+      margin-bottom: 0.75rem;
+    }
+    .github-alert-important p:last-child,
+    .github-alert-warning p:last-child,
+    .github-alert-note p:last-child {
+      margin-bottom: 0;
     }
 
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    .footer-copy {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    /* Media Queries */
-    @media (max-width: 767px) {
-      .docs-section {
-        padding: 1.5rem;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .nav-link {
-        display: inline-block;
-      }
-
-      .footer-container {
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
-      }
-    }
-  
     /* Mobile Menu Toggle button */
     .mobile-menu-toggle {
       display: none;
@@ -572,7 +529,7 @@
       }
     }
 
-  </style>
+</style>
 </head>
 <body>
 
@@ -600,27 +557,31 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
+  
+  
+  
   <!-- Docs Layout -->
   <div class="container docs-layout">
     
     <!-- Desktop Sidebar -->
     <aside class="docs-sidebar">
-      <div class="sidebar-title">Documentation</div>
+      <div class="sidebar-title">Docs</div>
       <ul class="sidebar-list">
-        <li><a href="#installation" class="sidebar-link">Installation</a></li>
-        <li><a href="#verifying-it-works" class="sidebar-link">Verifying it works</a></li>
-        <li><a href="#ide-setup" class="sidebar-link">IDE setup</a></li>
-        <li><a href="#using-the-mcp-tools" class="sidebar-link">Using the MCP tools</a></li>
-        <li><a href="#advanced-configuration" class="sidebar-link">Advanced configuration</a></li>
-        <li><a href="#troubleshooting" class="sidebar-link">Troubleshooting</a></li>
-        <li><a href="#limitations" class="sidebar-link">Limitations</a></li>
-        <li><a href="#uninstalling" class="sidebar-link">Uninstalling</a></li>
+        <li><a href="#quickstart" class="sidebar-link">1. Quickstart</a></li>
+        <li><a href="#ide-setup" class="sidebar-link">2. Hook Up My Editor</a></li>
+        <li><a href="#prompts" class="sidebar-link">3. AI Magic Prompts</a></li>
+        <li><a href="#mcp-ignore" class="sidebar-link">4. Exclude Files</a></li>
+        <li><a href="#git-hooks" class="sidebar-link">5. Git Branch Switching</a></li>
+        <li><a href="#bonus-tools" class="sidebar-link">6. Bonus CLI Tools</a></li>
+        <li><a href="#troubleshooting" class="sidebar-link">7. Troubleshooting</a></li>
+        <li><a href="#limitations" class="sidebar-link">8. Under The Hood</a></li>
+        <li><a href="#uninstall" class="sidebar-link">Uninstall</a></li>
       </ul>
     </aside>
 
@@ -629,142 +590,63 @@
       
       <div class="docs-header">
         <h1 class="docs-main-title">Documentation</h1>
-        <p class="docs-subtitle">Everything you need to get mcp-injector working</p>
+        <p class="docs-subtitle">The definitive guide to compressing your codebase for AI.</p>
       </div>
 
       <!-- Quick Navigation for Mobile/Tablet -->
       <section class="quick-nav-section">
-        <div class="quick-nav-title">Quick Navigation</div>
+        <div class="quick-nav-title">Quick Links</div>
         <ul class="quick-nav-links">
-          <li class="quick-nav-item"><a href="#installation">Installation</a></li>
-          <li class="quick-nav-item"><a href="#verifying-it-works">Verifying it works</a></li>
-          <li class="quick-nav-item"><a href="#ide-setup">IDE setup</a></li>
-          <li class="quick-nav-item"><a href="#using-the-mcp-tools">Using the MCP tools</a></li>
-          <li class="quick-nav-item"><a href="#advanced-configuration">Advanced configuration</a></li>
-          <li class="quick-nav-item"><a href="#troubleshooting">Troubleshooting</a></li>
-          <li class="quick-nav-item"><a href="#limitations">Limitations</a></li>
-          <li class="quick-nav-item"><a href="#uninstalling">Uninstalling</a></li>
+          <li class="quick-nav-item"><a href="#quickstart">1. Quickstart</a></li>
+          <li class="quick-nav-item"><a href="#ide-setup">2. Hook Up My Editor</a></li>
+          <li class="quick-nav-item"><a href="#prompts">3. AI Magic Prompts</a></li>
+          <li class="quick-nav-item"><a href="#mcp-ignore">4. Exclude Files</a></li>
+          <li class="quick-nav-item"><a href="#git-hooks">5. Git Branch Switching</a></li>
+          <li class="quick-nav-item"><a href="#bonus-tools">6. Bonus CLI Tools</a></li>
+          <li class="quick-nav-item"><a href="#troubleshooting">7. Troubleshooting</a></li>
+          <li class="quick-nav-item"><a href="#limitations">8. Under The Hood</a></li>
         </ul>
       </section>
 
-      <!-- Section: Installation -->
-      <section id="installation" class="docs-section">
-        <h2>Installation</h2>
+      <!-- Section: 1. Quickstart -->
+      <section id="quickstart" class="docs-section">
+        <h2>1. Quickstart</h2>
         
-        <h3>System requirements</h3>
-        <ul>
-          <li>macOS 12+, Linux (any modern distro), Windows 10+</li>
-          <li>Claude Desktop, Cursor, VS Code, or Devin Desktop</li>
-          <li>Git (for branch-aware re-indexing feature)</li>
-        </ul>
-
-        <h3>Install command</h3>
-        <p>This command downloads and runs the local installer script:</p>
+        <p>mcp-injector is a local background daemon that reads your codebase, strips out unnecessary syntax, and feeds highly-compressed architectural maps directly to your AI. It saves massive amounts of tokens and prevents the AI from getting confused.</p>
+        
+        <h3>Installation</h3>
+        <p>Run this command in your terminal. It downloads the binary and attempts to configure your IDE automatically.</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('install-cmd', this)">Copy</button>
           <pre id="install-cmd" class="code-block"><code>curl -fsSL https://foldwork.dev/install | sh</code></pre>
         </div>
-        <p>The script performs the following tasks:</p>
-        <ul>
-          <li>Downloads the correct binary for your OS and architecture.</li>
-          <li>Installs to <b>/usr/local/bin/mcp-injector</b> (or <b>~/.local/bin</b> if <b>/usr/local/bin</b> is not writable).</li>
-          <li>Detects installed IDEs and writes the MCP configuration.</li>
-          <li>Does not require sudo unless <b>/usr/local/bin</b> needs it.</li>
-        </ul>
 
-        <h3>Manual installation</h3>
-        <p>If you prefer not to use the automated install script, follow these steps:</p>
+        <h3>Manual Installation</h3>
+        <p>If you prefer not to pipe to shell, or if you're offline:</p>
         <ol>
-          <li>Go to github.com/foldwork-dev/mcp-injector/releases/latest.</li>
-          <li>Download the binary matching your platform.</li>
-          <li>Make the downloaded binary executable:
-            <div class="code-wrapper">
-              <button class="copy-btn" onclick="copyCode('manual-chmod', this)">Copy</button>
-              <pre id="manual-chmod" class="code-block"><code>chmod +x mcp-injector-darwin-arm64</code></pre>
-            </div>
-          </li>
-          <li>Move the binary to your path:
-            <div class="code-wrapper">
-              <button class="copy-btn" onclick="copyCode('manual-move', this)">Copy</button>
-              <pre id="manual-move" class="code-block"><code>mv mcp-injector-darwin-arm64 /usr/local/bin/mcp-injector</code></pre>
-            </div>
-          </li>
-          <li>Add the MCP configuration manually. Refer to the IDE Setup section below.</li>
+          <li>Download the binary from the latest GitHub release.</li>
+          <li>Make it executable: <code>chmod +x mcp-injector-*</code></li>
+          <li>Move it to your path: <code>mv mcp-injector-* /usr/local/bin/mcp-injector</code></li>
         </ol>
 
-        <h3>Free tier vs Pro</h3>
-        <p>Free: workspaces under 50,000 lines. No license key is needed.</p>
-        <p>Pro: workspaces of any size. After purchase, your license key is emailed to you automatically — just check your inbox and follow the activation instructions below.</p>
-        <p>To check your workspace line count before installing, run the benchmark tool:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('check-loc', this)">Copy</button>
-          <pre id="check-loc" class="code-block"><code>mcp-benchmark ./your-project</code></pre>
+        <div class="github-alert-note">
+          <p><strong>Free vs Pro:</strong> If your project has fewer than 50,000 lines of code, this tool is free forever. If your codebase is larger, it will enter a degraded state and require a <a href="/pricing">Pro License</a> to continue indexing.</p>
         </div>
-        <p>The output shows your total line count. If it is under 50,000 lines, you do not need Pro.</p>
       </section>
 
-      <!-- Section: Verifying it works -->
-      <section id="verifying-it-works" class="docs-section">
-        <h2>Verifying it works</h2>
-        <p>After installation and restarting your IDE, verify mcp-injector is running by prompting Claude:</p>
-        <p>Prompt: <b>"Call get_project_map and show me the structure of this project"</b></p>
-        <p>A working installation returns a payload similar to the following:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('verify-output', this)">Copy</button>
-          <pre id="verify-output" class="code-block"><code>{
-  "workspace": "/path/to/your/project",
-  "total_files": 47,
-  "total_raw_tokens": 198400,
-  "total_compressed_tokens": 72600,
-  "savings_pct": 63.4,
-  "current_branch": "main",
-  "modules": []
-}</code></pre>
-        </div>
-        <p>If Claude says it cannot find the tool, see the Troubleshooting section below.</p>
-        <p>Signs of correct operation:</p>
-        <ul>
-          <li>Claude can answer questions about files not currently open.</li>
-          <li>Claude knows your project structure without you explaining it.</li>
-          <li>Claude references the correct branch name.</li>
-          <li>Token usage in your Claude dashboard decreases over time.</li>
-        </ul>
-
-        <h3>Checking your ROI (Savings Dashboard)</h3>
-        <p>To see your real-time token savings and estimated dollars saved, run the status dashboard in your terminal:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('injector-status', this)">Copy</button>
-          <pre id="injector-status" class="code-block"><code>mcp-injector status</code></pre>
-        </div>
-        <p>This CLI dashboard proves the exact ROI value the daemon is delivering on your codebase by comparing raw tokens against AST-compressed tokens.</p>
-      </section>
-
-      <!-- Section: IDE Setup -->
+      <!-- Section: 2. IDE Setup -->
       <section id="ide-setup" class="docs-section">
-        <h2>IDE setup</h2>
+        <h2>2. Hook Up My Editor</h2>
         
-        <h3>Claude Desktop</h3>
-        <p>Config file locations:</p>
-        <ul>
-          <li>macOS: <b>~/Library/Application Support/Claude/claude_desktop_config.json</b></li>
-          <li>Linux: <b>~/.config/Claude/claude_desktop_config.json</b></li>
-          <li>Windows: <b>%APPDATA%\Claude\claude_desktop_config.json</b></li>
-        </ul>
-        <p>Add this entry to the <b>mcpServers</b> object:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('claude-config', this)">Copy</button>
-          <pre id="claude-config" class="code-block"><code>"mcp-injector": {
-  "command": "/usr/local/bin/mcp-injector",
-  "env": {
-    "MCP_WORKSPACE": "/absolute/path/to/your/project"
-  }
-}</code></pre>
+        <p>Your AI editor needs to know that mcp-injector exists. The setup is slightly different for each editor, but they all require the absolute path to your codebase via the <code>MCP_WORKSPACE</code> environment variable.</p>
+
+        <div class="github-alert-important">
+          <p><strong>🚨 CRITICAL RULE 🚨</strong><br><br>You <strong>MUST</strong> use an absolute path for <code>MCP_WORKSPACE</code>. Do not use <code>~</code> or relative paths.</p>
+          <p>❌ <strong>BAD:</strong> <code>~/projects/myapp</code><br>✅ <strong>GOOD:</strong> <code>/Users/alex/projects/myapp</code></p>
         </div>
-        <p>Important: <b>MCP_WORKSPACE</b> must be an absolute path. Use the full path from the root. Restart Claude Desktop after editing this configuration.</p>
 
         <h3>Cursor</h3>
-        <p>Config file path: <b>~/.cursor/mcp.json</b></p>
-        <p>Cursor uses a global configuration file. Add this entry to your <b>mcpServers</b> object:</p>
+        <p>Open <code>~/.cursor/mcp.json</code> (or go to Cursor Settings > Features > MCP) and add this:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('cursor-config', this)">Copy</button>
           <pre id="cursor-config" class="code-block"><code>"mcp-injector": {
@@ -774,229 +656,221 @@
   }
 }</code></pre>
         </div>
-        <div class="github-alert-important">
-          <p><strong>IMPORTANT:</strong> Cursor does not dynamically evaluate the <code>${workspaceFolder}</code> variable in global config files. You MUST use a hardcoded absolute path.</p>
-        </div>
 
-        <h3>VS Code</h3>
-        <p>Config file path: <b>.vscode/mcp.json</b> (in your workspace)</p>
-        <p>VS Code now natively supports MCP. You can configure it by creating an <b>mcp.json</b> file inside your workspace's <b>.vscode</b> directory. The installer script handles this automatically.</p>
+        <h3>Claude Desktop</h3>
+        <p>Open your config file (Mac: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>, Windows: <code>%APPDATA%\Claude\claude_desktop_config.json</code>).</p>
+        <p>Add the exact same JSON snippet shown in the Cursor section above, save the file, and <strong>restart Claude completely</strong>.</p>
 
         <h3>Devin Desktop</h3>
-        <p>Config file path: <b>~/.codeium/windsurf/mcp_config.json</b></p>
-        <p>Add this entry to the <b>mcpServers</b> object:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('devin-config', this)">Copy</button>
-          <pre id="devin-config" class="code-block"><code>"mcp-injector": {
-  "command": "/usr/local/bin/mcp-injector",
-  "env": {
-    "MCP_WORKSPACE": "/absolute/path/to/your/project"
-  }
-}</code></pre>
-        </div>
-        <div class="github-alert-important">
-          <p><strong>IMPORTANT:</strong> Devin Desktop does not dynamically evaluate the <code>${workspaceFolder}</code> variable in global config files. You MUST use a hardcoded absolute path.</p>
-        </div>
+        <p>Open <code>~/.codeium/windsurf/mcp_config.json</code> and paste the exact same snippet shown in the Cursor section above.</p>
 
         <h3>Antigravity</h3>
-        <p>Config file path: <b>~/.gemini/antigravity/mcp_config.json</b></p>
-        <p>Antigravity uses the same <code>command</code>-based MCP schema as Claude Desktop. Add this entry to the <b>mcpServers</b> object. Note that Antigravity requires an explicit <code>HOME</code> env var alongside <code>MCP_WORKSPACE</code>:</p>
+        <p>Open <code>~/.gemini/antigravity/mcp_config.json</code>. Note that Antigravity requires an explicit <code>HOME</code> environment variable:</p>
         <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('antigravity-config', this)">Copy</button>
-          <pre id="antigravity-config" class="code-block"><code>"mcp-injector": {
+          <button class="copy-btn" onclick="copyCode('ag-config', this)">Copy</button>
+          <pre id="ag-config" class="code-block"><code>"mcp-injector": {
   "command": "/usr/local/bin/mcp-injector",
-  "args": [],
   "env": {
     "MCP_WORKSPACE": "/absolute/path/to/your/project",
     "HOME": "/home/your-username"
   }
 }</code></pre>
         </div>
-        <div class="github-alert-important">
-          <p><strong>IMPORTANT:</strong> Antigravity does not dynamically evaluate the <code>${workspaceFolder}</code> variable. You MUST use a hardcoded absolute path for both <code>MCP_WORKSPACE</code> and <code>HOME</code>.</p>
-        </div>
 
-        <h3>Running multiple projects</h3>
-        <p>Each project requires its own <b>MCP_WORKSPACE</b> value. If you work on multiple projects, you have two options:</p>
-        <p>Option A: <b>(Recommended)</b> Simply re-run the installer (<code>curl -fsSL https://foldwork.dev/install | sh</code>) inside the new project directory. The installer automatically detects your current directory and updates the global configurations for Claude Desktop, Cursor, and Devin Desktop to point to the new project.</p>
-        <p>Option B: Run a separate daemon instance for each project on a different configuration. Each daemon maintains its own index at <b>~/.mcp-injector/cache/&lt;workspace-hash&gt;.db</b> to avoid conflicts.</p>
+        <h3>VS Code (Cline / RooCode)</h3>
+        <p>Create a <code>.vscode/mcp.json</code> file inside your workspace directory with the standard snippet. VS Code MCP extensions read this file dynamically.</p>
+
+        <h3>Working on multiple projects?</h3>
+        <p>Whenever you switch to a different project folder, just re-run <code>curl -fsSL https://foldwork.dev/install | sh</code> inside the new folder. The script updates your global configs automatically. Alternatively, run separate daemon instances pointing to different <code>MCP_WORKSPACE</code> paths.</p>
       </section>
 
-      <!-- Section: Using the MCP tools -->
-      <section id="using-the-mcp-tools" class="docs-section">
-        <h2>Using the MCP tools</h2>
-        <p>mcp-injector exposes five tools. Claude calls these tools automatically when relevant. You can also prompt Claude to call them explicitly.</p>
-        <div class="github-alert-important">
-          <p><strong>IMPORTANT:</strong> Code returned by <code>get_project_map</code> has compressed function bodies replaced with fold markers. This code is for reading structure only. You MUST call <code>injector_retrieve</code> to get full uncompressed source before editing any file. Editing folded code will destroy the real function implementations.</p>
+      <!-- Section: 3. Magic Prompts -->
+      <section id="prompts" class="docs-section">
+        <h2>3. AI Magic Prompts & Features</h2>
+        
+        <p>You don't <em>have</em> to know how the tools work—Claude/Cursor call them automatically. But if you want precise control, copy and paste these literal prompts into the chat to trigger specific features.</p>
+
+        <div class="github-alert-warning">
+          <p><strong>Writing Code (CRITICAL):</strong><br>Code returned by the tool has compressed function bodies replaced with <code>[...folded...]</code> markers. The AI is strictly instructed to use the <code>injector_write_file</code> tool to edit files. The daemon will actively hard-reject any attempt to save files containing fold markers, preventing accidental data loss.</p>
         </div>
 
-        <h3>get_project_map</h3>
-        <p>This tool returns a compressed view of the codebase. It automatically detects <b>Java packages</b> and <b>Spring component types</b> (e.g. controllers, services, repositories) to organize modules semantically rather than just by directory path. Feel free to use this proactively when exploring unfamiliar architectures.</p>
-        <p>Prompt: <b>"Use get_project_map to show me this project"</b></p>
-        <p>Parameters:</p>
+        <h3>The "Give me the big picture" tool (get_project_map)</h3>
+        <p>This tool returns a compressed overview of the architecture. It automatically detects framework boundaries (like Java Packages or Spring Components) and groups files semantically.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-map', this)">Copy</button>
+          <pre id="prompt-map" class="code-block"><code>Use get_project_map to analyze my codebase. Tell me how the main components fit together.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
         <ul>
-          <li><b>tier</b> (1, 2, or 3): compression level. Default is 3. Tier 1 does not compress. Tier 2 folds function bodies but keeps signatures. Tier 3 folds bodies and strips comments.</li>
-          <li><b>unfolded_files</b>: array of file paths or glob patterns to serve at full resolution.</li>
+          <li><code>tier</code>: Compression level. <strong>Tier 3</strong> (default) strips bodies and comments. <strong>Tier 2</strong> folds bodies but keeps comments. <strong>Tier 1</strong> disables compression.</li>
+          <li><code>unfolded_files</code>: An array of specific file paths to serve at full resolution.</li>
+          <li><code>path_prefixes</code>: An array of paths to restrict the map to a specific microservice.</li>
         </ul>
-        <p>The response includes a <code>dependency_graph</code> showing inter-module dependencies and a <code>layer_summary</code> for an instant architectural overview of the system.</p>
-        <p>Example prompt: <b>"Get the project map but show me src/auth/handler.go at full resolution"</b></p>
 
-        <h3>injector_search</h3>
-        <p>This tool performs a fast BM25 full-text search over indexed symbols in the local SQLite catalog. Results are ranked with definitions first, and include the <code>line_start</code>, <code>line_end</code>, and a <code>context_snippet</code> so you can immediately verify the symbol without a secondary lookup.</p>
-        <p>Prompt: <b>"Search the codebase for AuthenticationService"</b></p>
+        <h3>The "Find this thing" tool (injector_search)</h3>
+        <p>Fast BM25 full-text search over indexed symbols. Supports FTS5 boolean logic.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-search', this)">Copy</button>
+          <pre id="prompt-search" class="code-block"><code>Use injector_search to find "user AND auth" inside the src/services directory.</code></pre>
+        </div>
 
-        <h3>injector_retrieve</h3>
-        <p>This tool fetches the complete uncompressed source of a file. Optional: pass <code>start_line</code> and <code>end_line</code> to retrieve only a specific range of lines. Useful when you know the exact location of a symbol from injector_search results and want to avoid loading a large file.</p>
-        <p>Prompt: <b>"Show me the full implementation of UserService.java"</b></p>
-        <p>Claude calls this tool automatically when it needs to inspect a folded function body.</p>
+        <h3>The "Draw me a diagram" tool (injector_diagram)</h3>
+        <p>Generates a Mermaid sequence diagram for a symbol by traversing outbound dependencies.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-diagram', this)">Copy</button>
+          <pre id="prompt-diagram" class="code-block"><code>Use injector_diagram to draw a Mermaid sequence diagram for the ProcessPayment function. Set max_depth to 4.</code></pre>
+        </div>
 
-        <h3>injector_stats</h3>
-        <p>This tool shows daemon status and cumulative savings.</p>
-        <p>Prompt: <b>"Call injector_stats and show me my token savings"</b></p>
-        <p>The response includes indexed files, workspace line count, compression ratio, cache hit rate, and Pro license status.</p>
+        <h3>Other tools:</h3>
+        <ul>
+          <li><code>injector_retrieve</code>: Fetches the uncompressed source of a file. Supports <code>expand_graph=true</code> to resolve and append 1st-degree dependencies automatically.</li>
+          <li><code>injector_regex_search</code>: Bypasses tokenization for punctuation-heavy pattern matching.</li>
+          <li><code>injector_clear_cache</code>: Wipes the SQLite cache and forces a cold-start re-index.</li>
+          <li><code>injector_stats</code>: Shows daemon status, indexed files, and token savings.</li>
+        </ul>
 
-        <h3>injector_sync</h3>
-        <p>Waits for all pending file index updates to complete. Call this after writing to a file and before calling <code>get_project_map</code> to ensure the index reflects your latest changes. Returns a list of the exact files reindexed (<code>files_reindexed</code>) so you can verify your edits were processed.</p>
-        <p>Prompt: <b>"Sync the index before getting the project map"</b></p>
+        <h3>🧠 Persistent AI Memory (Hidden Feature)</h3>
+        <p>If you create a file at <code>.foldwork/decisions.md</code> in your project root, mcp-injector will silently inject the first 4KB of it directly into the AI's context on <em>every single request</em>. Use this to enforce architectural rules, styling guidelines, or team conventions globally.</p>
       </section>
 
-      <!-- Section: Advanced configuration -->
-      <section id="advanced-configuration" class="docs-section">
-        <h2>Advanced configuration</h2>
+      <!-- Section: 4. Exclude Files -->
+      <section id="mcp-ignore" class="docs-section">
+        <h2>4. Exclude Files (.mcp-ignore)</h2>
+        
+        <p>The daemon automatically respects your <code>.gitignore</code> rules. If you want to exclude additional files from AI indexing without ignoring them in Git, create a <code>.mcp-ignore</code> file in your workspace root.</p>
 
-        <h3>Excluding files from compression</h3>
-        <p>Create a <b>.mcp-ignore</b> file in your workspace root. It uses the same formatting rules as a <b>.gitignore</b> file:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('mcp-ignore-example', this)">Copy</button>
-          <pre id="mcp-ignore-example" class="code-block"><code># Exclude generated files
-generated/
+          <pre id="mcp-ignore-example" class="code-block"><code># .mcp-ignore
+# Exclude generated protobuf files
 *.pb.go
-dist/
 
-# Exclude large data files
+# Exclude massive data fixtures
 testdata/
 fixtures/</code></pre>
         </div>
-        <p>Files matching these patterns are excluded from the index. They will not appear in <b>get_project_map</b> and cannot be retrieved via <b>injector_retrieve</b>. mcp-injector also respects your existing <b>.gitignore</b> file automatically. Changes to <b>.gitignore</b> or <b>.mcp-ignore</b> are dynamically reloaded; newly ignored files are purged from the index instantly without requiring a daemon restart.</p>
-
-        <h3>Adjusting default compression tier</h3>
-        <p>The default compression tier is 3. If you want to change the default behavior, prompt Claude to use a lower tier:</p>
-        <p>Prompt: <b>"Use get_project_map with tier 2"</b></p>
-        <p>Tier 2 keeps signatures and folds bodies but preserves comments. This is useful when comments contain design decisions.</p>
-
-        <h3>Branch switching</h3>
-        <p>mcp-injector installs a post-checkout git hook on startup. When you switch branches, the hook signals the daemon to re-index.</p>
-        <p>The daemon logs show the transition details:</p>
-        <div class="code-wrapper">
-          <pre class="code-block"><code>[mcp-injector] Branch switched to feature/auth, re-indexing...
-[mcp-injector] Re-index complete in 4.2s</code></pre>
-        </div>
-        <p>If branch switching does not trigger re-indexing:</p>
-        <ol>
-          <li>Check that <b>.git/hooks/post-checkout</b> exists in your workspace.</li>
-          <li>Verify the hook file is executable.</li>
-          <li>If the hook is missing, restart the daemon on that workspace to reinstall it.</li>
-        </ol>
-
-        <h3>Pro license activation</h3>
-        <p>Activate your Pro subscription license key by running the following command in your terminal:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('license-config', this)">Copy</button>
-          <pre id="license-config" class="code-block"><code>mcp-injector --activate your-license-key-here</code></pre>
-        </div>
-        <p>This will write your license to <b>~/.mcp-injector/license.key</b>. License validation runs offline. No outbound network connections are required after activation.</p>
+        <p>Changes to <code>.gitignore</code> or <code>.mcp-ignore</code> are detected dynamically. Ignored files are purged from the cache instantly without a restart.</p>
       </section>
 
-      <!-- Section: Troubleshooting -->
-      <section id="troubleshooting" class="docs-section">
-        <h2>Troubleshooting</h2>
-
-        <h3>Claude says it cannot find get_project_map</h3>
-        <p><b>Cause:</b> The MCP server is not running or not configured for this IDE.</p>
-        <p><b>Fix:</b> Verify the binary path by running <b>which mcp-injector</b>. Confirm your IDE configuration file contains the correct entry. Restart your IDE completely.</p>
-
-        <h3>The tool runs but returns an empty project map</h3>
-        <p><b>Cause:</b> The <b>MCP_WORKSPACE</b> environment variable points to the wrong directory or an empty directory.</p>
-        <p><b>Fix:</b> Check the workspace path in your IDE configuration. Verify it is an absolute path. Run <b>mcp-benchmark /your/workspace/path</b> to confirm it finds source files.</p>
-
-        <h3>Branch switching is not triggering re-indexing</h3>
-        <p><b>Cause:</b> The post-checkout hook is missing or not executable.</p>
-        <p><b>Fix:</b> Run <b>cat .git/hooks/post-checkout</b> inside your repository. If the file is missing, restart the daemon on this workspace. If present, make it executable:
-          <div class="code-wrapper">
-            <button class="copy-btn" onclick="copyCode('chmod-hook', this)">Copy</button>
-            <pre id="chmod-hook" class="code-block"><code>chmod +x .git/hooks/post-checkout</code></pre>
-          </div>
-        </p>
-
-        <h3>Daemon exits immediately on startup</h3>
-        <p><b>Cause:</b> The <b>MCP_WORKSPACE</b> environment variable is not set, or points to a path that does not exist. You will see: <b>[mcp-injector] Error: MCP_WORKSPACE is not set.</b></p>
-        <p><b>Fix:</b> Add <b>MCP_WORKSPACE</b> to the env section of your IDE MCP configuration.</p>
-
-        <h3>Free tier workspace limit message</h3>
-        <p><b>Cause:</b> Your project codebase size exceeds the 50,000 line free tier limit.</p>
-        <p><b>Fix:</b> Run <b>mcp-benchmark ./your-project</b> to confirm the line count. Obtain a Pro license key from foldwork.dev to lift the limit.</p>
-
-        <h3>Secrets are being redacted unexpectedly</h3>
-        <p><b>Cause:</b> The Shannon entropy analyzer flagged a high-entropy string (such as a hash or UUID) in your source code.</p>
-        <p><b>Fix:</b> The output will show the redaction metadata. The variable name is preserved. The value is replaced with <b>[REDACTED: high entropy]</b>. Add the affected file to <b>.mcp-ignore</b> if you need to serve it raw.</p>
-
-        <h3>Windows-specific issues</h3>
-        <p><b>Cause:</b> The <b>MCP_WORKSPACE</b> path uses backslashes which are not escaped in JSON.</p>
-        <p><b>Fix:</b> Use forward slashes in your Windows path settings. For example: <b>"C:/Users/username/projects/myapp"</b>. Do not include a trailing slash.</p>
-      </section>
-
-      <!-- Section: Limitations -->
-      <section id="limitations" class="docs-section">
-        <h2>Limitations</h2>
+      <!-- Section: 5. Git Hooks -->
+      <section id="git-hooks" class="docs-section">
+        <h2>5. Git Branch Switching</h2>
         
-        <h3>Supported Languages & Fallbacks</h3>
-        <p>mcp-injector provides full AST compression (body stripping, signature preservation, and deterministic sorting) for Tier 1 supported languages. All other languages safely fall back to standard text indexing—they will not crash, but they will not receive advanced token compression.</p>
+        <p>mcp-injector automatically installs a <code>post-checkout</code> Git hook in your repository on startup. When you switch branches (e.g., <code>git checkout feature-branch</code>), the hook signals the background daemon to re-index the changed files.</p>
+        <p>This prevents the AI from reading stale codebase state.</p>
+        <p>If branch switching stops working, verify the hook is executable:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('chmod-hook', this)">Copy</button>
+          <pre id="chmod-hook" class="code-block"><code>chmod +x .git/hooks/post-checkout</code></pre>
+        </div>
+      </section>
+
+      <!-- Section: 6. Bonus CLI Tools -->
+      <section id="bonus-tools" class="docs-section">
+        <h2>6. Bonus CLI Tools</h2>
+        
+        <p>These powerful commands can be run directly from your terminal, no AI required.</p>
+
+        <h3>Check Token ROI (status)</h3>
+        <p>See exactly how many tokens the daemon is saving you right now.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('cmd-status', this)">Copy</button>
+          <pre id="cmd-status" class="code-block"><code>mcp-injector status</code></pre>
+        </div>
+
+        <h3>Find Bad Architecture (audit)</h3>
+        <p>Instantly scans your entire codebase graph to identify structural weaknesses.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('cmd-audit', this)">Copy</button>
+          <pre id="cmd-audit" class="code-block"><code>mcp-injector audit</code></pre>
+        </div>
+        <p>This outputs lists of <strong>God Objects</strong> (high outbound coupling), <strong>Architectural Bottlenecks</strong> (high inbound coupling), and <strong>Circular Dependencies</strong>.</p>
+
+        <h3>See What The AI Sees (inspect)</h3>
+        <p>Simulates an LLM context retrieval. Shows the confidence score, the retrieved files, and traces the dependency graph based on your query.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('cmd-inspect', this)">Copy</button>
+          <pre id="cmd-inspect" class="code-block"><code>mcp-injector inspect "payment processing"</code></pre>
+        </div>
+
+        <h3>Export The Graph (export)</h3>
+        <p>Dumps the entire parsed repository graph (nodes and edges) to JSON for custom visualization scripts.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('cmd-export', this)">Copy</button>
+          <pre id="cmd-export" class="code-block"><code>mcp-injector export > graph.json</code></pre>
+        </div>
+      </section>
+
+      <!-- Section: 7. Troubleshooting -->
+      <section id="troubleshooting" class="docs-section">
+        <h2>7. Troubleshooting</h2>
+
+        <h3>Symptom: Claude says "Tool not found"</h3>
+        <p><strong>The Fix:</strong> Your editor doesn't know the daemon exists. Verify the path using <code>which mcp-injector</code>. Ensure your <code>mcp.json</code> or Claude config contains the exact snippet from the IDE Setup section. <strong>Restart your editor.</strong></p>
+
+        <h3>Symptom: "Error: MCP_WORKSPACE is not set"</h3>
+        <p><strong>The Fix:</strong> You forgot the <code>env</code> block in your configuration, or you used a relative path. It must be absolute.</p>
+
+        <h3>Symptom: Claude returns an empty project map</h3>
+        <p><strong>The Fix:</strong> Your <code>MCP_WORKSPACE</code> absolute path is pointing to the wrong folder. Run <code>mcp-benchmark .</code> to ensure the daemon can actually see your files.</p>
+
+        <h3>Symptom: Inotify Limits (Linux Only)</h3>
+        <p><strong>The Fix:</strong> Large repositories (100k+ files) may crash Linux's default file watcher limit. The daemon intercepts this crash, pauses indexing, and opens an interactive prompt requesting permission to run <code>sudo sysctl fs.inotify.max_user_watches</code>. Allow it to proceed.</p>
+
+        <h3>Symptom: "Please upgrade to Pro"</h3>
+        <p><strong>The Fix:</strong> You hit the 50,000 line free tier limit. Go to <a href="/pricing">foldwork.dev/pricing</a>, get a license key, and run: <code>mcp-injector --activate YOUR_KEY_HERE</code>.</p>
+
+        <h3>Symptom: Secrets are replaced with [REDACTED: high entropy]</h3>
+        <p><strong>The Fix:</strong> The Shannon entropy analyzer flagged a string as a potential secret. To serve it raw, add that file to your <code>.mcp-ignore</code> file.</p>
+      </section>
+
+      <!-- Section: 8. Limitations -->
+      <section id="limitations" class="docs-section">
+        <h2>8. Under The Hood & Limitations</h2>
+        
+        <h3>Automatic Git Context Awareness</h3>
+        <p>You don't need to explain what you're working on to the AI. Every time the AI requests the project map, mcp-injector silently runs <code>git diff</code> and <code>git status</code> in the background. The AI automatically knows what branch you are on, what files you have modified (but not committed), and your last 5 commit messages. You can simply say: <em>"Review my uncommitted changes."</em></p>
+
+        <h3>Language Support</h3>
         <ul>
-          <li><b>Tier 1 (Full AST Compression):</b> Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust.</li>
-          <li><b>Text Fallback:</b> Any language not listed above is safely indexed as standard plaintext.</li>
+          <li><strong>Tier 1 (Full AST Compression):</strong> Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. These languages get full function folding, body stripping, and deterministic sorting.</li>
+          <li><strong>Fallback:</strong> Any other language is safely indexed as standard plaintext.</li>
+          <li><strong>Polyglot:</strong> Files with mixed content (<code>.vue</code>, <code>.svelte</code>) only compress the <code>&lt;script&gt;</code> tags. Templates are preserved.</li>
         </ul>
 
-        <h3>Other known limitations</h3>
-        <p>mcp-injector works well on most codebases but has the following known limitations:</p>
+        <h3>Hard Limits</h3>
         <ul>
-          <li><b>Files over 5MB are skipped.</b> Large generated outputs or data assets are excluded from indexing.</li>
-          <li><b>Minified files are skipped.</b> Files with fewer than 10 lines but exceeding 50KB are detected as minified and ignored.</li>
-          <li><b>inotify limits on Linux.</b> Large repositories (100,000+ files) may exceed default inotify watch limits. Increase the limit with this command:
-            <div class="code-wrapper">
-              <button class="copy-btn" onclick="copyCode('sysctl-watch', this)">Copy</button>
-              <pre id="sysctl-watch" class="code-block"><code>echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p</code></pre>
-            </div>
-          </li>
-          <li><b>NFS and network drives.</b> File watching does not work on network-mounted filesystems. The index is built on startup but will not update incrementally.</li>
-          <li><b>Windows file watching.</b> File watching on Windows uses polling. Changes are detected within 2 to 3 seconds.</li>
-          <li><b>Polyglot files.</b> Files with mixed content (.vue, .svelte, .astro) only compress the script section. Template sections are preserved but not compressed.</li>
+          <li><strong>Massive Files:</strong> Any single file over 5MB is completely ignored.</li>
+          <li><strong>Minified Code:</strong> We skip heavily minified files (files with under 10 lines but over 50KB of text).</li>
+          <li><strong>Network Drives:</strong> We can't automatically detect file changes on NFS/network drives. The index will build on startup but won't update incrementally.</li>
         </ul>
       </section>
 
       <!-- Section: Uninstalling -->
-      <section id="uninstalling" class="docs-section">
-        <h2>Uninstalling</h2>
-        <p>Remove the binary file from your path:</p>
+      <section id="uninstall" class="docs-section">
+        <h2>Uninstall</h2>
+        <p>Run these two commands to completely scrub it from your system.</p>
+        <p>1. Delete the app:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('uninstall-rm', this)">Copy</button>
           <pre id="uninstall-rm" class="code-block"><code>sudo rm /usr/local/bin/mcp-injector</code></pre>
         </div>
-        <p>Remove the local cache index directory:</p>
+        <p>2. Delete the cache:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('uninstall-cache', this)">Copy</button>
           <pre id="uninstall-cache" class="code-block"><code>rm -rf ~/.mcp-injector/</code></pre>
         </div>
-        <p>Open your IDE configuration file and remove the <b>mcp-injector</b> entry from the servers list.</p>
-        <p>Remove the git hook installed in your repository:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('uninstall-hook', this)">Copy</button>
-          <pre id="uninstall-hook" class="code-block"><code>rm .git/hooks/post-checkout</code></pre>
-        </div>
-        <p>If you have other hooks, open the file and remove only the lines referencing mcp-injector.</p>
+        <p>Finally, open your IDE's MCP config file and delete the <code>mcp-injector</code> block, and remove <code>.git/hooks/post-checkout</code> if you don't want the git hook anymore.</p>
       </section>
 
     </main>
   </div>
+
+
+
+
+
+
 
   <!-- Footer -->
   <!-- BEGIN FOOTER -->

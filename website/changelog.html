@@ -109,62 +109,7 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
     a:hover { color: var(--accent-hover); text-decoration: none; }
 
-    .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
-
-    /* Navigation Bar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-    .brand span { color: var(--accent); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .nav-link {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .nav-link:hover, .nav-link.active {
-      color: var(--text-white);
-    }
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
+    .text-container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
 
     /* Page Header */
     .header-section {
@@ -239,48 +184,6 @@
       color: var(--text-white);
     }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 0;
-      margin-top: auto;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      text-align: center;
-    }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    .footer-link {
-      color: var(--text-muted);
-      transition: color 0.2s ease;
-    }
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    @media (max-width: 768px) {
-      
-      .nav-links {
-        display: none;
-      }
-      .header-section {
-        padding: 3rem 0 2rem;
-      }
-      .page-title {
-        font-size: 1.75rem;
-      }
-    }
-  
     /* Mobile Menu Toggle button */
     .mobile-menu-toggle {
       display: none;
@@ -393,17 +296,88 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
-  <div class="container">
+  <div class="text-container">
     <header class="header-section">
       <h1 class="page-title">Changelog</h1>
       <p class="page-subtitle">All notable changes, fixes, and improvements to the mcp-injector platform.</p>
     </header>
+    <article class="changelog-entry">
+      <div class="version-header">
+        <h2 class="version-title">v0.3.0</h2>
+        <span class="version-date">July 15, 2026</span>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Zero-OOM Enterprise Engine (Net-New Core Architecture)</h3>
+        <p style="margin-bottom: 1rem;">This release completely rebuilds the core indexing architecture to scale to massive 50,000+ file monorepos without memory exhaustion or graph loss.</p>
+        <ul class="changelog-list">
+          <li><strong>Asynchronous Background Indexer:</strong> Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and sequential SQLite streaming (<code>InsertSymbolNodes</code>).</li>
+          <li><strong>Massive-Repo Graph Preservation:</strong> Fixed the massive-repo fallback mode to explicitly persist and read import nodes, ensuring dependency graphs (especially for Java) are no longer lost at scale.</li>
+          <li><strong>Schema Auto-Migration:</strong> Implemented <code>_v2.db</code> workspace hashing to guarantee clean, native background re-indexing upon major schema upgrades.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Data Loss Prevention & IDE Protection</h3>
+        <ul class="changelog-list">
+          <li><strong>API-Level Compression Guardrail (<code>injector_write_file</code>):</strong> Completely eliminated the "Compression Trap." The daemon now aggressively intercepts write operations via a dedicated tool and statically analyzes the payload, hard-rejecting attempts to write fold markers.</li>
+          <li><strong>Anti-EOF Handshake State:</strong> Removed hard <code>os.Exit(1)</code> background crashes. Free-tier limit violations now enter a degraded <code>fatalErr</code> state, keeping lightweight tools active and returning graceful JSON-RPC explanations.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Enterprise Resilience</h3>
+        <ul class="changelog-list">
+          <li><strong>OS File Watcher Auto-Remediation:</strong> Intercepts Linux <code>inotify</code> queue limit crashes (ENOSPC / "too many open files"). It safely pauses indexing, opens a direct <code>/dev/tty</code> interactive bridge to prompt for a <code>sysctl</code> limit increase, and dynamically resumes.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Surgical Scope Filtering</h3>
+        <ul class="changelog-list">
+          <li><strong><code>path_prefixes</code> for Project Maps:</strong> Agents can now generate architectural maps strictly scoped to specific microservices or packages, drastically reducing payload bloat.</li>
+          <li><strong><code>search_paths</code> for Semantic Search:</strong> Allows agents to search for symbols within a specific isolated folder via FTS5 constraints.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Context Window Circuit Breakers</h3>
+        <ul class="changelog-list">
+          <li><strong>LIMIT 50 Graph Expander:</strong> Added a hard ceiling to <code>injector_retrieve</code> (<code>expand_graph</code>) to prevent accidental inlining of thousands of 1st-degree dependencies.</li>
+          <li><strong>Standard-Library Pruning:</strong> Dependency graph explicitly ignores framework bloat (<code>java.lang.*</code>, <code>java.util.*</code>, <code>go/ast</code>) at query level.</li>
+          <li><strong>Diagram Node Breaker:</strong> Mermaid generator automatically halts after traversing 500 unique nodes to protect LLM context window.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Agent Feedback Loops</h3>
+        <ul class="changelog-list">
+          <li><strong>Raw FTS5 Boolean Logic:</strong> Agents can now use advanced SQLite FTS5 syntax (e.g., <code>user AND (auth OR login)</code>).</li>
+          <li><strong>Self-Correcting Syntax Errors:</strong> Daemon intercepts SQLite errors and explicitly returns invalid search syntax payloads.</li>
+          <li><strong>Implicit State Synchronization:</strong> Added a 3-second non-blocking sync hook (<code>PendingEvents.Wait()</code>) into read tools. <code>injector_sync</code> is now deprecated.</li>
+          <li><strong>Index Desync "Busy" Warnings:</strong> Read tools dynamically inject a clear "Results may be stale" warning if the indexer lags by >100 files.</li>
+          <li><strong>Diagram Noise Filtering:</strong> Added <code>include_primitives</code> parameter to actively prune language primitives and framework boundaries for crisp business-logic sequences.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Net-New Tools</h3>
+        <ul class="changelog-list">
+          <li><code>injector_diagram</code>: Architectural Mermaid sequence generator via BFS traversal.</li>
+          <li><code>injector_regex_search</code>: Fallback tool that bypasses FTS5 for native punctuation matching and extended regex syntax.</li>
+          <li><code>injector_write_file</code>: Strict, FOLD-aware file-writing bridge mandated for all edits to prevent data loss.</li>
+          <li><code>injector_clear_cache</code>: Manual cache wiping tool for automated recovery.</li>
+          <li><code>injector_stats</code>: Lightweight repository metrics, replacing the deprecated audit tool.</li>
+        </ul>
+      </div>
+    </article>
+
     <article class="changelog-entry">
       <div class="version-header">
         <h2 class="version-title">v0.2.1</h2>
@@ -412,13 +386,13 @@
 
       <div class="changelog-group">
         <h3 class="group-title">Agent UX (AX) Overhaul</h3>
-        <p style="margin-bottom: 1rem;">This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.</p>
+        <p style="margin-bottom: 1rem;">This patch focuses entirely on feedback from AI Agents (Claude Sonnet 5 & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.</p>
         <ul class="changelog-list">
           <li><strong>Zero-Friction Search:</strong> <code>injector_search</code> now returns <code>line_start</code>, <code>line_end</code>, <code>symbol_type</code>, and a <code>context_snippet</code> so agents can instantly verify symbols without wasting tokens on full file retrievals.</li>
           <li><strong>Smart Search Ranking:</strong> The BM25 search engine now explicitly ranks symbol definitions (classes, functions, methods) above references and comments to eliminate search noise.</li>
           <li><strong>Sync Transparency:</strong> <code>injector_sync</code> now returns an array of <code>files_reindexed</code> so agents receive immediate, concrete proof that their OS-level edits were picked up by the daemon.</li>
           <li><strong>Agent Proactivity:</strong> We updated the MCP tool description for <code>get_project_map</code> to inject a system prompt override that commands conservative AI agents to proactively use the tool when exploring unfamiliar architectures.</li>
-          <li><strong>Explicit Fold Markers:</strong> Replaced ambiguous <code>... (folded)</code> stubs with explicit <code># FOLD START</code> and <code># FOLD END</code> markers to prevent LLM confusion when reading heavily compressed files.</li>
+          <li><strong>Explicit Fold Markers:</strong> Replaced ambiguous <code>... (folded)</code> stubs with explicit <code>FOLDWORK: CODE COMPRESSED</code> markers to prevent LLM confusion when reading heavily compressed files.</li>
         </ul>
       </div>
     </article>

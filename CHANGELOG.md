@@ -2,11 +2,48 @@
 
 All notable changes to mcp-injector are documented here.
 
+## [0.3.0] - 2026-07-15
+
+### Zero-OOM Enterprise Engine (Net-New Core Architecture)
+- **Asynchronous Background Indexer**: Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and sequential SQLite streaming (`InsertSymbolNodes`), preventing memory exhaustion on massive monorepos (50,000+ files).
+- **Massive-Repo Graph Preservation**: Fixed the massive-repo fallback mode to explicitly persist and read import nodes, ensuring dependency graphs (especially for Java) are no longer lost at scale.
+- **Schema Auto-Migration**: Implemented `_v2.db` workspace hashing to guarantee clean, native background re-indexing upon major schema upgrades.
+
+### Data Loss Prevention & IDE Protection
+- **API-Level Compression Guardrail (`injector_write_file`)**: Completely eliminated the "Compression Trap." The daemon now aggressively intercepts write operations via a dedicated tool and statically analyzes the payload. Attempts to write codebase files containing compressed `FOLDWORK: CODE COMPRESSED` markers are hard-rejected before touching the disk.
+- **Anti-EOF Handshake State**: Removed hard `os.Exit(1)` background crashes. Free-tier limit violations now enter a degraded `fatalErr` state, keeping lightweight tools active and returning graceful JSON-RPC explanations to the agent instead of crashing the IDE pipe.
+
+### Enterprise Resilience
+- **OS File Watcher Auto-Remediation**: For massive 100k+ file monorepos, the daemon now intercepts Linux `inotify` queue limit crashes (ENOSPC / "too many open files"). It safely pauses indexing, opens a direct `/dev/tty` interactive bridge to prompt the user for an automatic `sudo sysctl fs.inotify.max_user_watches` increase, and dynamically resumes indexing without requiring a restart.
+
+### Surgical Scope Filtering
+- **`path_prefixes` for Project Maps**: Agents can now generate architectural maps strictly scoped to specific microservices or packages, drastically reducing payload bloat.
+- **`search_paths` for Semantic Search**: The SQLite FTS5 engine dynamically injects strict file-path constraints, allowing agents to search for symbols within a specific isolated folder.
+
+### Context Window Circuit Breakers
+- **LIMIT 50 Graph Expander**: Added a hard ceiling to `injector_retrieve` (`expand_graph`) to prevent agents from accidentally inlining thousands of 1st-degree dependencies.
+- **Standard-Library Pruning**: The dependency graph now explicitly ignores framework bloat (`java.lang.*`, `java.util.*`, `go/ast`) at the query level.
+- **Diagram Node Breaker**: The new Mermaid generator will automatically halt after traversing 500 unique nodes to protect the LLM context window.
+
+### Agent Feedback Loops
+- **Raw FTS5 Boolean Logic**: Removed legacy hardcoded string escaping. Agents can now use advanced SQLite FTS5 syntax (e.g., `user AND (auth OR login)`).
+- **Self-Correcting Syntax Errors**: If an agent provides malformed search syntax, the daemon now intercepts the SQLite error and explicitly returns an invalid search syntax payload so the agent can learn and rewrite its prompt.
+- **Implicit State Synchronization**: Added a 3-second non-blocking sync hook (`PendingEvents.Wait()`) into read tools. Agents are now guaranteed real-time AST state without ever needing to manually call `injector_sync` (now deprecated).
+- **Index Desync "Busy" Warnings**: Added real-time tracking of the fsnotify queue (`PendingCount`). If the indexer is lagging behind by >100 files (e.g., during massive git checkouts), read tools dynamically inject a clear "Results may be stale" warning directly into the JSON-RPC payload.
+- **Diagram Noise Filtering**: Added an `include_primitives` parameter to `injector_diagram`. The layout engine now actively prunes noise like language primitives (`String`, `boolean`) and abstract boundaries (`<<Framework Core>>`) for crisp business-logic sequences.
+
+### Net-New Tools
+- **`injector_diagram`**: Architectural Mermaid sequence generator via BFS traversal.
+- **`injector_regex_search`**: A new fallback tool that bypasses the SQLite FTS5 tokenizer entirely, providing a direct bridge to native `git grep -nE/-nF` for flawless punctuation matching and extended regex syntax.
+- **`injector_write_file`**: The strict, FOLD-aware file-writing bridge mandated for all agent-driven codebase edits to prevent data loss.
+- **`injector_clear_cache`**: A manual cache wiping tool bridging the gap for automated recovery from database corruption or massive bloat.
+- **`injector_stats`**: Lightweight repository metrics, replacing the deprecated audit tool.
+
 ## [0.2.1] - 2026-07-07
 
 ### Agent UX (AX) Overhaul
 
-This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.
+This patch focuses entirely on feedback from AI Agents (Claude Sonnet 5 & GPT-4o) to drastically reduce their blind retrievals and hallucination loops.
 
 **Zero-Friction Search:**
 - `injector_search` now returns `line_start`, `line_end`, `symbol_type`, and a `context_snippet` so agents can instantly verify symbols without wasting tokens on full file retrievals.
@@ -17,7 +54,7 @@ This patch focuses entirely on feedback from AI Agents (Claude 3.5 Sonnet & GPT-
 
 **Agent Proactivity & Parsing:**
 - We updated the MCP tool description for `get_project_map` to inject a system prompt override that commands conservative AI agents to proactively use the tool when exploring unfamiliar architectures.
-- Replaced ambiguous `... (folded)` stubs with explicit `# FOLD START` and `# FOLD END` markers to prevent LLM confusion when reading heavily compressed files.
+- Replaced ambiguous `... (folded)` stubs with explicit `FOLDWORK: CODE COMPRESSED` markers to prevent LLM confusion when reading heavily compressed files.
 
 ## [0.2.0] - 2026-07-07
 

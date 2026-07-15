@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts (non-render-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+  <!-- Icons & Theme -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="/assets/global.css">
+  <title>mcp-injector Zero-OOM Enterprise Engine | Foldwork</title>
+  <meta name="description" content="mcp-injector now scales to massive 50,000+ file monorepos with the new asynchronous background indexer and OS-level auto-remediation.">
+  <link rel="canonical" href="https://foldwork.dev/blog/zero-oom-enterprise-engine">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-card: #161b22;
+      --bg-nav: rgba(13, 17, 23, 0.75);
+      --border: rgba(240, 246, 252, 0.1);
+      --border-focus: rgba(124, 58, 237, 0.4);
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-white: #f0f6fc;
+      --accent: #7c3aed;
+      --accent-hover: #9061f9;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); text-decoration: none; }
+
+    .text-container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+
+
+    /* Blog Header */
+    .blog-header {
+      padding: 5rem 0 3rem;
+      text-align: left;
+    }
+    .blog-date {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .blog-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Content Styling */
+    .blog-content {
+      font-size: 1.1rem;
+      color: #b0b8c4;
+      padding-bottom: 5rem;
+    }
+    .blog-content h2 {
+      color: var(--text-white);
+      font-size: 1.75rem;
+      margin: 3rem 0 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .blog-content h3 {
+      color: var(--text-white);
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem;
+      font-weight: 600;
+    }
+    .blog-content p {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .blog-content ul {
+      margin: 0 0 1.5rem 1.5rem;
+      padding: 0;
+    }
+    .blog-content li {
+      margin-bottom: 0.5rem;
+    }
+    .blog-content code {
+      font-family: var(--font-mono);
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--text-white);
+    }
+    .alert {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      background: rgba(124, 58, 237, 0.1);
+      border-left: 4px solid var(--accent);
+      margin: 2rem 0;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <!-- BEGIN NAV -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+<!-- END NAV -->
+
+  <div class="text-container">
+    <header class="blog-header">
+      <span class="blog-date">July 15, 2026</span>
+      <h1 class="blog-title">Announcing the Zero-OOM Enterprise Engine for mcp-injector</h1>
+      <div class="blog-meta">
+        <span>By <strong>The Foldwork Team</strong></span>
+        <span>•</span>
+        <span>5 min read</span>
+      </div>
+    </header>
+
+    <article class="blog-content">
+      <p>Today, we're thrilled to announce the rollout of the <strong>Zero-OOM Enterprise Engine</strong> for <a href="/">mcp-injector</a> (v0.3.0). This major architectural rewrite fundamentally solves one of the hardest challenges in AI developer tools: reliably indexing and navigating massive, enterprise-scale monorepos without melting the user's local machine.</p>
+
+      <h2>The Problem with Massive Monorepos</h2>
+      <p>As AI agents become more sophisticated, they are being deployed against increasingly massive codebases. Repositories containing 50,000+ files, sprawling Java microservices, and deep monorepo structures present a unique challenge. Previous versions of <a href="/">mcp-injector</a> relied on global in-memory maps to track state. While extremely fast for typical repositories, this design hit a hard scalability ceiling on enterprise workloads, often resulting in Out-Of-Memory (OOM) panics or severe database locking contention.</p>
+
+      <h2>Asynchronous Background Indexer</h2>
+      <p>To eliminate these bottlenecks, we've completely eradicated legacy global in-memory maps. In their place, we have implemented a high-performance <strong>sequential asynchronous background indexer</strong>.</p>
+      
+      <p>This new architecture utilizes isolated local variables and sequential SQLite inserts via <code>InsertSymbolNodes</code>. By streaming data directly to the disk-backed WAL database rather than hoarding it in RAM, mcp-injector can now process 50,000+ files while maintaining a flat, predictable memory footprint. You get the parsing speed you expect, but without the memory exhaustion.</p>
+
+      <h2>OS-Level Auto-Remediation</h2>
+      <p>At massive scales (100k+ files), we discovered that the Linux operating system itself becomes the bottleneck, specifically hitting the default <code>inotify</code> watch limits (ENOSPC). Instead of simply crashing or failing silently, the new daemon features <strong>OS File Watcher Auto-Remediation</strong>.</p>
+      
+      <p>When the daemon intercepts an inotify queue limit crash, it safely pauses indexing, opens a direct <code>/dev/tty</code> interactive bridge to securely prompt the user for an automatic <code>sudo sysctl</code> limit increase, and dynamically resumes indexing without ever requiring a daemon restart.</p>
+
+      <h2>Bulletproof Data Loss Prevention</h2>
+      <p>As AI agents gain autonomy, protecting the integrity of your source code is paramount. We've introduced the <strong>API-Level Compression Guardrail</strong>. To prevent the notorious "Compression Trap"—where an AI accidentally overwrites your actual code with compressed <code>FOLDWORK: CODE COMPRESSED</code> placeholders—we've mandated a new write bridge.</p>
+      
+      <div class="alert">
+        <strong>CRITICAL:</strong> All agent-driven codebase edits must now go through the <code>injector_write_file</code> tool. The daemon actively intercepts write operations and statically analyzes the payload, hard-rejecting any attempts to write codebase files containing compressed fold markers before they touch the disk.
+      </div>
+      
+      <p>Here's how an AI agent now interacts with the daemon to write a file, completely preventing the Compression Trap:</p>
+      
+      <pre><code>// The agent calls the injector_write_file tool
+{
+  "name": "injector_write_file",
+  "arguments": {
+    "path": "src/auth/handler.go",
+    "content": "func Login() {\n  // Full, uncompressed code goes here\n}"
+  }
+}</code></pre>
+
+      <h2>What else is new?</h2>
+      <ul>
+        <li><strong>Surgical Scope Filtering:</strong> <code>path_prefixes</code> for Project Maps and <code>search_paths</code> for Semantic Search allow agents to isolate their operations to specific microservices, drastically reducing payload bloat.</li>
+        <li><strong>Architectural Diagramming:</strong> The new <code>injector_diagram</code> tool uses BFS traversal to generate Mermaid sequence diagrams, complete with a 500-node context circuit breaker to protect LLM context windows.</li>
+        <li><strong>Raw Regex Fallback:</strong> The <code>injector_regex_search</code> tool provides a direct bridge to native <code>git grep -nE</code>, bypassing FTS5 tokenization for flawless punctuation and regex matching.</li>
+        <li><strong>Implicit State Synchronization:</strong> Read tools now automatically wait for pending background indexing to complete using a non-blocking sync hook. The old <code>injector_sync</code> tool is now deprecated.</li>
+      </ul>
+
+      <p>The Zero-OOM Enterprise Engine is live today in v0.3.0. Check out the <a href="/changelog">Changelog</a> for the full list of improvements, or update your daemon by re-running the installation script.</p>
+    </article>
+  </div>
+
+  <!-- BEGIN FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navLinks.classList.toggle('active');
+          const isOpen = navLinks.classList.contains('active');
+          toggleBtn.setAttribute('aria-expanded', isOpen);
+          toggleBtn.innerHTML = isOpen ? `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ` : `
+            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+<!-- END FOOTER -->
+</body>
+</html>

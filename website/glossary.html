@@ -122,7 +122,7 @@
     body{background-color:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
     a{color:var(--accent);text-decoration:none;transition:color 0.2s;}
     a:hover{color:var(--accent-hover);}
-    .container{max-width:800px;margin:0 auto;padding:0 1.5rem;}
+    .text-container {max-width:800px;margin:0 auto;padding:0 1.5rem;}
     .navbar{position:sticky;top:0;z-index:100;background-color:var(--bg-nav);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
     .nav-container{display:flex;align-items:center;justify-content:space-between;height:4rem;}
     .brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:1.125rem;color:var(--text-white);letter-spacing:-0.025em;}
@@ -185,13 +185,13 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
-  <div class="container">
+  <div class="text-container">
     <header class="page-header">
       <h1 class="page-title">Glossary</h1>
       <p class="page-subtitle">Definitions of key technical terms used in mcp-injector documentation.</p>
@@ -226,7 +226,7 @@ func ProcessPayment(amount float64, userID string) error { ... }</pre>
             <a href="#mcp" class="term-anchor">#mcp</a>
           </dt>
           <dd class="term-def">
-            An open standard developed by Anthropic that defines how AI assistants can interact with external tools, data sources, and services during a conversation. An MCP server exposes named tools that the AI can call. mcp-injector runs as a local MCP server, exposing <code>get_project_map</code>, <code>injector_retrieve</code>, <code>injector_search</code>, <code>injector_stats</code>, and <code>injector_sync</code> as callable tools.
+            An open standard developed by Anthropic that defines how AI assistants can interact with external tools, data sources, and services during a conversation. An MCP server exposes named tools that the AI can call. mcp-injector runs as a local MCP server, exposing <code>get_project_map</code>, <code>injector_retrieve</code>, <code>injector_search</code>, <code>injector_stats</code>, <code>injector_diagram</code>, <code>injector_regex_search</code>, <code>injector_write_file</code>, and <code>injector_clear_cache</code> as callable tools.
           </dd>
           <dd class="term-links">See also: <a href="/docs#using-the-mcp-tools">MCP Tools documentation</a></dd>
         </div>

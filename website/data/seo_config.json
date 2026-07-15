@@ -44,6 +44,9 @@
     },
     "website/blog/ast-folding.html": {
       "target_keywords": ["AST body folding"]
+    },
+    "website/blog/zero-oom-enterprise-engine.html": {
+      "target_keywords": ["mcp-injector", "enterprise", "scalability"]
     }
   }
 }
