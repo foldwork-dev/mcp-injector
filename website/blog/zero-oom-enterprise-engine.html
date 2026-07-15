@@ -19,7 +19,7 @@
   <!-- Global Stylesheet -->
   <link rel="stylesheet" href="/assets/global.css">
   <title>mcp-injector Zero-OOM Enterprise Engine | Foldwork</title>
-  <meta name="description" content="mcp-injector now scales to massive 50,000+ file monorepos with the new 16-core MapReduce worker pool and OS-level auto-remediation.">
+  <meta name="description" content="mcp-injector now scales to massive 50,000+ file monorepos with the new asynchronous background indexer and OS-level auto-remediation.">
   <link rel="canonical" href="https://foldwork.dev/blog/zero-oom-enterprise-engine">
 
   <style>
@@ -54,46 +54,9 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
     a:hover { color: var(--accent-hover); text-decoration: none; }
 
-    .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+    .text-container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Navigation Bar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-    .brand span { color: var(--accent); }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .nav-link {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .nav-link:hover { color: var(--text-white); }
 
     /* Blog Header */
     .blog-header {
@@ -171,17 +134,6 @@
       margin: 2rem 0;
     }
     
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 0;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-    .footer-container {
-      display: flex;
-      justify-content: space-between;
-    }
   </style>
 </head>
 <body>
@@ -209,13 +161,13 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
-  <div class="container">
+  <div class="text-container">
     <header class="blog-header">
       <span class="blog-date">July 15, 2026</span>
       <h1 class="blog-title">Announcing the Zero-OOM Enterprise Engine for mcp-injector</h1>
@@ -232,10 +184,10 @@
       <h2>The Problem with Massive Monorepos</h2>
       <p>As AI agents become more sophisticated, they are being deployed against increasingly massive codebases. Repositories containing 50,000+ files, sprawling Java microservices, and deep monorepo structures present a unique challenge. Previous versions of <a href="/">mcp-injector</a> relied on global in-memory maps to track state. While extremely fast for typical repositories, this design hit a hard scalability ceiling on enterprise workloads, often resulting in Out-Of-Memory (OOM) panics or severe database locking contention.</p>
 
-      <h2>Streaming MapReduce Worker Pool</h2>
-      <p>To eliminate these bottlenecks, we've completely eradicated legacy global in-memory maps. In their place, we have implemented a high-performance <strong>16-core concurrent Streaming MapReduce Worker Pool</strong>.</p>
+      <h2>Asynchronous Background Indexer</h2>
+      <p>To eliminate these bottlenecks, we've completely eradicated legacy global in-memory maps. In their place, we have implemented a high-performance <strong>sequential asynchronous background indexer</strong>.</p>
       
-      <p>This new architecture utilizes isolated local variables and streaming SQLite inserts via <code>SymbolsForFile</code>. By streaming data directly to the disk-backed WAL database rather than hoarding it in RAM, mcp-injector can now process 50,000+ files while maintaining a flat, predictable memory footprint. You get the 16-core parsing speed you expect, but without the memory exhaustion.</p>
+      <p>This new architecture utilizes isolated local variables and sequential SQLite inserts via <code>InsertSymbolNodes</code>. By streaming data directly to the disk-backed WAL database rather than hoarding it in RAM, mcp-injector can now process 50,000+ files while maintaining a flat, predictable memory footprint. You get the parsing speed you expect, but without the memory exhaustion.</p>
 
       <h2>OS-Level Auto-Remediation</h2>
       <p>At massive scales (100k+ files), we discovered that the Linux operating system itself becomes the bottleneck, specifically hitting the default <code>inotify</code> watch limits (ENOSPC). Instead of simply crashing or failing silently, the new daemon features <strong>OS File Watcher Auto-Remediation</strong>.</p>

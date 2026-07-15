@@ -119,63 +119,6 @@
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Navigation Bar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-    .brand span { color: var(--accent); }
-    .brand-logo-icon { transition: transform 0.3s ease; }
-    .brand:hover .brand-logo-icon { transform: rotate(-5deg) scale(1.05); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .nav-link {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .nav-link:hover, .nav-link.active {
-      color: var(--text-white);
-    }
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
-
     /* Page Header */
     .header-section {
       padding: 5rem 0 3rem;
@@ -336,48 +279,6 @@
       user-select: none;
     }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 0;
-      margin-top: auto;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      text-align: center;
-    }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    .footer-link {
-      color: var(--text-muted);
-      transition: color 0.2s ease;
-    }
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    @media (max-width: 768px) {
-      
-      .nav-links {
-        display: none;
-      }
-      .header-section {
-        padding: 3rem 0 2rem;
-      }
-      .page-title {
-        font-size: 2rem;
-      }
-    }
-  
     /* Mobile Menu Toggle button */
     .mobile-menu-toggle {
       display: none;
@@ -490,7 +391,7 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
@@ -499,7 +400,7 @@
   <div class="container">
     <header class="header-section">
       <h1 class="page-title">Codebase context benchmarks</h1>
-      <p class="page-subtitle">Real-world results measuring token reduction and cost savings on Claude Sonnet 5 ($2.00/1M input tokens). Powered by the new 16-core MapReduce worker pool, mcp-injector scales to massive 50,000+ file monorepos without memory exhaustion.</p>
+      <p class="page-subtitle">Real-world results measuring token reduction and cost savings on Claude Sonnet 5 ($2.00/1M input tokens). Powered by the new asynchronous background indexer, mcp-injector scales to massive 50,000+ file monorepos without memory exhaustion.</p>
     </header>
 
     <div class="table-container">

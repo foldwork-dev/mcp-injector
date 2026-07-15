@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing for mcp-injector | Foldwork</title>
+  <meta name="description" content="Pricing plans for mcp-injector, the ultimate Context Layer for Software Engineering.">
+  <link rel="stylesheet" href="/assets/global.css">
+  <link rel="canonical" href="https://foldwork.dev/pricing">
+</head>
+<body>
+
+  <!-- BEGIN NAV -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;" alt="Foldwork">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foldwork<span>.dev</span>
+      </a>
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="nav-links">
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="/benchmarks" class="nav-link">Benchmarks</a>
+        <a href="/docs" class="nav-link">Docs</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
+      </div>
+    </div>
+  </nav>
+  <!-- END NAV -->
+
+  <main>
+    <section class="section reveal" style="padding-top: 6rem; padding-bottom: 2rem;">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="hero-title">Pricing for the MCP server</h1>
+          <p class="hero-subtitle" style="max-width: 600px; margin: 0 auto; color: var(--text-muted); font-size: 1.125rem;">Start for free. Upgrade to Pro when you need enterprise scale for massive monorepos.</p>
+        </div>
+
+        <div class="pricing-toggle-wrap" style="margin-top: 3rem;">
+          <span class="pricing-toggle-label active" id="monthly-toggle">Monthly</span>
+          <label class="switch">
+            <input type="checkbox" id="billing-toggle">
+            <span class="slider"></span>
+          </label>
+          <span class="pricing-toggle-label" id="yearly-toggle">Yearly <span style="color:var(--success); font-size:0.75rem; background:rgba(16,185,129,0.1); padding:0.125rem 0.375rem; border-radius:4px; margin-left:0.25rem;">Save 30%</span></span>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Free Tier -->
+          <div class="price-card">
+            <div class="price-title">Free</div>
+            <p class="price-subtext" style="height:2.5rem;">For individual developers and small open-source projects.</p>
+            <div class="price-amt">$0<span>/mo</span></div>
+            <ul class="price-features">
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Up to 50,000 Lines of Code</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Standard AST Parsing</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Basic MCP Integrations</span>
+              </li>
+              <li class="price-feature" style="opacity: 0.5;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <span>Zero-OOM Enterprise Engine</span>
+              </li>
+              <li class="price-feature" style="opacity: 0.5;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <span>Architecture Diagrams</span>
+              </li>
+            </ul>
+            <a href="/docs#installation" class="price-btn">Start Free</a>
+          </div>
+
+          <!-- Pro Tier -->
+          <div class="price-card popular">
+            <div class="popular-badge">Most Popular</div>
+            <div class="price-title" style="color:var(--text-white);">Pro</div>
+            <p class="price-subtext" style="height:2.5rem;">For enterprise monorepos and advanced autonomous agents.</p>
+            <div class="price-amt" id="pro-price">$12<span>/mo</span></div>
+            <ul class="price-features">
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Unlimited Lines of Code</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Zero-OOM Enterprise Engine</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Regex Search Bridge</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Mermaid Architecture Diagrams</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Priority Email Support</span>
+              </li>
+            </ul>
+            <a href="https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1&redirect_url=https://foldwork.dev/docs.html" id="pro-checkout-btn" class="price-btn primary" target="_blank" rel="noopener">Upgrade to Pro</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="section reveal" style="padding-top: 2rem;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Feature Comparison</h2>
+        </div>
+        
+        <div style="overflow-x: auto; padding-bottom: 2rem;">
+          <table style="width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; text-align: left; color: var(--text-white); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; border-style: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,0.05);">
+            <thead style="background: rgba(22, 27, 34, 0.4);">
+              <tr>
+                <th style="padding: 1.5rem; font-size: 1.125rem; font-weight: 700; border-top-left-radius: 12px;">Features</th>
+                <th style="padding: 1.5rem; font-size: 1.125rem; font-weight: 700; width: 20%; text-align: center;">Free</th>
+                <th style="padding: 1.5rem; font-size: 1.125rem; font-weight: 700; width: 20%; text-align: center; color: var(--accent-hover); border-top-right-radius: 12px;">Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Business & Limits -->
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Repository Size Limit</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;">50,000 LOC</td>
+                <td style="padding: 1rem 1.5rem; text-align: center; font-weight: bold; color: var(--accent-hover);">Unlimited</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Commercial Usage License</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              
+              <!-- Core Tooling -->
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">AST Structural Parsing (Tier 2/3)</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);"><code>injector_diagram</code> Generation</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);"><code>injector_regex_search</code> Tool</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              
+              <!-- Configuration & Security -->
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);"><code>.mcp-ignore</code> Path Exclusions</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Shannon Entropy Secret Filtering</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              
+              <!-- Engineering Resilience -->
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Zero-OOM Event Debouncing</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">5MB OOM Circuit Breaker</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Interactive <code>/dev/tty</code> System Remediation</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--border-focus)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">SQLite WAL Indexing Mode</td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+                <td style="padding: 1rem 1.5rem; text-align: center;"><svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24" style="margin: 0 auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></td>
+              </tr>
+              
+              <!-- Support -->
+              <tr>
+                <td style="padding: 1rem 1.5rem; color: var(--text-muted);">Support</td>
+                <td style="padding: 1rem 1.5rem; text-align: center; color: var(--text-muted);">GitHub Issues</td>
+                <td style="padding: 1rem 1.5rem; text-align: center; color: var(--text-white);">Priority Email</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById('billing-toggle');
+    const proPrice = document.getElementById('pro-price');
+    const monthLabel = document.getElementById('monthly-toggle');
+    const yearLabel = document.getElementById('yearly-toggle');
+    const proCheckoutBtn = document.getElementById('pro-checkout-btn');
+    
+    const monthlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTy2uQtH48y19xNYdP?quantity=1&redirect_url=https://foldwork.dev/docs.html";
+    const yearlyCheckoutUrl = "https://checkout.dodopayments.com/buy/pdt_0NipTwQvleXFAze0ndedX?quantity=1&redirect_url=https://foldwork.dev/docs.html";
+  
+    if(toggleBtn) {
+      toggleBtn.addEventListener('change', (e) => {
+        if(e.target.checked) {
+          proPrice.innerHTML = '$99<span>/yr</span>';
+          yearLabel.classList.add('active');
+          monthLabel.classList.remove('active');
+          if (proCheckoutBtn) proCheckoutBtn.href = yearlyCheckoutUrl;
+        } else {
+          proPrice.innerHTML = '$12<span>/mo</span>';
+          monthLabel.classList.add('active');
+          yearLabel.classList.remove('active');
+          if (proCheckoutBtn) proCheckoutBtn.href = monthlyCheckoutUrl;
+        }
+      });
+    }
+
+    // Scroll-reveal Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -50px 0px" });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+  </script>
+
+  <!-- BEGIN FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
+      <div class="footer-links">
+        <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+        <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+        <a href="/benchmarks" class="footer-link">Benchmarks</a>
+        <a href="/docs" class="footer-link">Docs</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+      </div>
+    </div>
+  </footer>
+  <!-- END FOOTER -->
+
+</body>
+</html>

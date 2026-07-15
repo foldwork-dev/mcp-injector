@@ -5,7 +5,7 @@ All notable changes to mcp-injector are documented here.
 ## [0.3.0] - 2026-07-15
 
 ### Zero-OOM Enterprise Engine (Net-New Core Architecture)
-- **Streaming MapReduce Worker Pool**: Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and 16-core concurrent SQLite streaming (`SymbolsForFile`), preventing memory exhaustion on massive monorepos (50,000+ files).
+- **Asynchronous Background Indexer**: Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and sequential SQLite streaming (`InsertSymbolNodes`), preventing memory exhaustion on massive monorepos (50,000+ files).
 - **Massive-Repo Graph Preservation**: Fixed the massive-repo fallback mode to explicitly persist and read import nodes, ensuring dependency graphs (especially for Java) are no longer lost at scale.
 - **Schema Auto-Migration**: Implemented `_v2.db` workspace hashing to guarantee clean, native background re-indexing upon major schema upgrades.
 

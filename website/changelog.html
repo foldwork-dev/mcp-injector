@@ -109,62 +109,7 @@
     a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
     a:hover { color: var(--accent-hover); text-decoration: none; }
 
-    .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
-
-    /* Navigation Bar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: var(--bg-nav);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 4rem;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--text-white);
-      letter-spacing: -0.025em;
-    }
-    .brand span { color: var(--accent); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .nav-link {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .nav-link:hover, .nav-link.active {
-      color: var(--text-white);
-    }
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      background-color: var(--accent);
-      color: var(--text-white);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-    .nav-btn:hover {
-      background-color: var(--accent-hover);
-    }
+    .text-container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
 
     /* Page Header */
     .header-section {
@@ -239,48 +184,6 @@
       color: var(--text-white);
     }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 0;
-      margin-top: auto;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-    .footer-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      text-align: center;
-    }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    .footer-link {
-      color: var(--text-muted);
-      transition: color 0.2s ease;
-    }
-    .footer-link:hover {
-      color: var(--text-white);
-    }
-
-    @media (max-width: 768px) {
-      
-      .nav-links {
-        display: none;
-      }
-      .header-section {
-        padding: 3rem 0 2rem;
-      }
-      .page-title {
-        font-size: 1.75rem;
-      }
-    }
-  
     /* Mobile Menu Toggle button */
     .mobile-menu-toggle {
       display: none;
@@ -393,13 +296,13 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
-  <div class="container">
+  <div class="text-container">
     <header class="header-section">
       <h1 class="page-title">Changelog</h1>
       <p class="page-subtitle">All notable changes, fixes, and improvements to the mcp-injector platform.</p>
@@ -414,7 +317,7 @@
         <h3 class="group-title">Zero-OOM Enterprise Engine (Net-New Core Architecture)</h3>
         <p style="margin-bottom: 1rem;">This release completely rebuilds the core indexing architecture to scale to massive 50,000+ file monorepos without memory exhaustion or graph loss.</p>
         <ul class="changelog-list">
-          <li><strong>Streaming MapReduce Worker Pool:</strong> Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and 16-core concurrent SQLite streaming (<code>SymbolsForFile</code>).</li>
+          <li><strong>Asynchronous Background Indexer:</strong> Completely eradicated legacy global in-memory maps and lock contention. Replaced with isolated local variables and sequential SQLite streaming (<code>InsertSymbolNodes</code>).</li>
           <li><strong>Massive-Repo Graph Preservation:</strong> Fixed the massive-repo fallback mode to explicitly persist and read import nodes, ensuring dependency graphs (especially for Java) are no longer lost at scale.</li>
           <li><strong>Schema Auto-Migration:</strong> Implemented <code>_v2.db</code> workspace hashing to guarantee clean, native background re-indexing upon major schema upgrades.</li>
         </ul>

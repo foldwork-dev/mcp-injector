@@ -48,14 +48,9 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .navbar { position: sticky; top: 0; z-index: 100; background-color: var(--bg-nav); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 4rem; }
-    .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.125rem; color: var(--text-white); text-decoration: none; letter-spacing: -0.025em; }
-    .brand span { color: var(--accent); }
-    .nav-btn { display: inline-flex; align-items: center; background-color: var(--accent); color: var(--text-white); font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; }
-    .nav-btn:hover { background-color: var(--accent-hover); }
 
-    .container { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+
+    .text-container { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
     h1 { font-size: 2rem; font-weight: 800; color: var(--text-white); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
     .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 3rem; }
     h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-white); margin: 2.5rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
@@ -63,9 +58,7 @@
     ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
     li { margin-bottom: 0.5rem; font-size: 0.9375rem; }
 
-    .footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.8125rem; color: var(--text-muted); }
-    .footer a { color: var(--text-muted); margin: 0 0.5rem; }
-    .footer a:hover { color: var(--text-white); }
+
   
     code {
       font-family: var(--font-mono);
@@ -111,13 +104,13 @@
         <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
         <a href="/benchmarks" class="nav-link">Benchmarks</a>
         <a href="/docs" class="nav-link">Docs</a>
-        <a href="/#pricing" class="nav-btn">Get Pro →</a>
+        <a href="/pricing" class="nav-btn">Get Pro →</a>
       </div>
     </div>
   </nav>
 <!-- END NAV -->
 
-  <div class="container">
+  <div class="text-container">
     <h1>Privacy Policy</h1>
     <p class="subtitle">Last updated: July 5, 2026</p>
 
