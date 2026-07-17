@@ -309,6 +309,30 @@
     </header>
     <article class="changelog-entry">
       <div class="version-header">
+        <h2 class="version-title">v0.3.1</h2>
+        <span class="version-date">July 17, 2026</span>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Net-New Agent Intelligence Tools</h3>
+        <ul class="changelog-list">
+          <li><strong><code>injector_blast_radius</code>:</strong> Analyzes the architectural impact of changing a symbol by traversing the dependency graph (now with inbound/outbound directional traversal).</li>
+          <li><strong><code>injector_git_context</code>:</strong> Integrates with local Git history to surface commit context and code evolution.</li>
+          <li><strong><code>injector_inspect_table</code>:</strong> Enables direct database introspection capabilities. <em>Note: Requires <code>FOLDWORK_DB_DSN</code> environment variable (supports PostgreSQL & MySQL).</em></li>
+        </ul>
+      </div>
+
+      <div class="changelog-group">
+        <h3 class="group-title">Enterprise Hardening</h3>
+        <ul class="changelog-list">
+          <li><strong>Instant Regex Visibility:</strong> Bypassed OS fsnotify debouncers for zero-latency regex search availability on daemon-injected files.</li>
+          <li><strong>Config-Driven Graph Filtering:</strong> Replaced hardcoded language ignore strings with a robust <code>.mcp-ignore-symbols</code> engine, dynamically stripping noisy primitives and utility classes from architectural graph expansion.</li>
+          <li><strong>Stability Fixes:</strong> Fixed critical crash (<code>EOF</code>) when clearing the cache (<code>injector_clear_cache</code>) and ensured <code>injector_search</code> correctly returns standard empty JSON arrays <code>[]</code> instead of <code>null</code> on zero matches.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="changelog-entry">
+      <div class="version-header">
         <h2 class="version-title">v0.3.0</h2>
         <span class="version-date">July 15, 2026</span>
       </div>

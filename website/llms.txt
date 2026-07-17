@@ -27,6 +27,9 @@ It does not send any data to external servers. All indexing and compression happ
 - `injector_write_file` — API-Level Compression Guardrail. Mandatory tool for writing file edits; intercepts and hard-rejects folded code markers to prevent data loss.
 - `injector_clear_cache` — Wipes the local SQLite index and forces a cold start.
 - `injector_sync` — (Deprecated) Synchronously waits for the daemon to finish indexing pending filesystem edits before mapping the project. (Read tools now wait implicitly).
+- `injector_blast_radius` — Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.
+- `injector_git_context` — Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
+- `injector_inspect_table` — Enables direct database introspection capabilities. Requires `FOLDWORK_DB_DSN` environment variable.
 ## Supported languages
 
 Go, Python, Java, TypeScript, JavaScript, C++, C, C#, Rust
