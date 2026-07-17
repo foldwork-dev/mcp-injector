@@ -4,7 +4,7 @@ AI coding assistants often fail because they retrieve the wrong context. On a la
 
 Foldwork fixes this. It is a deterministic repository understanding engine that pre-indexes your entire codebase into a local SQLite catalog. It acts as the Context Layer for your IDE, serving exactly the functions the AI needs—no more, no less—maximizing the first-try success rate and reducing token usage by 41-89%.
 
-I built this after my team's Claude API bill hit $400/month on a 500K line Spring Boot monorepo. After installing mcp-injector the same workflow costs ~$11/month. The difference is AST body folding (strips function bodies, keeps signatures) plus canonical determinism (byte-identical output every run so Anthropic's KV cache fires instead of miss).
+By combining AST body folding (which strips out function bodies while preserving signatures) with canonical determinism (which guarantees byte-identical outputs to maximize Anthropic's KV cache hits), Foldwork transforms massive enterprise monorepos into lightweight, cache-friendly payloads. This drastically reduces token consumption, cuts API costs by up to 90%, and eliminates context window overflow.
 
 No cloud. No telemetry. Runs entirely on your machine.--
 
@@ -59,6 +59,20 @@ Returns a compressed structural overview of the workspace. Function bodies are f
 - `tier` (integer, optional): Compression tier to apply (default: 2).
 - `unfolded_files` (array of strings, optional): Workspace-relative paths or glob patterns for files to serve at full resolution (uncompressed).
 - `path_prefixes` (array of strings, optional): Scope the project map to specific microservices or packages, drastically reducing payload bloat.
+- `git_context`: always includes current branch, changed files, and recent commits in the response.
+- `secrets_redacted`: count of credentials automatically redacted before sending to Claude.
+
+Example call:
+```json
+{
+  "tool": "get_project_map",
+  "arguments": {
+    "tier": 3,
+    "unfolded_files": ["src/auth/handler.go", "**/*_test.go"],
+    "path_prefixes": ["src/auth/"]
+  }
+}
+```
 
 ### `injector_retrieve`
 Retrieves the full uncompressed source of a file from the local cache.
@@ -180,7 +194,18 @@ Or ask Claude directly: "Call injector_stats and tell me my current token saving
 
 ---
 
-## Advanced Usage
+## Agent Use Cases & Advanced Usage
+
+Now that your AI has deterministic tools to search, traverse, and retrieve code, you can ask it high-level architectural questions that usually fail on raw codebases:
+
+- **Trace authentication flow** — Ask the agent to map out your login sequence; it will use `injector_retrieve` with `expand_graph=true` to traverse through middleware, validation, and database layers.
+- **Find dead code** — The agent can leverage `injector_blast_radius` (inbound traversal) to identify unused functions and isolated structs.
+- **Generate architecture diagrams** — Tell your AI to "Generate a Mermaid diagram for this workflow"; it uses `injector_diagram` to instantly draw the entire outbound execution sequence.
+- **Understand dependency graphs** — Use `injector_blast_radius` to see exactly what services or packages rely on a specific core module.
+- **Locate implementations** — The agent uses `injector_search` (BM25 full-text indexing) to find exact function definitions across millions of lines of code.
+- **Refactor safely** — Before making a breaking change, the agent checks `injector_blast_radius` to see every caller that will be impacted.
+- **Review pull requests** — Instruct the agent to analyze your uncommitted changes or branch diff. It uses `injector_git_context` to understand recent commits and author intent alongside the code.
+- **Navigate large monorepos** — `get_project_map` gives the AI a compressed, birds-eye view of your entire architecture, allowing it to drill down into specific microservices using `path_prefixes`.
 
 ### Inspecting specific files uncompressed
 
@@ -252,12 +277,11 @@ Config file locations:
 
 ##  How It Works
 
-* **Persistent Local Daemon:** Indexes your repository structure into a high-performance WAL-mode SQLite database catalog.
-* **Smart File Watchers:** Monitors files incrementally via OS notification hooks (`inotify`/`FSEvents`) and local `git post-checkout` / `post-merge` triggers.
-* **Branch-Aware Re-indexing:** Installs a `post-checkout` git hook on startup. Switching branches triggers automatic workspace re-indexing. `get_project_map` always reflects your current branch including uncommitted changes.
-* **Canonical Output Determinism:** Guarantees byte-identical outputs across runs, maximizing Claude's **KV prompt caching** hits.
-* **Compress-Cache-Retrieve (CCR):** Employs lossless AST compression. The LLM gets the high-level outline and calls `injector_retrieve` to fetch raw file bodies on-demand.
-* **100% Local & Offline:** Running entirely on your local machine, keeping your intellectual property private and secure.
+* **Incremental Parsing:** Foldwork scans your repository instantly using a single-pass AST parser, identifying all interfaces, classes, and function signatures without blocking.
+* **Graph Generation:** It deterministically builds two structures: a Symbol Graph for precise definitions, and a Dependency Graph tracking outbound caller/callee relationships.
+* **Local Catalog:** The graphs are durably stored in a local SQLite FTS5 catalog. Indexing happens exactly once per file change, meaning zero overhead during AI prompts.
+* **MCP Serving:** Your AI agent securely communicates with Foldwork via the Model Context Protocol, fetching sub-graphs in milliseconds without the code ever leaving your machine.
+* **Branch-Aware & Deterministic:** Switching branches triggers automatic incremental re-indexing via git hooks. By guaranteeing byte-identical outputs across runs, Foldwork maximizes Claude's **KV prompt caching** hits.
 
 **Supports:** Go, Python, TypeScript, JavaScript, Java, C++, C, C#, Rust.
 
@@ -271,38 +295,7 @@ Config file locations:
 
 ---
 
-##  Exposed MCP Tools
-
-* **`get_project_map`** - Generates a hierarchical outline of module exports, structures, and internal dependencies.
-  * `unfolded_files` parameter: pass specific file paths or glob patterns to receive those files uncompressed while everything else stays folded.
-  * `path_prefixes` parameter: scope the project map to specific microservices or packages.
-  * `git_context`: always includes current branch, changed files, and recent commits in the response.
-  * `secrets_redacted`: count of credentials automatically redacted before sending to Claude.
-
-  Example call:
-  ```json
-  {
-    "tool": "get_project_map",
-    "arguments": {
-      "tier": 3,
-      "unfolded_files": ["src/auth/handler.go", "**/*_test.go"],
-      "path_prefixes": ["src/auth/"]
-    }
-  }
-  ```
-
-* **`injector_retrieve`** - Retrieves the raw source code of any compressed symbol from the local cache. Supports `start_line` and `end_line` parameters for surgical snippet extraction, and `expand_graph` to inline 1st-degree dependencies.
-* **`injector_search`** - BM25 full-text search over indexed symbols. Returns line ranges, symbol types, and context snippets. Supports `search_paths` and FTS5 boolean logic (e.g., `user AND (auth OR login)`).
-* **`injector_diagram`** - Generates a Mermaid sequence diagram for a given symbol by traversing its outbound dependencies.
-* **`injector_regex_search`** - Bypasses FTS5 tokenization for exact punctuation or extended regex matching.
-* **`injector_write_file`** - The strict, FOLD-aware file-writing bridge mandated for all agent-driven codebase edits to prevent data loss.
-* **`injector_clear_cache`** - Wipes the SQLite index cache and triggers a clean cold-start full re-index.
-* **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
-* **`injector_blast_radius`** - Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.
-* **`injector_git_context`** - Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
-* **`injector_inspect_table`** - Enables direct database introspection capabilities. *Requires setting the `FOLDWORK_DB_DSN` environment variable.*
-
-### Check your ROI (Savings Dashboard)
+## Check your ROI (Savings Dashboard)
 
 You can run `mcp-injector status` in your terminal at any time. This CLI dashboard visually proves your exact token savings and estimated dollars saved by comparing your raw codebase tokens against the AST-compressed tokens in real-time.
 

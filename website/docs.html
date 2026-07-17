@@ -599,12 +599,11 @@
         <ul class="quick-nav-links">
           <li class="quick-nav-item"><a href="#quickstart">1. Quickstart</a></li>
           <li class="quick-nav-item"><a href="#ide-setup">2. Hook Up My Editor</a></li>
-          <li class="quick-nav-item"><a href="#prompts">3. AI Magic Prompts</a></li>
-          <li class="quick-nav-item"><a href="#mcp-ignore">4. Exclude Files</a></li>
-          <li class="quick-nav-item"><a href="#git-hooks">5. Git Branch Switching</a></li>
-          <li class="quick-nav-item"><a href="#bonus-tools">6. Bonus CLI Tools</a></li>
-          <li class="quick-nav-item"><a href="#troubleshooting">7. Troubleshooting</a></li>
-          <li class="quick-nav-item"><a href="#limitations">8. Under The Hood</a></li>
+          <li class="quick-nav-item"><a href="#tools">3. MCP Tools API</a></li>
+          <li class="quick-nav-item"><a href="#features">4. Additional Features</a></li>
+          <li class="quick-nav-item"><a href="#bonus-tools">5. Bonus CLI Tools</a></li>
+          <li class="quick-nav-item"><a href="#troubleshooting">6. Troubleshooting</a></li>
+          <li class="quick-nav-item"><a href="#limitations">7. Under The Hood</a></li>
         </ul>
       </section>
 
@@ -614,12 +613,23 @@
         
         <p>mcp-injector is a local background daemon that reads your codebase, strips out unnecessary syntax, and feeds highly-compressed architectural maps directly to your AI. It saves massive amounts of tokens and prevents the AI from getting confused.</p>
         
-        <h3>Installation</h3>
-        <p>Run this command in your terminal. It downloads the binary and attempts to configure your IDE automatically.</p>
+        <h3>Step 1: Install the Daemon</h3>
+        <p>Open your terminal, <strong>navigate to the root directory of your project</strong>, and run this command. It downloads the binary and will automatically attempt to configure your active IDEs (Cursor, Claude Desktop, VS Code, Devin, Antigravity) to use your current directory as the workspace.</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('install-cmd', this)">Copy</button>
           <pre id="install-cmd" class="code-block"><code>curl -fsSL https://foldwork.dev/install | sh</code></pre>
         </div>
+
+        <h3>Step 2: Restart Your IDE</h3>
+        <p>The MCP server runs entirely locally and starts automatically when your IDE launches. There is no separate daemon process you need to manage. Simply quit and restart your IDE for the new configuration to take effect.</p>
+
+        <h3>Step 3: Verify the Connection</h3>
+        <p>Open your AI chat and prompt it with the following to verify the integration is working:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('verify-cmd', this)">Copy</button>
+          <pre id="verify-cmd" class="code-block"><code>Use get_project_map to show me the structure of this project.</code></pre>
+        </div>
+        <p>The AI will call the mcp-injector tool and return a compressed map of your entire codebase. If you see module names and dependency information, you are fully set up!</p>
 
         <h3>Manual Installation</h3>
         <p>If you prefer not to pipe to shell, or if you're offline:</p>
@@ -627,6 +637,7 @@
           <li>Download the binary from the latest GitHub release.</li>
           <li>Make it executable: <code>chmod +x mcp-injector-*</code></li>
           <li>Move it to your path: <code>mv mcp-injector-* /usr/local/bin/mcp-injector</code></li>
+          <li>Proceed to <a href="#ide-setup">Section 2</a> to manually configure your IDE.</li>
         </ol>
 
         <div class="github-alert-note">
@@ -649,10 +660,14 @@
         <p>Open <code>~/.cursor/mcp.json</code> (or go to Cursor Settings > Features > MCP) and add this:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('cursor-config', this)">Copy</button>
-          <pre id="cursor-config" class="code-block"><code>"mcp-injector": {
-  "command": "/usr/local/bin/mcp-injector",
-  "env": {
-    "MCP_WORKSPACE": "/absolute/path/to/your/project"
+          <pre id="cursor-config" class="code-block"><code>{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "/absolute/path/to/your/project"
+      }
+    }
   }
 }</code></pre>
         </div>
@@ -668,11 +683,15 @@
         <p>Open <code>~/.gemini/antigravity/mcp_config.json</code>. Note that Antigravity requires an explicit <code>HOME</code> environment variable:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('ag-config', this)">Copy</button>
-          <pre id="ag-config" class="code-block"><code>"mcp-injector": {
-  "command": "/usr/local/bin/mcp-injector",
-  "env": {
-    "MCP_WORKSPACE": "/absolute/path/to/your/project",
-    "HOME": "/home/your-username"
+          <pre id="ag-config" class="code-block"><code>{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "/absolute/path/to/your/project",
+        "HOME": "/home/your-username"
+      }
+    }
   }
 }</code></pre>
         </div>
@@ -684,92 +703,172 @@
         <p>Whenever you switch to a different project folder, just re-run <code>curl -fsSL https://foldwork.dev/install | sh</code> inside the new folder. The script updates your global configs automatically. Alternatively, run separate daemon instances pointing to different <code>MCP_WORKSPACE</code> paths.</p>
       </section>
 
-      <!-- Section: 3. Magic Prompts -->
-      <section id="prompts" class="docs-section">
-        <h2>3. AI Magic Prompts & Features</h2>
+      <!-- Section: 3. Exposed MCP Tools -->
+      <section id="tools" class="docs-section">
+        <h2>3. Exposed MCP Tools API & Magic Prompts</h2>
         
-        <p>You don't <em>have</em> to know how the tools work—Claude/Cursor call them automatically. But if you want precise control, copy and paste these literal prompts into the chat to trigger specific features.</p>
+        <p>You don't <em>have</em> to know how these tools work—the AI will call them automatically. However, you can explicitly prompt the AI to use these tools for precise control over your workflow.</p>
 
         <div class="github-alert-warning">
-          <p><strong>Writing Code (CRITICAL):</strong><br>Code returned by the tool has compressed function bodies replaced with <code>[...folded...]</code> markers. The AI is strictly instructed to use the <code>injector_write_file</code> tool to edit files. The daemon will actively hard-reject any attempt to save files containing fold markers, preventing accidental data loss.</p>
+          <p><strong>Writing Code (CRITICAL):</strong><br>Code returned by the tools has compressed function bodies replaced with <code>[...folded...]</code> markers. The AI is strictly instructed to use the <code>injector_write_file</code> tool to edit files. The daemon will actively hard-reject any attempt to save files containing fold markers, preventing accidental data loss.</p>
         </div>
 
-        <h3>The "Give me the big picture" tool (get_project_map)</h3>
-        <p>This tool returns a compressed overview of the architecture. It automatically detects framework boundaries (like Java Packages or Spring Components) and groups files semantically.</p>
+        <h3>get_project_map</h3>
+        <p>Returns a compressed overview of the architecture. It automatically detects framework boundaries and groups files semantically.</p>
+        <p><strong>Magic Prompt:</strong></p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('prompt-map', this)">Copy</button>
-          <pre id="prompt-map" class="code-block"><code>Use get_project_map to analyze my codebase. Tell me how the main components fit together.</code></pre>
+          <pre id="prompt-map" class="code-block"><code>Use get_project_map to analyze my codebase and tell me how the main components fit together.</code></pre>
         </div>
         <p><strong>Advanced Parameters:</strong></p>
         <ul>
-          <li><code>tier</code>: Compression level. <strong>Tier 3</strong> (default) strips bodies and comments. <strong>Tier 2</strong> folds bodies but keeps comments. <strong>Tier 1</strong> disables compression.</li>
-          <li><code>unfolded_files</code>: An array of specific file paths to serve at full resolution.</li>
-          <li><code>path_prefixes</code>: An array of paths to restrict the map to a specific microservice.</li>
+          <li><code>tier</code> (int): Compression level. Tier 3 (default) strips bodies. Tier 2 keeps comments. Tier 1 disables compression.</li>
+          <li><code>unfolded_files</code> (array): Specific file paths to serve at full resolution uncompressed.</li>
+          <li><code>path_prefixes</code> (array): Paths to restrict the map to a specific microservice.</li>
         </ul>
 
-        <h3>The "Find this thing" tool (injector_search)</h3>
+        <h3>injector_search</h3>
         <p>Fast BM25 full-text search over indexed symbols. Supports FTS5 boolean logic.</p>
+        <p><strong>Magic Prompt:</strong></p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('prompt-search', this)">Copy</button>
           <pre id="prompt-search" class="code-block"><code>Use injector_search to find "user AND auth" inside the src/services directory.</code></pre>
         </div>
-
-        <h3>The "Draw me a diagram" tool (injector_diagram)</h3>
-        <p>Generates a Mermaid sequence diagram for a symbol by traversing outbound dependencies.</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('prompt-diagram', this)">Copy</button>
-          <pre id="prompt-diagram" class="code-block"><code>Use injector_diagram to draw a Mermaid sequence diagram for the ProcessPayment function. Set max_depth to 4.</code></pre>
-        </div>
-
-        <h3>The "Analyze impact" tool (injector_blast_radius)</h3>
-        <p>Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('prompt-blast', this)">Copy</button>
-          <pre id="prompt-blast" class="code-block"><code>Use injector_blast_radius to find all inbound dependencies that call the `SaveUser` function.</code></pre>
-        </div>
-
-        <h3>The "Git context" tool (injector_git_context)</h3>
-        <p>Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.</p>
-
-        <h3>The "Database introspection" tool (injector_inspect_table)</h3>
-        <p>Enables direct database introspection capabilities. To protect against arbitrary SQL execution, this tool is disabled by default. Currently supports PostgreSQL and MySQL.</p>
-        <p><strong style="color: #ff2a5f;">CRITICAL SETUP INSTRUCTIONS:</strong></p>
-        <p>You must explicitly add <code>"FOLDWORK_DB_DSN"</code> to the <code>env</code> block of your MCP configuration JSON file (e.g., <code>claude_desktop_config.json</code>, <code>.vscode/mcp.json</code>, or <code>~/.cursor/mcp.json</code>) to activate this tool. Set it to your database connection string. Example:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" onclick="copyCode('env-sql-example', this)">Copy</button>
-          <pre id="env-sql-example" class="code-block"><code>{
-  "mcpServers": {
-    "mcp-injector": {
-      "command": "/usr/local/bin/mcp-injector",
-      "env": {
-        "MCP_WORKSPACE": "/absolute/path/to/your/project",
-        "FOLDWORK_DB_DSN": "postgres://user:pass@localhost:5432/dbname"
-      }
-    }
-  }
-}</code></pre>
-        </div>
-
-        <h3>Other tools:</h3>
+        <p><strong>Advanced Parameters:</strong></p>
         <ul>
-          <li><code>injector_retrieve</code>: Fetches the uncompressed source of a file. Supports <code>expand_graph=true</code> to resolve and append 1st-degree dependencies automatically.</li>
-          <li><code>injector_regex_search</code>: Bypasses tokenization for punctuation-heavy pattern matching.</li>
-          <li><code>injector_clear_cache</code>: Wipes the SQLite cache and forces a cold-start re-index.</li>
-          <li><code>injector_stats</code>: Shows daemon status, indexed files, and token savings.</li>
-          <li><code>injector_write_file</code>: Safe AI-assisted editing with fold-marker collision prevention.</li>
-          <li><code>injector_sync</code>: Waits for all pending background file index updates to complete.</li>
+          <li><code>search_paths</code> (array): Optional list of directories to restrict the search scope.</li>
+          <li><code>limit</code> (int): Maximum number of search results to return (default is usually 10).</li>
         </ul>
 
-        <h3>🧠 Persistent AI Memory (Hidden Feature)</h3>
-        <p>If you create a file at <code>.foldwork/decisions.md</code> in your project root, mcp-injector will silently inject the first 4KB of it directly into the AI's context on <em>every single request</em>. Use this to enforce architectural rules, styling guidelines, or team conventions globally.</p>
+        <h3>injector_diagram</h3>
+        <p>Generates a Mermaid sequence diagram for a symbol by traversing outbound dependencies.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-diagram', this)">Copy</button>
+          <pre id="prompt-diagram" class="code-block"><code>Use injector_diagram to draw a Mermaid sequence diagram for the ProcessPayment function.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>max_depth</code> (int): The maximum depth to traverse outbound dependencies (default is 3).</li>
+        </ul>
+
+        <h3>injector_blast_radius</h3>
+        <p>Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-blast', this)">Copy</button>
+          <pre id="prompt-blast" class="code-block"><code>Use injector_blast_radius to find all inbound dependencies that call the SaveUser function.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>direction</code> (string): Can be "inbound" (what depends on this) or "outbound" (what this depends on).</li>
+        </ul>
+
+        <h3>injector_git_context</h3>
+        <p>Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-git', this)">Copy</button>
+          <pre id="prompt-git" class="code-block"><code>Use injector_git_context to summarize the recent changes in the last 5 commits.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>limit</code> (int): The maximum number of commits to retrieve (default is 3).</li>
+        </ul>
+
+        <h3>injector_inspect_table</h3>
+        <p>Enables direct database introspection capabilities. Currently supports PostgreSQL and MySQL.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-inspect', this)">Copy</button>
+          <pre id="prompt-inspect" class="code-block"><code>Use injector_inspect_table to show me the schema for the users table.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>table_name</code> (string): The precise name of the table to introspect.</li>
+        </ul>
+        <div class="github-alert-note">
+          <p><strong>Setup Required:</strong> You must explicitly add <code>"FOLDWORK_DB_DSN"</code> to the <code>env</code> block of your MCP configuration JSON file to activate this tool.</p>
+        </div>
+
+        <h3>injector_retrieve</h3>
+        <p>Fetches the uncompressed source of a file from the local cache.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-retrieve', this)">Copy</button>
+          <pre id="prompt-retrieve" class="code-block"><code>Use injector_retrieve to show me the full implementation of UserService.java.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>start_line</code> & <code>end_line</code> (int): Restrict retrieval to a specific line range snippet.</li>
+          <li><code>expand_graph</code> (bool): If true, resolves and appends 1st-degree dependencies automatically.</li>
+        </ul>
+
+        <h3>injector_regex_search</h3>
+        <p>Bypasses FTS5 tokenization for exact punctuation or extended regex matching.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-regex', this)">Copy</button>
+          <pre id="prompt-regex" class="code-block"><code>Use injector_regex_search to find exact matches for "SELECT * FROM".</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li><code>is_regex</code> (bool): Treat the search query as an extended POSIX regex pattern.</li>
+        </ul>
+
+        <h3>injector_write_file</h3>
+        <p>Safe AI-assisted editing with fold-marker collision prevention.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-write', this)">Copy</button>
+          <pre id="prompt-write" class="code-block"><code>Use injector_write_file to save the updated handler logic to src/api/handler.go.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li>None. Automatically handles overwrite safety and triggers re-indexing.</li>
+        </ul>
+
+        <h3>injector_stats</h3>
+        <p>Shows daemon status, indexed files, compression ratios, and cache hit rates.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-stats', this)">Copy</button>
+          <pre id="prompt-stats" class="code-block"><code>Call injector_stats and tell me my current token savings.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li>None.</li>
+        </ul>
+
+        <h3>injector_clear_cache</h3>
+        <p>Wipes the SQLite index cache and triggers a clean cold-start full re-index.</p>
+        <p><strong>Magic Prompt:</strong></p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-clear', this)">Copy</button>
+          <pre id="prompt-clear" class="code-block"><code>Use injector_clear_cache to completely wipe the local index.</code></pre>
+        </div>
+        <p><strong>Advanced Parameters:</strong></p>
+        <ul>
+          <li>None.</li>
+        </ul>
       </section>
 
-      <!-- Section: 4. Exclude Files -->
-      <section id="mcp-ignore" class="docs-section">
-        <h2>4. Exclude Files (.mcp-ignore)</h2>
+      <!-- Section: 4. Additional Features -->
+      <section id="features" class="docs-section">
+        <h2>4. Additional Features</h2>
         
-        <p>The daemon automatically respects your <code>.gitignore</code> rules. If you want to exclude additional files from AI indexing without ignoring them in Git, create a <code>.mcp-ignore</code> file in your workspace root.</p>
+        <h3>Persistent AI Memory (Hidden Feature)</h3>
+        <p>If you create a file at <code>.foldwork/decisions.md</code> in your project root, mcp-injector will silently inject the first 4KB of it directly into the AI's context on <em>every single request</em>. Use this to enforce architectural rules, styling guidelines, or team conventions globally.</p>
 
+        <h3>Security First: Zero-Leak Guarantee</h3>
+        <p>Enterprise security teams often block AI coding tools because developers accidentally leak sensitive credentials in their context window.</p>
+        <p>mcp-injector solves this locally. The daemon includes a built-in Shannon entropy filter that analyzes all AST strings and comments in real-time. If it detects high-entropy strings (like AWS Access Keys, SSH private keys, or database passwords), it dynamically redacts them as <code>[REDACTED: high entropy]</code> <em>before</em> they ever leave your machine. Your API credentials are never sent to the LLM.</p>
+        
+        <h3>Canonical Output Determinism</h3>
+        <p>Anthropic's Context Caching (KV cache) relies on strict byte-for-byte matching of prompts. Foldwork guarantees byte-identical outputs across runs by applying deterministic sorting to all AST nodes. This ensures that unchanged files always hit the prompt cache, driving your API costs down by up to 90%.</p>
+        
+        <h3 id="mcp-ignore">Exclude Files (.mcp-ignore)</h3>
+        <p>The daemon automatically respects your <code>.gitignore</code> rules. If you want to exclude additional files from AI indexing without ignoring them in Git, create a <code>.mcp-ignore</code> file in your workspace root.</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode('mcp-ignore-example', this)">Copy</button>
           <pre id="mcp-ignore-example" class="code-block"><code># .mcp-ignore
@@ -781,12 +880,8 @@ testdata/
 fixtures/</code></pre>
         </div>
         <p>Changes to <code>.gitignore</code> or <code>.mcp-ignore</code> are detected dynamically. Ignored files are purged from the cache instantly without a restart.</p>
-      </section>
 
-      <!-- Section: 5. Git Hooks -->
-      <section id="git-hooks" class="docs-section">
-        <h2>5. Git Branch Switching</h2>
-        
+        <h3 id="git-hooks">Git Branch Switching</h3>
         <p>mcp-injector automatically installs a <code>post-checkout</code> Git hook in your repository on startup. When you switch branches (e.g., <code>git checkout feature-branch</code>), the hook signals the background daemon to re-index the changed files.</p>
         <p>This prevents the AI from reading stale codebase state.</p>
         <p>If branch switching stops working, verify the hook is executable:</p>
@@ -794,11 +889,20 @@ fixtures/</code></pre>
           <button class="copy-btn" onclick="copyCode('chmod-hook', this)">Copy</button>
           <pre id="chmod-hook" class="code-block"><code>chmod +x .git/hooks/post-checkout</code></pre>
         </div>
+
+        <h3 id="smart-watchers">Smart File Watchers</h3>
+        <p>mcp-injector hooks into your operating system's native file watching APIs (<code>inotify</code> on Linux, <code>FSEvents</code> on macOS). When you modify a file in your editor, the daemon detects the change and incrementally re-indexes the AST in the background within milliseconds, ensuring the AI always has the freshest context without manually triggering updates.</p>
+
+        <h3 id="os-limits">Interactive OS Limit Scaling</h3>
+        <p>When indexing massive 100,000+ file monorepos, hitting Linux <code>inotify</code> file-watcher limits (ENOSPC) is common. Instead of crashing, Foldwork safely pauses operations, opens a direct <code>/dev/tty</code> interactive bridge to prompt the developer to scale their OS limits, and dynamically resumes indexing without requiring a restart.</p>
+
+        <h3 id="polyglot">Polyglot AST Parsing</h3>
+        <p>The daemon provides Tier 1 full syntax tree compression (function folding, body stripping, deterministic sorting) for Go, Python, Java, TypeScript, JavaScript, C++, C, C#, and Rust. For any other language, it safely degrades to standard plaintext indexing, ensuring 100% repository coverage.</p>
       </section>
 
-      <!-- Section: 6. Bonus CLI Tools -->
+      <!-- Section: 5. Bonus CLI Tools -->
       <section id="bonus-tools" class="docs-section">
-        <h2>6. Bonus CLI Tools</h2>
+        <h2>5. Bonus CLI Tools</h2>
         
         <p>These powerful commands can be run directly from your terminal, no AI required.</p>
 
@@ -832,32 +936,102 @@ fixtures/</code></pre>
         </div>
       </section>
 
-      <!-- Section: 7. Troubleshooting -->
+      <!-- Section: 6. Troubleshooting -->
       <section id="troubleshooting" class="docs-section">
-        <h2>7. Troubleshooting</h2>
+        <h2>6. Troubleshooting</h2>
+        <p>A comprehensive guide to resolving issues at every phase of the mcp-injector lifecycle, from installation to production usage.</p>
 
-        <h3>Symptom: Claude says "Tool not found"</h3>
-        <p><strong>The Fix:</strong> Your editor doesn't know the daemon exists. Verify the path using <code>which mcp-injector</code>. Ensure your <code>mcp.json</code> or Claude config contains the exact snippet from the IDE Setup section. <strong>Restart your editor.</strong></p>
+        <h3>Phase 1: Setup & Installation</h3>
+        <div class="troubleshooting-grid">
+          <h4>Symptom: Installer returns <code>Permission Denied</code></h4>
+          <p><strong>The Fix:</strong> Run the installer by piping it through bash: <code>curl -fsSL https://foldwork.dev/install.sh | bash</code>. Do not use <code>sudo</code>.</p>
 
-        <h3>Symptom: "Error: MCP_WORKSPACE is not set"</h3>
-        <p><strong>The Fix:</strong> You forgot the <code>env</code> block in your configuration, or you used a relative path. It must be absolute.</p>
+          <h4>Symptom: <code>mcp-injector: command not found</code></h4>
+          <p><strong>The Fix:</strong> Add <code>export PATH="$HOME/.local/bin:$PATH"</code> to your <code>~/.zshrc</code> or <code>~/.bashrc</code>, then restart your terminal.</p>
+        </div>
 
-        <h3>Symptom: Claude returns an empty project map</h3>
-        <p><strong>The Fix:</strong> Your <code>MCP_WORKSPACE</code> absolute path is pointing to the wrong folder. Run <code>mcp-benchmark .</code> to ensure the daemon can actually see your files.</p>
+        <h3>Phase 2: Editor Connection & Config</h3>
+        <div class="troubleshooting-grid">
+          <h4>Symptom: Editor shows "Tool not found" or "Connection Refused"</h4>
+          <p><strong>The Fix:</strong>
+            <br>1. Verify the binary path using <code>which mcp-injector</code>. 
+            <br>2. Ensure your <code>mcp.json</code> or Claude config contains the exact snippet from the IDE Setup section. 
+            <br>3. <strong>CRITICAL:</strong> Fully restart your editor (do not just reload the window) so it reads the new configuration.</p>
 
-        <h3>Symptom: Inotify Limits (Linux Only)</h3>
-        <p><strong>The Fix:</strong> Large repositories (100k+ files) may crash Linux's default file watcher limit. The daemon intercepts this crash, pauses indexing, and opens an interactive prompt requesting permission to run <code>sudo sysctl fs.inotify.max_user_watches</code>. Allow it to proceed.</p>
+          <h4>Symptom: Editor fails to parse the MCP configuration</h4>
+          <p><strong>The Fix:</strong> Validate your config using a JSON linter to fix trailing commas or missing brackets in your <code>mcp.json</code> or <code>claude_desktop_config.json</code>.</p>
 
-        <h3>Symptom: "Please upgrade to Pro"</h3>
-        <p><strong>The Fix:</strong> You hit the 50,000 line free tier limit. Go to <a href="/pricing">foldwork.dev/pricing</a>, get a license key, and run: <code>mcp-injector --activate YOUR_KEY_HERE</code>.</p>
+          <h4>Symptom: <code>Error: MCP_WORKSPACE is not set</code></h4>
+          <p><strong>The Fix:</strong> Add the <code>env</code> block to your configuration and ensure the <code>MCP_WORKSPACE</code> variable is set to an absolute path (e.g., <code>/Users/name/projects/app</code>).</p>
 
-        <h3>Symptom: Secrets are replaced with [REDACTED: high entropy]</h3>
-        <p><strong>The Fix:</strong> The Shannon entropy analyzer flagged a string as a potential secret. To serve it raw, add that file to your <code>.mcp-ignore</code> file.</p>
+          <h4>Symptom: Claude Desktop shows the tool, but calling it times out</h4>
+          <p><strong>The Fix:</strong> For massive repositories, increase the connection timeout setting in your editor's MCP configuration (e.g., <code>timeout: 60</code>).</p>
+        </div>
+
+        <h3>Phase 3: Indexing & Performance</h3>
+        <div class="troubleshooting-grid">
+          <h4>Symptom: Claude returns an empty project map</h4>
+          <p><strong>The Fix:</strong> Ensure your <code>MCP_WORKSPACE</code> environment variable is set to the correct absolute path. Run <code>mcp-injector status</code> from your terminal to verify the daemon can index the files.</p>
+
+          <h4>Symptom: CPU spikes to 100% and stays there</h4>
+          <p><strong>The Fix:</strong> Create a <code>.mcp-ignore</code> file in your project root and exclude directories containing massive generated files (e.g., <code>dist/</code>, <code>build/</code>, <code>dump.sql</code>).</p>
+
+          <h4>Symptom: "Database is locked" or "Busy" errors</h4>
+          <p><strong>The Fix:</strong> Close duplicate editors (e.g., Cursor and VS Code) trying to boot the daemon on the same repository concurrently.</p>
+
+          <h4>Symptom: Out of Memory (OOM) killer kills the process during indexing</h4>
+          <p><strong>The Fix:</strong> Limit concurrency by adding <code>--workers 4</code> to your command args instead of allowing it to max out all cores on a massive monorepo.</p>
+
+          <h4>Symptom: The index is corrupted after a sudden power loss</h4>
+          <p><strong>The Fix:</strong> Run <code>mcp-injector reset</code> to purge the cache and rebuild the graph from scratch.</p>
+        </div>
+
+        <h3>Phase 4: Tool & AI Interaction</h3>
+        <div class="troubleshooting-grid">
+          <h4>Symptom: Secrets are replaced with <code>[REDACTED: high entropy]</code></h4>
+          <p><strong>The Fix:</strong> To intentionally serve a secret to the AI, add the specific file containing the secret to your <code>.mcp-ignore</code> file to bypass the AST parser.</p>
+
+          <h4>Symptom: <code>injector_inspect_table</code> returns "Database connection failed"</h4>
+          <p><strong>The Fix:</strong> Set the <code>FOLDWORK_DB_DSN</code> environment variable in your editor's MCP config to a valid Postgres/MySQL connection string.</p>
+
+          <h4>Symptom: AI is reading stale code after a branch switch</h4>
+          <p><strong>The Fix:</strong> Run <code>chmod +x .git/hooks/post-checkout</code> in your repository root.</p>
+
+          <h4>Symptom: AI suggests code using a completely wrong file path</h4>
+          <p><strong>The Fix:</strong> Ensure your IDE workspace root exactly matches the <code>MCP_WORKSPACE</code> absolute path. Relative paths will confuse the AI mapping.</p>
+
+          <h4>Symptom: The <code>mcp-injector audit</code> command fails with "No index found"</h4>
+          <p><strong>The Fix:</strong> Run the daemon at least once in your editor to trigger the initial background indexing before attempting to use the CLI tools.</p>
+        </div>
+
+        <h3>Phase 5: Licensing & Upgrades</h3>
+        <div class="troubleshooting-grid">
+          <h4>Symptom: "Please upgrade to Pro"</h4>
+          <p><strong>The Fix:</strong> Go to <a href="/pricing">foldwork.dev/pricing</a>, purchase a license key, and run: <code>mcp-injector --activate YOUR_KEY_HERE</code>.</p>
+          
+          <h4>Symptom: License verification fails offline</h4>
+          <p><strong>The Fix:</strong> Synchronize your system clock. The offline expiration date check fails if your system time is severely desynchronized.</p>
+        </div>
+
+        <h3>Phase 6: OS-Specific Quirks</h3>
+        <div class="troubleshooting-grid">
+          <h4>Windows: "Access is denied" when launching daemon</h4>
+          <p><strong>The Fix:</strong> Windows Defender or your corporate antivirus is blocking the executable. Add <code>mcp-injector.exe</code> to your antivirus exclusion list.</p>
+          
+          <h4>Windows: Invalid <code>MCP_WORKSPACE</code> path in JSON</h4>
+          <p><strong>The Fix:</strong> JSON configuration files require escaped backslashes. Use <code>C:\\Users\\name\\projects\\app</code> or forward slashes <code>C:/Users/name/projects/app</code>.</p>
+
+          <h4>macOS: Daemon fails to start with "Bad CPU type in executable"</h4>
+          <p><strong>The Fix:</strong> You downloaded the <code>darwin-amd64</code> binary on an Apple Silicon (M1/M2/M3) Mac without Rosetta 2. Download the <code>darwin-arm64</code> binary instead.</p>
+          
+          <h4>Linux: Inotify Limits Reached (ENOSPC)</h4>
+          <p><strong>The Fix:</strong> Large monorepos exhaust default file watcher limits. Run <code>sudo sysctl fs.inotify.max_user_watches=524288</code> to scale the OS limits.</p>
+        </div>
       </section>
 
-      <!-- Section: 8. Limitations -->
+      <!-- Section: 7. Limitations -->
       <section id="limitations" class="docs-section">
-        <h2>8. Under The Hood & Limitations</h2>
+        <h2>7. Under The Hood & Limitations</h2>
         
         <h3>Automatic Git Context Awareness</h3>
         <p>You don't need to explain what you're working on to the AI. Every time the AI requests the project map, mcp-injector silently runs <code>git diff</code> and <code>git status</code> in the background. The AI automatically knows what branch you are on, what files you have modified (but not committed), and your last 5 commit messages. You can simply say: <em>"Review my uncommitted changes."</em></p>
