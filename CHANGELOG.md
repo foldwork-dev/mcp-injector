@@ -7,7 +7,7 @@ All notable changes to mcp-injector are documented here.
 ### Net-New Agent Intelligence Tools
 - **`injector_blast_radius`**: Analyzes the architectural impact of changing a symbol by traversing the dependency graph (now with inbound/outbound directional traversal).
 - **`injector_git_context`**: Integrates with local Git history to surface commit context and code evolution.
-- **`injector_inspect_table`**: Enables direct database introspection capabilities. *Note: Requires `MCP_INJECTOR_ALLOW_SQL=true` environment variable.*
+- **`injector_inspect_table`**: Enables direct database introspection capabilities. *Note: Requires `FOLDWORK_DB_DSN` environment variable (supports PostgreSQL & MySQL).*
 
 ### Enterprise Hardening
 - **Instant Regex Visibility**: Bypassed OS fsnotify debouncers for zero-latency regex search availability on daemon-injected files.

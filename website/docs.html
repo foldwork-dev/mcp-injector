@@ -732,7 +732,23 @@
         <p>Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.</p>
 
         <h3>The "Database introspection" tool (injector_inspect_table)</h3>
-        <p>Enables direct database introspection capabilities. <strong style="color: #ff2a5f;">CRITICAL:</strong> You must start the daemon with the <code>MCP_INJECTOR_ALLOW_SQL=true</code> environment variable to activate this tool.</p>
+        <p>Enables direct database introspection capabilities. To protect against arbitrary SQL execution, this tool is disabled by default. Currently supports PostgreSQL and MySQL.</p>
+        <p><strong style="color: #ff2a5f;">CRITICAL SETUP INSTRUCTIONS:</strong></p>
+        <p>You must explicitly add <code>"FOLDWORK_DB_DSN"</code> to the <code>env</code> block of your MCP configuration JSON file (e.g., <code>claude_desktop_config.json</code>, <code>.vscode/mcp.json</code>, or <code>~/.cursor/mcp.json</code>) to activate this tool. Set it to your database connection string. Example:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('env-sql-example', this)">Copy</button>
+          <pre id="env-sql-example" class="code-block"><code>{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "/absolute/path/to/your/project",
+        "FOLDWORK_DB_DSN": "postgres://user:pass@localhost:5432/dbname"
+      }
+    }
+  }
+}</code></pre>
+        </div>
 
         <h3>Other tools:</h3>
         <ul>

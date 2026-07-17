@@ -95,8 +95,8 @@ Analyzes the architectural impact of changing a symbol by traversing the depende
 Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
 
 ### `injector_inspect_table`
-Enables direct database introspection capabilities.
-*CRITICAL:* You must start the daemon with the `MCP_INJECTOR_ALLOW_SQL=true` environment variable to activate this tool.
+Enables direct database introspection capabilities. Currently supports PostgreSQL and MySQL.
+*CRITICAL:* You must start the daemon with the `FOLDWORK_DB_DSN` environment variable set to your database connection string (e.g. `postgres://user:pass@localhost:5432/dbname`) to activate this tool.
 
 ### `injector_clear_cache`
 Wipes the SQLite index cache and triggers a clean cold-start full re-index.
@@ -229,7 +229,8 @@ If the auto-installer does not detect your IDE, add this to your MCP config manu
     "mcp-injector": {
       "command": "/usr/local/bin/mcp-injector",
       "env": {
-        "MCP_WORKSPACE": "/absolute/path/to/your/project"
+        "MCP_WORKSPACE": "/absolute/path/to/your/project",
+        "FOLDWORK_DB_DSN": "postgres://user:pass@localhost:5432/dbname"
       }
     }
   }
@@ -299,7 +300,7 @@ Config file locations:
 * **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
 * **`injector_blast_radius`** - Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.
 * **`injector_git_context`** - Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
-* **`injector_inspect_table`** - Enables direct database introspection capabilities. *Requires setting `MCP_INJECTOR_ALLOW_SQL=true` in the `env` config block.*
+* **`injector_inspect_table`** - Enables direct database introspection capabilities. *Requires setting the `FOLDWORK_DB_DSN` environment variable.*
 
 ### Check your ROI (Savings Dashboard)
 
