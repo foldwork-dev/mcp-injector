@@ -721,12 +721,27 @@
           <pre id="prompt-diagram" class="code-block"><code>Use injector_diagram to draw a Mermaid sequence diagram for the ProcessPayment function. Set max_depth to 4.</code></pre>
         </div>
 
+        <h3>The "Analyze impact" tool (injector_blast_radius)</h3>
+        <p>Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode('prompt-blast', this)">Copy</button>
+          <pre id="prompt-blast" class="code-block"><code>Use injector_blast_radius to find all inbound dependencies that call the `SaveUser` function.</code></pre>
+        </div>
+
+        <h3>The "Git context" tool (injector_git_context)</h3>
+        <p>Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.</p>
+
+        <h3>The "Database introspection" tool (injector_inspect_table)</h3>
+        <p>Enables direct database introspection capabilities. <strong style="color: #ff2a5f;">CRITICAL:</strong> You must start the daemon with the <code>MCP_INJECTOR_ALLOW_SQL=true</code> environment variable to activate this tool.</p>
+
         <h3>Other tools:</h3>
         <ul>
           <li><code>injector_retrieve</code>: Fetches the uncompressed source of a file. Supports <code>expand_graph=true</code> to resolve and append 1st-degree dependencies automatically.</li>
           <li><code>injector_regex_search</code>: Bypasses tokenization for punctuation-heavy pattern matching.</li>
           <li><code>injector_clear_cache</code>: Wipes the SQLite cache and forces a cold-start re-index.</li>
           <li><code>injector_stats</code>: Shows daemon status, indexed files, and token savings.</li>
+          <li><code>injector_write_file</code>: Safe AI-assisted editing with fold-marker collision prevention.</li>
+          <li><code>injector_sync</code>: Waits for all pending background file index updates to complete.</li>
         </ul>
 
         <h3>🧠 Persistent AI Memory (Hidden Feature)</h3>

@@ -88,6 +88,16 @@ Fallback for exact literal or regex searches against file contents. Bypasses FTS
 ### `injector_write_file`
 Write a full file to disk. CRITICAL: Prevents data loss by intercepting and rejecting payloads containing compressed fold markers.
 
+### `injector_blast_radius`
+Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.
+
+### `injector_git_context`
+Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
+
+### `injector_inspect_table`
+Enables direct database introspection capabilities.
+*CRITICAL:* You must start the daemon with the `MCP_INJECTOR_ALLOW_SQL=true` environment variable to activate this tool.
+
 ### `injector_clear_cache`
 Wipes the SQLite index cache and triggers a clean cold-start full re-index.
 
@@ -287,6 +297,9 @@ Config file locations:
 * **`injector_write_file`** - The strict, FOLD-aware file-writing bridge mandated for all agent-driven codebase edits to prevent data loss.
 * **`injector_clear_cache`** - Wipes the SQLite index cache and triggers a clean cold-start full re-index.
 * **`injector_stats`** - Visualizes index status, current token savings, and CCR cache hit rates.
+* **`injector_blast_radius`** - Analyzes the architectural impact of changing a symbol by traversing the dependency graph. Supports inbound and outbound directional traversal.
+* **`injector_git_context`** - Integrates with local Git history to surface commit context, authorship, and code evolution directly into the LLM context.
+* **`injector_inspect_table`** - Enables direct database introspection capabilities. *Requires setting `MCP_INJECTOR_ALLOW_SQL=true` in the `env` config block.*
 
 ### Check your ROI (Savings Dashboard)
 

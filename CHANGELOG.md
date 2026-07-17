@@ -2,6 +2,18 @@
 
 All notable changes to mcp-injector are documented here.
 
+## [0.3.1] - 2026-07-17
+
+### Net-New Agent Intelligence Tools
+- **`injector_blast_radius`**: Analyzes the architectural impact of changing a symbol by traversing the dependency graph (now with inbound/outbound directional traversal).
+- **`injector_git_context`**: Integrates with local Git history to surface commit context and code evolution.
+- **`injector_inspect_table`**: Enables direct database introspection capabilities. *Note: Requires `MCP_INJECTOR_ALLOW_SQL=true` environment variable.*
+
+### Enterprise Hardening
+- **Instant Regex Visibility**: Bypassed OS fsnotify debouncers for zero-latency regex search availability on daemon-injected files.
+- **Config-Driven Graph Filtering**: Replaced hardcoded language ignore strings with a robust `.mcp-ignore-symbols` engine, dynamically stripping noisy primitives and utility classes from architectural graph expansion.
+- **Stability Fixes**: Fixed critical crash (`EOF`) when clearing the cache (`injector_clear_cache`) and ensured `injector_search` correctly returns standard empty JSON arrays `[]` instead of `null` on zero matches.
+
 ## [0.3.0] - 2026-07-15
 
 ### Zero-OOM Enterprise Engine (Net-New Core Architecture)
