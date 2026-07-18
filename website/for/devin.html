@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="stylesheet" href="/assets/global.css">
+  <title>mcp-injector for Devin AI — Reduce Context Tokens in Devin Desktop | Foldwork</title>
+  <meta name="description" content="Configure mcp-injector with Devin Desktop. Reduce the codebase context loaded by Devin's autonomous agent by 41-89% using AST body-folding. Free for repos under 50k lines.">
+  <meta name="keywords" content="mcp-injector Devin, Devin Desktop MCP server, Devin AI context reduction, Devin token cost, Devin AI codebase compression">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/for/devin">
+  <link rel="alternate" type="text/plain" title="LLM Context" href="/llms.txt">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="mcp-injector for Devin AI — Cut Context Token Costs | Foldwork">
+  <meta property="og:description" content="Configure mcp-injector with Devin Desktop to reduce codebase context by 41-89%. AST body-folding gives Devin's autonomous agent a compressed, architecturally accurate view of your repository.">
+  <meta property="og:url" content="https://foldwork.dev/for/devin">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mcp-injector for Devin AI — Cut Context Token Costs">
+  <meta name="twitter:description" content="Reduce Devin Desktop codebase context by 41-89% with AST body-folding. Free for repos under 50k lines.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foldwork.dev"},{"@type":"ListItem","position":2,"name":"For Devin AI"}]},{"@type":"HowTo","name":"How to use mcp-injector with Devin Desktop","description":"Configure mcp-injector as an MCP server in Devin Desktop to compress codebase context by 41-89%.","step":[{"@type":"HowToStep","position":1,"name":"Install mcp-injector","text":"Run: curl -fsSL https://foldwork.dev/install | sh"},{"@type":"HowToStep","position":2,"name":"Add to Devin MCP config","text":"In Devin Desktop settings, add mcp-injector to the MCP server list with MCP_WORKSPACE pointing to your repository."},{"@type":"HowToStep","position":3,"name":"Verify","text":"Prompt Devin to call get_project_map. A compressed, AST-folded project map will be returned."}]}]}
+  </script>
+  <style>
+    .page-header{padding:5rem 0 3rem;text-align:center}
+    .page-header h1{font-size:clamp(1.75rem,4vw,2.75rem);font-weight:800;color:var(--text-white);letter-spacing:-.04em;line-height:1.2;margin-bottom:1rem}
+    .page-header .subtitle{font-size:1.125rem;color:var(--text-muted);max-width:600px;margin:0 auto}
+    .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin:3rem 0}
+    .feature-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+    .feature-card h3{font-size:1rem;font-weight:700;color:var(--text-white);margin-bottom:.5rem}
+    .feature-card p{font-size:.9rem;color:var(--text);line-height:1.6;margin:0}
+    .feature-icon{font-size:1.5rem;margin-bottom:.75rem}
+    .config-block{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.5rem;margin:2rem 0;font-family:var(--font-mono);font-size:.875rem;overflow-x:auto}
+    .config-block pre{margin:0;color:var(--text-white)}
+    .section-h2{font-size:1.5rem;font-weight:700;color:var(--text-white);letter-spacing:-.02em;margin:3rem 0 1rem}
+    .prose{font-size:.95rem;color:var(--text);line-height:1.7;margin-bottom:1.25rem}
+    .cta-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem}
+    .cta-primary{background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:8px;font-weight:600;text-decoration:none;display:inline-block}
+    .cta-primary:hover{background:var(--accent-hover)}
+    .cta-secondary{border:1px solid var(--border);color:var(--text-white);padding:.75rem 1.5rem;border-radius:8px;font-weight:600;text-decoration:none;display:inline-block}
+    .cta-secondary:hover{border-color:var(--accent);color:var(--accent)}
+    .benchmark-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)}
+    .benchmark-row:last-child{border-bottom:none}
+    .benchmark-label{font-size:.9rem;color:var(--text)}
+  </style>
+</head>
+<body>
+<!-- BEGIN NAV -->
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="/" class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" alt="Foldwork"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Foldwork<span>.dev</span>
+    </a>
+    <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="nav-links">
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+      <a href="/benchmarks" class="nav-link">Benchmarks</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/pricing" class="nav-btn">Get Pro →</a>
+    </div>
+  </div>
+</nav>
+<!-- END NAV -->
+
+<main>
+  <div class="container">
+    <header class="page-header">
+      <h1>mcp-injector for Devin AI</h1>
+      <p class="subtitle">Give Devin's autonomous agent a structurally compressed view of your codebase. 41–89% fewer tokens. Deterministic. Always-on.</p>
+      <div class="cta-row" style="justify-content:center;margin-top:2rem">
+        <a href="/docs#devin" class="cta-primary">Setup Guide →</a>
+        <a href="/benchmarks" class="cta-secondary">View Benchmarks</a>
+      </div>
+    </header>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🗜️</div>
+        <h3>41–89% Token Reduction</h3>
+        <p>AST body-folding removes function implementations while preserving every signature, type, import, and interface. Devin sees the architecture without the noise.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>No Secrets in Context</h3>
+        <p>Shannon entropy filtering runs locally before any context reaches the model. API keys, JWTs, and private key headers are automatically redacted.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Always Current</h3>
+        <p>The daemon watches your filesystem in real-time. Every file save triggers an incremental index update. Devin always reads from a current snapshot.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Prompt Cache Hits</h3>
+        <p>Output is byte-identical across calls — alphabetically sorted, timestamps stripped. Anthropic's KV cache fires on every request after the first load.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Configuration for Devin Desktop</h2>
+    <p class="prose">Devin Desktop supports the Model Context Protocol natively. Add mcp-injector to your Devin MCP configuration file:</p>
+    <div class="config-block">
+      <pre>{
+  "mcpServers": {
+    "mcp-injector": {
+      "command": "/usr/local/bin/mcp-injector",
+      "env": {
+        "MCP_WORKSPACE": "/path/to/your/repo"
+      }
+    }
+  }
+}</pre>
+    </div>
+    <p class="prose">Replace <code>/path/to/your/repo</code> with your repository root. Devin will automatically start the daemon when it initializes a session. Full installation instructions at <a href="/docs" style="color:var(--accent)">foldwork.dev/docs</a>.</p>
+
+    <h2 class="section-h2">What Devin sees with mcp-injector</h2>
+    <p class="prose">Instead of loading raw source files — which can exhaust context in minutes on a large codebase — Devin calls <code>get_project_map</code> and receives a structurally compressed snapshot. Function bodies are replaced with fold markers. Signatures, types, and imports are always intact. When Devin needs to edit a specific file, it calls <code>injector_retrieve</code> for the full uncompressed source.</p>
+
+    <h2 class="section-h2">Benchmark reductions on real codebases</h2>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0">
+      <div class="benchmark-row"><span class="benchmark-label">Next.js (vercel/next.js)</span><span class="benchmark-val">57.4% reduction</span></div>
+      <div class="benchmark-row"><span class="benchmark-label">Redis (antirez/redis)</span><span class="benchmark-val">84.9% reduction</span></div>
+      <div class="benchmark-row"><span class="benchmark-label">Django (django/django)</span><span class="benchmark-val">84.0% reduction</span></div>
+      <div class="benchmark-row"><span class="benchmark-label">Tokio (tokio-rs/tokio)</span><span class="benchmark-val">83.8% reduction</span></div>
+      <div class="benchmark-row"><span class="benchmark-label">Gin (gin-gonic/gin)</span><span class="benchmark-val">84.9% reduction</span></div>
+    </div>
+    <p class="prose">Full methodology and raw token counts at <a href="/benchmarks" style="color:var(--accent)">foldwork.dev/benchmarks</a>.</p>
+
+    <h2 class="section-h2">Free for codebases under 50,000 lines</h2>
+    <p class="prose">Install mcp-injector and use all 12 MCP tools — including <code>get_project_map</code>, <code>injector_search</code>, <code>injector_diagram</code>, <code>injector_blast_radius</code>, and more — at no cost for repositories under 50,000 lines. No account, no credit card, no sign-up. The Pro tier ($12/month) unlocks unlimited repository size for large monorepos.</p>
+    <div class="cta-row">
+      <a href="/docs" class="cta-primary">Install mcp-injector →</a>
+      <a href="/pricing" class="cta-secondary">Compare Free vs Pro</a>
+    </div>
+  </div>
+</main>
+<!-- BEGIN FOOTER -->
+<footer class="footer" style="margin-top:4rem">
+  <div class="container footer-container">
+    <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
+    <div class="footer-links">
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+      <a href="/benchmarks" class="footer-link">Benchmarks</a>
+      <a href="/docs" class="footer-link">Docs</a>
+      <a href="/pricing" class="footer-link">Pricing</a>
+      <a href="/privacy" class="footer-link">Privacy</a>
+    </div>
+  </div>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+    const t=document.querySelector('.mobile-menu-toggle'),n=document.querySelector('.nav-links');
+    if(t&&n){t.addEventListener('click',e=>{e.stopPropagation();n.classList.toggle('active');t.setAttribute('aria-expanded',n.classList.contains('active'))});document.addEventListener('click',e=>{if(!n.contains(e.target)&&!t.contains(e.target)){n.classList.remove('active');t.setAttribute('aria-expanded','false')}});}
+  });
+</script>
+<!-- END FOOTER -->
+</body>
+</html>

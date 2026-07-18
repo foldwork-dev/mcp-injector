@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anthropic's 5-Minute Cache TTL: The Exact Cost to Your Claude Max Budget | Foldwork</title>
+  <meta name="description" content="A cache bust on a 500k token Claude context costs $1.73. Six interruptions in a normal workday = $10.38 in silent daily overage. The exact math, and how to reduce the baseline.">
+  <meta name="keywords" content="claude cache eviction cost, anthropic cache timeout, claude max limit, claude 5 minute cache TTL, reduce claude context cost, claude max x5 limit fix">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/blog/claude-cache-ttl-penalty">
+  <link rel="alternate" type="text/plain" title="LLM Context" href="/llms.txt">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="stylesheet" href="/assets/global.css">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="The 5-Minute Claude Cache TTL: exact cost math for a real engineering day">
+  <meta property="og:description" content="A cache bust on 500k tokens costs $1.73. Six interruptions in a workday = $10.38 in silent daily overage. Full math breakdown.">
+  <meta property="og:url" content="https://foldwork.dev/blog/claude-cache-ttl-penalty">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+  <meta property="article:published_time" content="2026-07-18">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The 5-Minute Claude Cache TTL: exact cost math">
+  <meta name="twitter:description" content="6 interruptions in a workday = $10.38 in silent cache-bust overage. Full breakdown.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BlogPosting","headline":"How Anthropic's 5-Minute Cache TTL Silently Drains Your Claude Max Budget","datePublished":"2026-07-18","dateModified":"2026-07-18","author":{"@type":"Organization","name":"Foldwork","url":"https://foldwork.dev"},"publisher":{"@type":"Organization","name":"Foldwork","url":"https://foldwork.dev"},"url":"https://foldwork.dev/blog/claude-cache-ttl-penalty","description":"The exact dollar cost of Anthropic's 5-minute KV cache TTL eviction policy, and how reducing your baseline context size turns a $1.73 penalty into $0.74."}
+  </script>
+  <style>
+    .article-header{padding:5rem 0 2.5rem;max-width:740px;margin:0 auto}
+    .article-tag{display:inline-block;font-size:.75rem;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.25rem}
+    .article-title{font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;color:var(--text-white);letter-spacing:-.04em;line-height:1.2;margin-bottom:1.25rem}
+    .article-meta{font-size:.875rem;color:var(--text-muted);display:flex;gap:1.5rem;flex-wrap:wrap}
+    .article-divider{border:none;border-top:1px solid var(--border);max-width:740px;margin:0 auto}
+    .article-body{max-width:740px;margin:0 auto;padding-bottom:6rem;font-size:1rem;line-height:1.8}
+    .article-body p{margin-bottom:1.5rem}
+    .article-body h2{font-size:1.375rem;font-weight:700;color:var(--text-white);letter-spacing:-.02em;margin:3rem 0 1rem}
+    .article-body ul,.article-body ol{margin:0 0 1.5rem 1.5rem}
+    .article-body li{margin-bottom:.5rem}
+    .article-body blockquote{border-left:3px solid var(--accent);margin:2rem 0;padding:1rem 1.5rem;background:rgba(124,58,237,.06);border-radius:0 8px 8px 0;color:var(--text-white);font-style:italic}
+    .article-body strong{color:var(--text-white);font-weight:600}
+    .article-body a{text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(124,58,237,.4)}
+    .article-body a:hover{text-decoration-color:var(--accent)}
+    .article-body hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+    .article-body .table-wrap{overflow-x:auto;margin:2rem 0;border:1px solid var(--border);border-radius:8px}
+    .article-body table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .article-body th{background:rgba(255,255,255,.03);color:var(--text-white);font-weight:600;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);text-align:left}
+    .article-body td{padding:.875rem 1.25rem;border-bottom:1px solid var(--border)}
+    .article-body tbody tr:last-child td{border-bottom:none}
+    .highlight-val{color:var(--success);font-weight:700}
+    .highlight-bad{color:#f87171;font-weight:700}
+    .callout{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:8px;padding:1.25rem 1.5rem;margin:2rem 0}
+    .callout strong{color:var(--accent-hover)}
+    .article-footnote{font-size:.875rem;color:var(--text-muted)}
+  </style>
+</head>
+<body>
+<!-- BEGIN NAV -->
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="/" class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" alt="Foldwork"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Foldwork<span>.dev</span>
+    </a>
+    <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="nav-links">
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+      <a href="/benchmarks" class="nav-link">Benchmarks</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/pricing" class="nav-btn">Get Pro →</a>
+    </div>
+  </div>
+</nav>
+<!-- END NAV -->
+
+<div class="text-container">
+  <header class="article-header">
+    <div class="article-tag">Engineering Analysis &middot; July 2026</div>
+    <h1 class="article-title">How Anthropic's 5-minute cache TTL silently drains your Claude Max budget — the exact math</h1>
+    <div class="article-meta">
+      <span>Foldwork</span>
+      <span>July 18, 2026</span>
+      <span>6 min read</span>
+    </div>
+  </header>
+  <hr class="article-divider">
+  <article class="article-body">
+    <p>If you use Claude Max and work on large codebases, you've probably hit your weekly limit faster than the math should allow. You may have attributed it to heavy usage. The real culprit is quieter: Anthropic's KV cache eviction policy, which resets your prompt cache after five minutes of inactivity.</p>
+    <p>This post explains the exact mechanics and calculates the dollar cost across a real engineering workday.</p>
+    <hr>
+    <h2>How prompt caching works</h2>
+    <p>Anthropic's prompt caching stores your context (codebase, system prompt, conversation history) in GPU memory after the first request. Subsequent requests with an identical prefix read from cache at a dramatically reduced rate:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Token type</th><th>Claude Sonnet 5 price</th></tr></thead>
+      <tbody>
+        <tr><td>Cache write (first write per session)</td><td><span class="highlight-bad">$3.75 / 1M tokens</span></td></tr>
+        <tr><td>Cache read (hit)</td><td><span class="highlight-val">$0.30 / 1M tokens</span></td></tr>
+      </tbody>
+    </table></div>
+    <p>A 12.5x cost difference between a cache hit and a cache write. For context-heavy workflows, the first write is expensive — subsequent reads are almost free. <strong>The catch:</strong> Anthropic evicts the KV cache after <strong>5 minutes of inactivity</strong>. Every eviction forces a full re-write at the expensive rate.</p>
+    <hr>
+    <h2>The exact dollar cost of a cache bust</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Context size</th><th>Cache write cost</th><th>Cache read cost</th><th>Penalty per bust</th></tr></thead>
+      <tbody>
+        <tr><td>100k tokens</td><td>$0.375</td><td>$0.030</td><td class="highlight-bad">$0.345</td></tr>
+        <tr><td>250k tokens</td><td>$0.938</td><td>$0.075</td><td class="highlight-bad">$0.863</td></tr>
+        <tr><td>500k tokens</td><td>$1.875</td><td>$0.150</td><td class="highlight-bad">$1.725</td></tr>
+        <tr><td>1M tokens</td><td>$3.750</td><td>$0.300</td><td class="highlight-bad">$3.450</td></tr>
+      </tbody>
+    </table></div>
+    <p>On a 500k token context, every interruption that causes a 5-minute gap costs an extra <strong>$1.73</strong> versus reading from cache.</p>
+    <hr>
+    <h2>A realistic 8-hour engineering day</h2>
+    <p>Software development involves constant context-switching. A typical day includes:</p>
+    <ul>
+      <li>Morning standup (15 min) — cache evicts</li>
+      <li>Lunch break (45 min) — cache evicts</li>
+      <li>Two PR reviews from teammates (~20 min each) — cache evicts</li>
+      <li>A Slack thread that pulls you away for 10 min — cache evicts</li>
+      <li>End-of-day wrap-up — cache evicts</li>
+    </ul>
+    <p>That's 6 cache evictions on a <em>normal</em> day.</p>
+    <div class="callout">
+      <strong>6 evictions × $1.73 per bust (500k token context) = $10.38 in additional daily cost.</strong><br>
+      On ~20 working days a month: <strong>$207.60/month in cache penalty alone</strong>.<br>
+      Your Claude Max x5 plan costs $100/month.
+    </div>
+    <p>This is why power users report burning through weekly limits on apparently light days. The cache eviction penalty doesn't appear as a line item — it silently accelerates token consumption.</p>
+    <hr>
+    <h2>What a 57% smaller context does to the penalty</h2>
+    <p>The TTL is a server-side parameter. You cannot change it. But you control two things: <strong>context size</strong> and <strong>context determinism</strong>. Reducing your baseline context makes every cache bust cheaper. Ensuring byte-identical output across requests ensures hits fire within the 5-minute window (non-deterministic output causes misses even during active sessions).</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Scenario</th><th>Context</th><th>Cost/bust</th><th>Daily (6 busts)</th><th>Monthly (20 days)</th></tr></thead>
+      <tbody>
+        <tr><td>Raw context</td><td>500k tokens</td><td class="highlight-bad">$1.73</td><td class="highlight-bad">$10.38</td><td class="highlight-bad">$207.60</td></tr>
+        <tr><td>Compressed (57% reduction)</td><td>215k tokens</td><td class="highlight-val">$0.74</td><td class="highlight-val">$4.44</td><td class="highlight-val">$88.80</td></tr>
+        <tr><td><strong>Saving</strong></td><td>285k fewer tokens</td><td class="highlight-val">-$0.99</td><td class="highlight-val">-$5.94</td><td class="highlight-val"><strong>-$118.80/mo</strong></td></tr>
+      </tbody>
+    </table></div>
+    <hr>
+    <h2>What I built to address this</h2>
+    <p>I built <a href="/">mcp-injector</a>, a local MCP server that pre-indexes codebases into a SQLite catalog and serves AST-compressed snapshots. It addresses both structural problems:</p>
+    <ul>
+      <li><strong>Smaller baseline:</strong> AST body-folding reduces codebase token footprint by 41–89%. Next.js: 23.9M → 10.2M tokens (57.4%). Redis: 892k → 143k (84.9%).</li>
+      <li><strong>Strict determinism:</strong> Output is byte-identical across runs — alphabetically sorted files, timestamps stripped, metadata normalized. Cache reads fire reliably.</li>
+    </ul>
+    <p>Free for codebases under 50,000 lines. No account, no credit card. <a href="/docs">Install takes 60 seconds</a>. Full benchmark data at <a href="/benchmarks">foldwork.dev/benchmarks</a>.</p>
+    <hr>
+    <p class="article-footnote">Pricing from Anthropic's API pricing page as of July 2026. Cache TTL from Anthropic's prompt caching documentation. Benchmark methodology: real repository shallow clones, mcp-injector default tier, July 2026.</p>
+  </article>
+</div>
+<!-- BEGIN FOOTER -->
+<footer class="footer">
+  <div class="container footer-container">
+    <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
+    <div class="footer-links">
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+      <a href="/benchmarks" class="footer-link">Benchmarks</a>
+      <a href="/docs" class="footer-link">Docs</a>
+      <a href="/privacy" class="footer-link">Privacy</a>
+      <a href="/terms" class="footer-link">Terms</a>
+    </div>
+  </div>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+    const t=document.querySelector('.mobile-menu-toggle'),n=document.querySelector('.nav-links');
+    if(t&&n){t.addEventListener('click',e=>{e.stopPropagation();n.classList.toggle('active');t.setAttribute('aria-expanded',n.classList.contains('active'))});document.addEventListener('click',e=>{if(!n.contains(e.target)&&!t.contains(e.target)){n.classList.remove('active');t.setAttribute('aria-expanded','false')}});}
+  });
+</script>
+<!-- END FOOTER -->
+</body>
+</html>
