@@ -47,6 +47,15 @@
     },
     "website/blog/zero-oom-enterprise-engine.html": {
       "target_keywords": ["mcp-injector", "enterprise", "scalability"]
+    },
+    "website/blog/claude-cache-ttl-penalty.html": {
+      "target_keywords": ["Claude", "cache"]
+    },
+    "website/for/devin.html": {
+      "target_keywords": ["Devin", "context"]
+    },
+    "website/vs/headroom.html": {
+      "target_keywords": ["Headroom", "mcp-injector"]
     }
   }
 }

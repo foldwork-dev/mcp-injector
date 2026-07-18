@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="stylesheet" href="/assets/global.css">
+  <link rel="stylesheet" href="../shared.css">
+  <title>Headroom vs mcp-injector — Detailed Comparison | Foldwork</title>
+  <meta name="description" content="Compare Headroom and mcp-injector. Headroom compresses dynamic tool outputs via proxy. mcp-injector uses deterministic AST folding on codebase structure. Different tools, different risks.">
+  <meta name="keywords" content="headroom vs mcp-injector, headroom alternative, context compression comparison, mcp-injector vs headroom, claude context tool comparison">
+  <meta name="author" content="Foldwork">
+  <link rel="canonical" href="https://foldwork.dev/vs/headroom">
+  <link rel="alternate" type="text/plain" title="LLM Context" href="/llms.txt">
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="Headroom vs mcp-injector — Which context tool is right for you?">
+  <meta property="og:description" content="Headroom uses heuristic proxy compression on dynamic outputs. mcp-injector uses deterministic AST folding on codebase structure. Side-by-side comparison.">
+  <meta property="og:url" content="https://foldwork.dev/vs/headroom">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Headroom vs mcp-injector — Context tool comparison">
+  <meta name="twitter:description" content="Two different approaches to reducing Claude token usage. An honest, technical comparison.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://foldwork.dev"},{"@type":"ListItem","position":2,"name":"Comparisons"},{"@type":"ListItem","position":3,"name":"Headroom vs mcp-injector"}]},{"@type":"WebPage","name":"Headroom vs mcp-injector — Detailed Comparison","url":"https://foldwork.dev/vs/headroom","description":"Side-by-side comparison of Headroom and mcp-injector covering compression approach, safety model, integration architecture, and pricing.","publisher":{"@type":"Organization","name":"Foldwork","url":"https://foldwork.dev"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the main difference between Headroom and mcp-injector?","acceptedAnswer":{"@type":"Answer","text":"Headroom is a network proxy that intercepts and heuristically compresses tool outputs, logs, and API responses before they reach the LLM. mcp-injector is an MCP server that uses deterministic AST body-folding to structurally compress codebase snapshots. They solve different problems and can be used together."}},{"@type":"Question","name":"Is Headroom open source?","acceptedAnswer":{"@type":"Answer","text":"Headroom's core compression engine is open source. They monetize a commercial macOS app built on top of the CLI."}},{"@type":"Question","name":"Does mcp-injector work with Headroom?","acceptedAnswer":{"@type":"Answer","text":"Yes. They address complementary problems. mcp-injector compresses the static codebase context. Headroom compresses dynamic tool outputs. Using both reduces both token sources independently."}}]}]}
+  </script>
+  <style>
+    .header-section{padding:5rem 0 3rem;text-align:center}
+    .summary-text{font-size:1rem;color:var(--text);margin-bottom:3rem;line-height:1.7}
+    .table-container{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;margin-bottom:4rem;box-shadow:0 4px 30px rgba(0,0,0,.2)}
+    .compare-table{width:100%;border-collapse:collapse;text-align:left;font-size:.9rem}
+    .compare-table th{background-color:rgba(255,255,255,.02);border-bottom:1px solid var(--border);color:var(--text-white);font-weight:600;padding:1rem 1.25rem}
+    .compare-table td{padding:1.25rem 1.25rem;border-bottom:1px solid var(--border);vertical-align:top}
+    .compare-table tbody tr:last-child td{border-bottom:none}
+    .compare-table tbody tr:hover{background-color:rgba(255,255,255,.01)}
+    .status-yes{color:var(--success);font-weight:600}
+    .status-no{color:var(--text-muted)}
+    .status-partial{color:var(--warning);font-weight:600}
+    .section-title{font-size:1.5rem;font-weight:700;color:var(--text-white);margin-bottom:1rem;margin-top:3rem;letter-spacing:-.02em}
+    .narrative-p{margin-bottom:1.25rem;font-size:.95rem;color:var(--text)}
+    .callout-box{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:1.25rem 1.5rem;margin:2rem 0;font-size:.95rem;color:var(--text)}
+  </style>
+</head>
+<body>
+<!-- BEGIN NAV -->
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="/" class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" alt="Foldwork"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Foldwork<span>.dev</span>
+    </a>
+    <button class="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="nav-links">
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="nav-link" target="_blank" rel="noopener">mcp-benchmark (free)</a>
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+      <a href="/benchmarks" class="nav-link">Benchmarks</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/pricing" class="nav-btn">Get Pro →</a>
+    </div>
+  </div>
+</nav>
+<!-- END NAV -->
+
+<div class="text-container">
+  <header class="header-section">
+    <h1 class="page-title">Headroom vs mcp-injector</h1>
+    <p class="page-subtitle">Two different approaches to reducing Claude token usage. An honest, architectural comparison.</p>
+  </header>
+
+  <div class="summary-text">
+    <p><strong>Headroom</strong> and <strong>mcp-injector</strong> both reduce Claude token costs, but they operate on entirely different parts of the problem. Headroom is a network proxy that intercepts dynamic tool outputs (logs, API responses, test results) and compresses them heuristically before they reach the model. mcp-injector is a persistent local daemon that uses deterministic AST body-folding to compress the static codebase structure. They are largely complementary, not alternatives.</p>
+  </div>
+
+  <div class="callout-box">
+    <strong>tl;dr:</strong> Headroom compresses what comes back from tools at runtime. mcp-injector compresses what you load about your codebase upfront. If you're hitting token limits, both address real costs — but they target different sources.
+  </div>
+
+  <div class="table-container">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:30%">Feature / Aspect</th>
+          <th style="width:35%">mcp-injector</th>
+          <th style="width:35%">Headroom</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>What it compresses</strong></td>
+          <td><span class="status-yes">✅ Codebase structure (static)</span><br><small style="color:var(--text-muted)">Pre-indexes source files. AST-folds function bodies. Serves compressed snapshots of your repository architecture.</small></td>
+          <td><span class="status-yes">✅ Tool outputs &amp; logs (dynamic)</span><br><small style="color:var(--text-muted)">Intercepts claude tool call results, test output, git diffs, JSON responses — compresses them before they enter context.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Compression approach</strong></td>
+          <td><span class="status-yes">✅ Deterministic AST folding</span><br><small style="color:var(--text-muted)">Structurally safe. Retains all type signatures, imports, interfaces. Only removes function bodies. Output is byte-identical across runs.</small></td>
+          <td><span class="status-partial">⚠️ Heuristic / AI-based</span><br><small style="color:var(--text-muted)">Uses LLM-guided and rule-based compression. Effective but non-deterministic — output varies per run, causing prompt cache misses.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Silent failure risk</strong></td>
+          <td><span class="status-yes">✅ None (structural, not lossy)</span><br><small style="color:var(--text-muted)">AST folding cannot omit a compiler warning or error message — those aren't function bodies. Architecturally safe for agentic loops.</small></td>
+          <td><span class="status-partial">⚠️ Possible on edge cases</span><br><small style="color:var(--text-muted)">Heuristic truncation of tool output can omit critical warnings or non-zero exit codes. Documented concern in the developer community.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Integration model</strong></td>
+          <td><span class="status-yes">✅ Native MCP server (stdio)</span><br><small style="color:var(--text-muted)">Runs as a local daemon. IDE spawns it as a subprocess. No network proxy, no traffic interception.</small></td>
+          <td><span class="status-partial">⚠️ Network proxy / CLI wrapper</span><br><small style="color:var(--text-muted)">Intercepts at the API call layer. Works as a macOS menu bar app, Python library, OpenAI-compatible proxy, or CLI wrapper.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Prompt cache hits</strong></td>
+          <td><span class="status-yes">✅ 100% deterministic (maximum hits)</span><br><small style="color:var(--text-muted)">Byte-identical output. Alphabetically sorted files, timestamps stripped. Anthropic KV cache fires on every request after the first.</small></td>
+          <td><span class="status-no">❌ Non-deterministic (frequent misses)</span><br><small style="color:var(--text-muted)">Output varies per run. Cache prefix breaks. You pay for full write cost more often than necessary.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Source / License</strong></td>
+          <td><span class="status-no">❌ Closed-source binary</span><br><small style="color:var(--text-muted)">Commercial. Free tier: 50k LOC, no account. Pro: $12/month for unlimited monorepos.</small></td>
+          <td><span class="status-yes">✅ Open-source core (MIT)</span><br><small style="color:var(--text-muted)">Core CLI is open source. Commercial macOS app: Pro $3/mo, Max x5 $12/mo, Max x20 $24/mo.</small></td>
+        </tr>
+        <tr>
+          <td><strong>What it does NOT address</strong></td>
+          <td><span class="status-no">❌ Dynamic runtime outputs</span><br><small style="color:var(--text-muted)">Does not compress tool call results, test logs, or API responses at runtime. These are Headroom's domain.</small></td>
+          <td><span class="status-no">❌ Codebase structure</span><br><small style="color:var(--text-muted)">Does not pre-index codebases or provide AST-level structural compression for architectural navigation.</small></td>
+        </tr>
+        <tr>
+          <td><strong>Best for</strong></td>
+          <td>Developers loading large codebases repeatedly into Claude Code, Cursor, or VS Code for architectural navigation and editing.</td>
+          <td>Developers running long agentic loops where tool outputs (test runners, build logs, search results) dominate context growth.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">The key architectural difference</h2>
+  <p class="narrative-p">The fundamental distinction is <strong>what gets compressed and how</strong>. mcp-injector operates pre-flight: before any LLM call, your codebase is indexed and structurally folded. The result is deterministic — the same AST fold every time. This is mathematically safe because function bodies are the only thing removed, and AST parsers don't make mistakes about what constitutes a function body.</p>
+  <p class="narrative-p">Headroom operates in-flight: it intercepts the dynamic outputs of tools and applies heuristic or AI-guided compression to reduce their size. This is powerful for runtime verbosity (test output, git diffs, JSON payloads) but carries inherent risk: any heuristic that processes unstructured text can, in edge cases, truncate content the agent needs. The developer community's significant debate about RTK and Headroom's "token compression illusion" centers precisely on this class of failure.</p>
+
+  <h2 class="section-title">Can you use both together?</h2>
+  <p class="narrative-p">Yes. They target different token sources. mcp-injector compresses the codebase you load for architectural context. Headroom compresses what flows back from tools during task execution. A workflow using both would see compressive effects at both phases, independently. There is no known conflict between them.</p>
+
+  <h2 class="section-title">Which should you start with?</h2>
+  <p class="narrative-p">If your primary usage is codebase-heavy architectural sessions (loading a large repository to understand structure, navigate unfamiliar code, make cross-file changes), start with mcp-injector. The free tier covers 50,000 lines with no account required. If your primary pain is long agentic task runs where test logs and build output dominate your context growth, Headroom's domain is more relevant.</p>
+  <p class="narrative-p">The benchmarks for mcp-injector's codebase compression are at <a href="/benchmarks" style="color:var(--accent)">foldwork.dev/benchmarks</a>. Installation guide at <a href="/docs" style="color:var(--accent)">foldwork.dev/docs</a>.</p>
+</div>
+<!-- BEGIN FOOTER -->
+<footer class="footer">
+  <div class="container footer-container">
+    <div class="footer-brand">Foldwork © 2026 - <a href="mailto:foldwork@proton.me" class="footer-link">foldwork@proton.me</a></div>
+    <div class="footer-links">
+      <a href="https://github.com/foldwork-dev/mcp-injector" class="footer-link" target="_blank" rel="noopener">mcp-injector</a>
+      <a href="https://github.com/foldwork-dev/mcp-benchmark" class="footer-link" target="_blank" rel="noopener">mcp-benchmark</a>
+      <a href="/benchmarks" class="footer-link">Benchmarks</a>
+      <a href="/docs" class="footer-link">Docs</a>
+      <a href="/privacy" class="footer-link">Privacy</a>
+      <a href="/terms" class="footer-link">Terms</a>
+    </div>
+  </div>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+    const t=document.querySelector('.mobile-menu-toggle'),n=document.querySelector('.nav-links');
+    if(t&&n){t.addEventListener('click',e=>{e.stopPropagation();n.classList.toggle('active');t.setAttribute('aria-expanded',n.classList.contains('active'))});document.addEventListener('click',e=>{if(!n.contains(e.target)&&!t.contains(e.target)){n.classList.remove('active');t.setAttribute('aria-expanded','false')}});}
+  });
+</script>
+<!-- END FOOTER -->
+</body>
+</html>

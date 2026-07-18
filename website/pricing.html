@@ -3,11 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing for mcp-injector | Foldwork</title>
-  <meta name="description" content="Pricing plans for mcp-injector, the ultimate Context Layer for Software Engineering.">
+  <title>Pricing — mcp-injector MCP Context Server | Free & Pro | Foldwork</title>
+  <meta name="description" content="mcp-injector is free for codebases under 50,000 lines. No credit card, no account. Pro unlocks unlimited monorepos at $12/mo. Compare features.">
   <link rel="stylesheet" href="/assets/global.css">
   <link rel="canonical" href="https://foldwork.dev/pricing">
-</head>
+  <link rel="alternate" type="text/plain" title="LLM Context" href="/llms.txt">
+
+  <!-- Google Fonts (non-render-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+
+  <!-- Icons & Theme -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/og-image.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#7c3aed">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Foldwork">
+  <meta property="og:title" content="mcp-injector Pricing — Free for under 50k lines | Foldwork">
+  <meta property="og:description" content="Free for codebases under 50,000 lines. No account required. Pro unlocks unlimited monorepos, Zero-OOM engine, and commercial license for $12/month.">
+  <meta property="og:url" content="https://foldwork.dev/pricing">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mcp-injector Pricing — Free under 50k lines">
+  <meta name="twitter:description" content="Free for codebases under 50,000 lines. No account, no credit card. Pro: $12/month for unlimited monorepos.">
+  <meta name="twitter:image" content="https://foldwork.dev/og-image.png">
+
+  <!-- Schema.org Product -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "mcp-injector",
+    "description": "Local MCP daemon that pre-indexes codebases and serves AST-compressed context to Claude Code, Cursor, and VS Code. Reduces token usage by 41-89%.",
+    "url": "https://foldwork.dev",
+    "brand": { "@type": "Brand", "name": "Foldwork" },
+    "offers": [
+      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "Up to 50,000 lines of code. All core tools included." },
+      { "@type": "Offer", "name": "Pro Monthly", "price": "12", "priceCurrency": "USD", "priceSpecification": { "@type": "UnitPriceSpecification", "billingIncrement": 1, "unitCode": "MON" } },
+      { "@type": "Offer", "name": "Pro Yearly", "price": "99", "priceCurrency": "USD", "priceSpecification": { "@type": "UnitPriceSpecification", "billingIncrement": 1, "unitCode": "ANN" } }
+    ]
+  }
+  </script>
 <body>
 
   <!-- BEGIN NAV -->
@@ -69,19 +112,23 @@
               </li>
               <li class="price-feature">
                 <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                <span>Standard AST Parsing</span>
+                <span>AST Body Folding (all tiers)</span>
               </li>
               <li class="price-feature">
                 <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                <span>Basic MCP Integrations</span>
+                <span>All 12 MCP Tools (incl. Diagrams &amp; Regex Search)</span>
+              </li>
+              <li class="price-feature">
+                <svg width="20" height="20" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Shannon Entropy Secret Filtering</span>
               </li>
               <li class="price-feature" style="opacity: 0.5;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                <span>Zero-OOM Enterprise Engine</span>
+                <span>Zero-OOM Enterprise Engine (&gt;50k LOC)</span>
               </li>
               <li class="price-feature" style="opacity: 0.5;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                <span>Architecture Diagrams</span>
+                <span>Commercial Usage License</span>
               </li>
             </ul>
             <a href="/docs#installation" class="price-btn">Start Free</a>
