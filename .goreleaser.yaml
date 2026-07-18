@@ -4,7 +4,8 @@ before:
 
 builds:
   - id: mcp-injector
-    main: ./cmd/mcp-injector
+    dir: ./cmd/mcp-injector
+    main: .
     binary: mcp-injector
     env:
       - CGO_ENABLED=0
