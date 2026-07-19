@@ -1,9 +1,7 @@
-# Source code — never publish
 **/*.go
 go.mod
 go.sum
 
-# Internal files — never publish
 .mcp-injector/
 MCP_Context_Injector_Design.md
 customisation.md
@@ -12,7 +10,6 @@ scratch/
 node_modules/
 package-lock.json
 
-# Loose binaries in root — never publish
 benchmark
 main
 public-benchmark
